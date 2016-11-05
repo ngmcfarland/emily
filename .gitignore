@@ -4,4 +4,4 @@
 *.pyc
 notes
 env
-
+modules/conf/*
