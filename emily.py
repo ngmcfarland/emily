@@ -274,7 +274,7 @@ def start_emily(web_socket=False):
             for var in session_vars:
                 logging.debug(" * {}: {}".format(var,session_vars[var]))
 
-        if user_input.upper() in ['QUIT','Q','EXIT']:
+        if user_input.upper() in ['QUIT','Q','EXIT','BYE']:
             if web_socket:
                 s.close()
             break
