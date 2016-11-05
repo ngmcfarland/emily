@@ -1,0 +1,98 @@
+{
+    "subject": "WEATHER",
+    "topics": [
+        {
+            "topic": "NONE",
+            "categories": [
+                {
+                    "pattern": "WHERE AM I",
+                    "template": {
+                        "type": "W",
+                        "presponse": "Let me check...",
+                        "command": "get_location.where_am_i('CITYSTATE')",
+                        "response": "You are currently in {{}}"
+                    }
+                },
+                {
+                    "pattern": "TEMPERATURE IN *",
+                    "template": {
+                        "type": "W",
+                        "presponse": "Getting the weather in {{1}}",
+                        "command": "weather.get_temp('{{1}}')",
+                        "response": "It is currently {{}} degrees Fahrenheit in {{1}}"
+                    }
+                },
+                {
+                    "pattern": "SUNRISE IN *",
+                    "template": {
+                        "type": "W",
+                        "presponse": "Getting the time of sunrise in {{1}}",
+                        "command": "weather.get_sun_schedule('{{1}}','SUNRISE')",
+                        "response": "Sunrise is or was at {{}} today in {{1}}"
+                    }
+                },
+                {
+                    "pattern": "SUNSET IN *",
+                    "template": {
+                        "type": "W",
+                        "presponse": "Getting the time of sunset in {{1}}",
+                        "command": "weather.get_sun_schedule('{{1}}','SUNSET')",
+                        "response": "Sunset is or was at {{}} today in {{1}}"
+                    }
+                },
+                {
+                    "pattern": "WHAT IS THE TEMPERATURE",
+                    "template": {
+                        "type": "WU",
+                        "command": "get_location.where_am_i('CITY')",
+                        "redirect": "TEMPERATURE IN {{}}"
+                    }
+                },
+                {
+                    "pattern": "WHAT TIME IS SUNRISE",
+                    "template": {
+                        "type": "WU",
+                        "command": "get_location.where_am_i('CITY')",
+                        "redirect": "SUNRISE IN {{}}"
+                    }
+                },
+                {
+                    "pattern": "WHAT TIME IS SUNSET",
+                    "template": {
+                        "type": "WU",
+                        "command": "get_location.where_am_i('CITY')",
+                        "redirect": "SUNSET IN {{}}"
+                    }
+                },
+                {
+                    "pattern": "HOW HOT IS IT OUTSIDE",
+                    "template": {
+                        "type": "U",
+                        "redirect": "WHAT IS THE TEMPERATURE"
+                    }
+                },
+                {
+                    "pattern": "HOW COLD IS IT OUTSIDE",
+                    "template": {
+                        "type": "U",
+                        "redirect": "WHAT IS THE TEMPERATURE"
+                    }
+                },
+                {
+                    "pattern": "WHEN IS SUNSET",
+                    "template": {
+                        "type": "U",
+                        "redirect": "WHAT TIME IS SUNSET"
+                    }
+                },
+                {
+                    "pattern": "WHEN IS SUNRISE",
+                    "template": {
+                        "type": "U",
+                        "redirect": "WHAT TIME IS SUNRISE"
+                    }
+                }
+            ]
+        }
+    ]
+}
