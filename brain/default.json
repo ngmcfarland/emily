@@ -26,6 +26,13 @@
                     }
                 },
                 {
+                    "pattern": "BYE",
+                    "template": {
+                        "type": "U",
+                        "redirect": "QUIT"
+                    }
+                },
+                {
                     "pattern": "*",
                     "template": {
                         "type": "V",
