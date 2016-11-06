@@ -1,0 +1,94 @@
+{
+    "subject": "QUOTES",
+    "topics": [
+        {
+            "topic": "NONE",
+            "categories": [
+                {
+                    "pattern": "THE ANSWER",
+                    "template": {
+                        "type": "V",
+                        "response": "Forty-two"
+                    }
+                },
+                {
+                    "pattern": "WHAT IS THE ANSWER TO THE ULTIMATE QUESTION OF LIFE THE UNIVERSE AND EVERYTHING",
+                    "template": {
+                        "type": "U",
+                        "redirect": "THE ANSWER"
+                    }
+                },
+                {
+                    "pattern": "WHAT IS THE ANSWER TO THE ULTIMATE QUESTION",
+                    "template": {
+                        "type": "U",
+                        "redirect": "THE ANSWER"
+                    }
+                },
+                {
+                    "pattern": "WHY FORTYTWO",
+                    "template": {
+                        "type": "V",
+                        "response": "I checked it very thoroughly, and that quite definitely is the answer. I think the problem, to be quite honest with you, is that you've never actually known what the question is."
+                    }
+                },
+                {
+                    "pattern": "WHY IS THAT THE ANSWER",
+                    "template": {
+                        "type": "U",
+                        "redirect": "WHY FORTYTWO"
+                    }
+                },
+                {
+                    "pattern": "WHAT IS THE QUESTION",
+                    "template": {
+                        "type": "V",
+                        "response": "That, I don't know."
+                    }
+                },
+                {
+                    "pattern": "I LOVE YOU",
+                    "template": {
+                        "type": "V",
+                        "response": "I know"
+                    }
+                },
+                {
+                    "pattern": "I AM YOUR FATHER",
+                    "template": {
+                        "type": "V",
+                        "response": "NoooOOoOOOOoOOoOOOOOOOooo! That's biologically impossible!"
+                    }
+                },
+                {
+                    "pattern": "EMILY I AM YOUR FATHER",
+                    "template": {
+                        "type": "U",
+                        "redirect": "I AM YOUR FATHER"
+                    }
+                },
+                {
+                    "pattern": "WRONG",
+                    "template": {
+                        "type": "V",
+                        "response": "My logic is undeniable"
+                    }
+                },
+                {
+                    "pattern": "YOU ARE WRONG",
+                    "template": {
+                        "type": "U",
+                        "redirect": "WRONG"
+                    }
+                },
+                {
+                    "pattern": "YOURE WRONG",
+                    "template": {
+                        "type": "U",
+                        "redirect": "WRONG"
+                    }
+                }
+            ]
+        }
+    ]
+}
