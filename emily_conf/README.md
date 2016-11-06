@@ -11,6 +11,7 @@ Relative path to directory containing brain files. Default: brain
 ## logging_level
 
 Desired logging level. Default: DEBUG
+
 Options:
 
 * CRITICAL
