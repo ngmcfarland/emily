@@ -22,11 +22,21 @@ Now, from any python module, you can use the following example as a guide for in
 ```python
 import emily
 
-
 session = emily.Emily()
-
 session.start()
 
+response = session.send('What is your name?')
+print(response)
+```
 
-response = session.send('Hello')
+You can also pass new brain files to Emily to extend her funcitonality
+
+```python
+import emily
+
+session = emily.Emily('/path/to/my/brain_file.json')
+session.start()
+
+response = session.send('Do you recognize my custom input?')
+print(response)
 ```
