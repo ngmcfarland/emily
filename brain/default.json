@@ -33,37 +33,6 @@
                     }
                 },
                 {
-                    "pattern": "HELP",
-                    "template": {
-                        "type": "U",
-                        "redirect": "HELP SUGGESTIONS Hey! I'm Emily. You can say things to me like:"
-                    }
-                },
-                {
-                    "pattern": "HELP SUGGESTIONS *",
-                    "template": {
-                        "type": "E",
-                        "responses": [
-                            {
-                                "type": "V",
-                                "response": "{{1}} 'What time is it?'"
-                            },
-                            {
-                                "type": "V",
-                                "response": "{{1}} 'Tell me a joke'"
-                            },
-                            {
-                                "type": "V",
-                                "response": "{{1}} 'What is the answer to the ultimate question of life, the universe, and everything?'"
-                            },
-                            {
-                                "type": "V",
-                                "response": "{{1}} 'Why is your name Emily?'"
-                            }
-                        ]
-                    }
-                },
-                {
                     "pattern": "*",
                     "template": {
                         "type": "V",
