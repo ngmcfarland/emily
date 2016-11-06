@@ -1,9 +1,10 @@
 from pandas.io.json import json_normalize
-from conf import emily_config as config
-from modules import run_command
+from emily_conf import emily_config as config
+from emily_modules import run_command
 from fuzzywuzzy import fuzz
 from fnmatch import fnmatch
 import pandas as pd
+import threading
 import logging
 import socket
 import string
@@ -15,7 +16,8 @@ import os
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
-logfile = "{}/emily.log".format(config.log_file_path)
+curdir = os.path.dirname(__file__)
+logfile = os.path.join(curdir, config.log_file)
 logging_level = config.logging_level
 numeric_level = getattr(logging, logging_level.upper(), None)
 if not isinstance(numeric_level, int):
@@ -24,23 +26,66 @@ if not isinstance(numeric_level, int):
 logging.basicConfig(filename=logfile, filemode='w', format='%(asctime)s | %(levelname)-8s | %(funcName)-15s | %(message)s', datefmt='%H:%M:%S', level=numeric_level)
 
 
+class Emily(threading.Thread):
+    def __init__(self,more_brains=[]):
+        super(Emily, self).__init__()
+        self.brain = __load_data__(more_brains)
+        self.s = socket.socket()
+        logging.debug("Socket successfully created")
+        self.s.bind(('',config.emily_port))
+        logging.debug("socket bound to {}".format(config.emily_port))
+        self.s.listen(5)
+        logging.debug("socket is listening")
+
+    def run(self):
+        session_vars = { 'TOPIC':'NONE' }
+        while True:
+            c,addr = self.s.accept()
+            user_input = c.recv(4096)
+            printlog(user_input,'USER')
+            response,session_vars = match_input(__remove_punctuation__(user_input),self.brain,session_vars)
+            printlog(response,'EMILY',noprint=True)
+            c.send(response)
+            c.close()
+
+            session_vars = clear_stars(session_vars)
+            if logging_level == 'DEBUG':
+                logging.debug("Session Variables:")
+                for var in session_vars:
+                    logging.debug(" * {}: {}".format(var,session_vars[var]))
+
+            if user_input.upper() in ['Q','QUIT','EXIT','BYE']:
+                self.s.close()
+                break
+
+    def send(self,message):
+        new_s = socket.socket()
+        port = config.emily_port
+        new_s.connect(('localhost',port))
+        new_s.send(message)
+        response = new_s.recv(4096)
+        new_s.close()
+        return response
+
+
 # Internal Functions
 
-def __load_data__():
-    brain_dir = 'brain'
-    brain_files = os.listdir(brain_dir)
-    print("Loading brain files:\n{}".format(brain_files))
+def __load_data__(more_brains=[]):
+    brain_dir = os.path.join(curdir, config.brain_dir)
+    brain_files = ["{}/{}".format(brain_dir,file) for file in os.listdir(brain_dir)]
+    brain_files = brain_files + more_brains
+    logging.info("Loading brain files: {}".format(brain_files))
     with open('{}/default.json'.format(brain_dir),'r') as f:
         data = json.loads(f.read())
     results = json_normalize(data['topics'],'categories',['topic'])
     for filename in brain_files:
-        if filename != 'default.json':
-            with open('{}/{}'.format(brain_dir,filename),'r') as f:
+        if filename != '{}/default.json'.format(brain_dir) and fnmatch(filename,'*.json'):
+            with open(filename,'r') as f:
                 data = json.loads(f.read())
             results = results.append(json_normalize(data['topics'],'categories',['topic']))
     results = results.reset_index(drop=True)
     logging.log(55,"Loaded {} brain files: {}".format(len(brain_files),brain_files))
-    print("-- DATA LOADED --\n")
+    logging.info("-- DATA LOADED --")
     return results
 
 
@@ -222,8 +267,8 @@ def clear_stars(session_vars):
     return session_vars
 
 
-def printlog(response,speaker,presponse=False):
-    if speaker.upper() == 'EMILY':
+def printlog(response,speaker,presponse=False,noprint=False):
+    if speaker.upper() == 'EMILY' and not noprint:
         if presponse:
             print("\n{}>  {}".format('Emily'.ljust(10),response))
         else:
@@ -236,26 +281,26 @@ def printlog(response,speaker,presponse=False):
 
 def start_emily(web_socket=False):
     brain = __load_data__()
-    topic = 'NONE'
+    # topic = 'NONE'
     session_vars = { 'TOPIC':'NONE' }
     if web_socket:
         session_vars['SOCKET'] = True
         s = socket.socket()
         logging.debug("Socket successfully created")
-        port = 8000
-        s.bind(('', port))
-        logging.debug("socket bound to {}".format(port))
+        s.bind(('', config.emily_port))
+        logging.debug("socket bound to {}".format(config.emily_port))
         s.listen(5)
         logging.debug("socket is listening")
     else:
         s = None
+        print("")
     while True:
         if web_socket:
             c, addr = s.accept()
             user_input = c.recv(4096)
             printlog(user_input,'USER')
             response,session_vars = match_input(__remove_punctuation__(user_input),brain,session_vars)
-            logging.info("EMILY: {}".format(response))
+            printlog(response,'EMILY',noprint=True)
             c.send(response)
             c.close()
         else:

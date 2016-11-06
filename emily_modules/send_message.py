@@ -8,7 +8,7 @@ def send(message):
     s.send(message)
     response = s.recv(4096)
     s.close()
-    print(response)
+    # print(response)
     return response
 
 if __name__ == '__main__':
