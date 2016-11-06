@@ -29,12 +29,24 @@ response = session.send('What is your name?')
 print(response)
 ```
 
-You can also pass new brain files to Emily to extend her funcitonality
+You can also pass an array of new brain files to Emily to extend her funcitonality
 
 ```python
 import emily
 
-session = emily.Emily('/path/to/my/brain_file.json')
+session = emily.Emily(more_brains=['/path/to/my/brain_file.json'])
+session.start()
+
+response = session.send('Do you recognize my custom input?')
+print(response)
+```
+
+If you are extending Emily's functionality for a project and would like to not include Emily's default brain files, you can use an additional parameter to run a lighter version of Emily.
+
+```python
+import emily
+
+session = emily.Emily(more_brains=['/path/to/my/brain_file.json'],disable_emily_defaults=True)
 session.start()
 
 response = session.send('Do you recognize my custom input?')
