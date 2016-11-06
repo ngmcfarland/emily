@@ -84,8 +84,7 @@ def __load_data__(more_brains=[]):
                 data = json.loads(f.read())
             results = results.append(json_normalize(data['topics'],'categories',['topic']))
     results = results.reset_index(drop=True)
-    logging.log(55,"Loaded {} brain files: {}".format(len(brain_files),brain_files))
-    logging.info("-- DATA LOADED --")
+    logging.info("Loaded {} brain files".format(len(brain_files)))
     return results
 
 
@@ -123,7 +122,7 @@ def match_input(user_input,brain,session_vars):
 
 def check_stars(pattern,user_input,session_vars):
     if re.search(r"\*",pattern):
-        match_stars = re.compile(r"^{}$".format(pattern.replace('*','([A-Za-z0-9\s]*)')),re.IGNORECASE)
+        match_stars = re.compile(r"^{}$".format(pattern.replace('*','([A-Za-z0-9\s!\.\':]*)')),re.IGNORECASE)
         rematch = match_stars.match(user_input)
         for i in range(1,match_stars.groups+1):
             session_vars['STAR{}'.format(i)] = rematch.group(i)
