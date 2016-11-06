@@ -52,7 +52,7 @@ Categories always contain a "pattern" and a "template". Emily will try to match 
 
 Patterns should always be upper case, and contain no punctuation.
 
-Emily does support the use of stars ("*") in patterns. Meaning, a pattern of "HELLO *" will match a user's input of "Hello, World!". Note that all punctuation (including apostrophes) are stripped from the user's input when matching patterns.
+Emily does support the use of stars ("\*") in patterns. Meaning, a pattern of "HELLO \*" will match a user's input of "Hello, World!". Note that all punctuation (including apostrophes) are stripped from the user's input when matching patterns.
 
 ## Templates
 
