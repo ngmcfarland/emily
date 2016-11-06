@@ -27,11 +27,12 @@ logging.basicConfig(filename=logfile, filemode='w', format='%(asctime)s | %(leve
 
 
 class Emily(threading.Thread):
-    def __init__(self,more_brains=[]):
+    def __init__(self,more_brains=[],disable_emily_defaults=False):
         super(Emily, self).__init__()
-        self.brain = __load_data__(more_brains)
+        self.brain = __load_data__(more_brains,disable_emily_defaults)
         self.s = socket.socket()
         logging.debug("Socket successfully created")
+        self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.s.bind(('',config.emily_port))
         logging.debug("socket bound to {}".format(config.emily_port))
         self.s.listen(5)
@@ -70,10 +71,13 @@ class Emily(threading.Thread):
 
 # Internal Functions
 
-def __load_data__(more_brains=[]):
+def __load_data__(more_brains=[],disable_emily_defaults=False):
     brain_dir = os.path.join(curdir, config.brain_dir)
-    brain_files = ["{}/{}".format(brain_dir,file) for file in os.listdir(brain_dir)]
-    brain_files = brain_files + more_brains
+    if disable_emily_defaults:
+        brain_files = more_brains
+    else:
+        brain_files = ["{}/{}".format(brain_dir,file) for file in os.listdir(brain_dir)]
+        brain_files = brain_files + more_brains
     logging.info("Loading brain files: {}".format(brain_files))
     with open('{}/default.json'.format(brain_dir),'r') as f:
         data = json.loads(f.read())
