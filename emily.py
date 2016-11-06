@@ -207,13 +207,13 @@ def parse_template(template,brain,session_vars):
         if 'var' in template:
             if template['var'] in session_vars:
                 for condition in template['conditions']:
-                    if fnmatch(session_vars[template['var']],condition['condition']):
+                    if fnmatch(session_vars[template['var']],condition['pattern']):
                         response,session_vars = parse_template(condition['template'],brain,session_vars)
                         condition_matched = True
                         break
         else:
             for condition in template['conditions']:
-                check = replace_vars(session_vars,condition['condition'])
+                check = replace_vars(session_vars,condition['pattern'])
                 if re.search(r"\{\{.*\}\}",check):
                     break
                 if eval(check):

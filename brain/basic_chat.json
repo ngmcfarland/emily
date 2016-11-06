@@ -56,7 +56,7 @@
                         "var": "NAME",
                         "conditions": [
                             {
-                                "condition": "*",
+                                "pattern": "*",
                                 "template": {
                                     "type": "V",
                                     "response": "Your name is {{NAME}}!"
