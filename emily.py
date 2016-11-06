@@ -84,9 +84,15 @@ def __load_data__(more_brains=[],disable_emily_defaults=False):
     results = json_normalize(data['topics'],'categories',['topic'])
     for filename in brain_files:
         if filename != '{}/default.json'.format(brain_dir) and fnmatch(filename,'*.json'):
-            with open(filename,'r') as f:
-                data = json.loads(f.read())
-            results = results.append(json_normalize(data['topics'],'categories',['topic']))
+            try:
+                with open(filename,'r') as f:
+                    data = json.loads(f.read())
+                results = results.append(json_normalize(data['topics'],'categories',['topic']))
+            except:
+                print("Failed to load {}".format(filename))
+                logging.error("Failed to load {}".format(filename))
+                print("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
+                logging.error("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
     results = results.reset_index(drop=True)
     logging.info("Loaded {} brain files".format(len(brain_files)))
     return results

@@ -1,4 +1,6 @@
+import logging
 import sys
+import os
 
 def run(command):
     try:
@@ -8,7 +10,10 @@ def run(command):
         module = str(e).split("'")[1]
         return re_run(command,module)
     except:
-        return "ERROR: Inside run"
+        logging.error("Error running command in {}".format(__file__))
+        logging.error("{}".format(sys.exc_info()[0]))
+        logging.error("{}".format(sys.exc_info()[1]))
+        return "...well, this is embarrassing. I seem to be having trouble running commands right now using {}".format(__file__)
 
 def re_run(command,module):
     try:
@@ -16,7 +21,10 @@ def re_run(command,module):
         rerun_value = eval(command)
         return rerun_value
     except:
-        return "ERROR: Inside rerun\n{}\n{}".format(sys.exc_info()[0],sys.exc_info()[1])
+        logging.error("Error running command in {}".format(__file__))
+        logging.error("{}".format(sys.exc_info()[0]))
+        logging.error("{}".format(sys.exc_info()[1]))
+        return "...well, this is embarrassing. I seem to be having trouble running: '{}'. Make sure the location of this module is accessible in PYTHONPATH.".format(command)
 
 if __name__ == '__main__':
     run(sys.argv[1])
