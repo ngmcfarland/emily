@@ -40,3 +40,11 @@ session.start()
 response = session.send('Do you recognize my custom input?')
 print(response)
 ```
+
+## Brain Files
+
+See documentation here: [Brain Files](/brain)
+
+## Configuration Options
+
+See documentation here: [Configuration Options](/emily_conf)
