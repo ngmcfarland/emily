@@ -27,9 +27,10 @@ logging.basicConfig(filename=logfile, filemode='w', format='%(asctime)s | %(leve
 
 
 class Emily(threading.Thread):
-    def __init__(self,more_brains=[],disable_emily_defaults=False):
+    def __init__(self,more_brains=[],more_vars={},disable_emily_defaults=False):
         super(Emily, self).__init__()
         self.brain = __load_data__(more_brains,disable_emily_defaults)
+        self.more_vars = more_vars
         self.s = socket.socket()
         logging.debug("Socket successfully created")
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -40,6 +41,9 @@ class Emily(threading.Thread):
 
     def run(self):
         session_vars = { 'TOPIC':'NONE' }
+        for key in self.more_vars.keys():
+            session_vars[key] = self.more_vars[key]
+        logging.debug("Session Variables: {}".format(session_vars))
         while True:
             c,addr = self.s.accept()
             user_input = c.recv(4096)
@@ -271,7 +275,7 @@ def replace_vars(session_vars,response,command_result=None):
             response = response.replace("".join(["{{",star,"}}"]),session_vars["STAR{}".format(star)])
         replace_these = re.findall(r"\{\{([A-Za-z0-9_]*)\}\}",response)
         for var in replace_these:
-            response = response.replace("".join(["{{",var,"}}"]),session_vars[var])
+            response = response.replace("".join(["{{",var,"}}"]),str(session_vars[var]))
         return response
     except KeyError:
         return response
