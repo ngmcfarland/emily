@@ -161,11 +161,11 @@ def parse_template(template,brain,session_vars):
         # Redirect
         if 'vars' in template:
             session_vars = set_vars(session_vars,template)
+        if 'reset' in template:
+            session_vars = reset_vars(session_vars,template)
         redirect = replace_vars(session_vars,template['redirect'])
         logging.info("Redirecting with: {}".format(redirect))
         response,session_vars = match_input(redirect,brain,session_vars)
-        if 'reset' in template:
-            session_vars = reset_vars(session_vars,template)
         return response,session_vars
     elif template['type'] == 'W':
         # Run command
