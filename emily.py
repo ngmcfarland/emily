@@ -260,16 +260,19 @@ def reset_vars(session_vars,template):
 def replace_vars(session_vars,response,command_result=None):
     try:
         if command_result:
-            replace_results = re.findall(r"\{\{\}\}",response)
-            for result in replace_results:
-                response = response.replace("{{}}",str(command_result))
-            if isinstance(command_result,dict):
-                replace_these = re.findall(r"\{\{([A-Za-z0-9_]*)\}\}",response)
-                for var in replace_these:
-                    try:
-                        response = response.replace("".join(["{{",var,"}}"]),str(command_result[var]))
-                    except KeyError:
-                        pass
+            if command_result['success']:
+                replace_results = re.findall(r"\{\{\}\}",response)
+                for result in replace_results:
+                    response = response.replace("{{}}",str(command_result['response']))
+                if isinstance(command_result['response'],dict):
+                    replace_these = re.findall(r"\{\{([A-Za-z0-9_]*)\}\}",response)
+                    for var in replace_these:
+                        try:
+                            response = response.replace("".join(["{{",var,"}}"]),str(command_result['response'][var]))
+                        except KeyError:
+                            pass
+            else:
+                response = command_result['response']
         replace_stars = re.findall(r"\{\{(\d*)\}\}",response)
         for star in replace_stars:
             response = response.replace("".join(["{{",star,"}}"]),session_vars["STAR{}".format(star)])
