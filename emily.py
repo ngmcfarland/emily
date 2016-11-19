@@ -1,6 +1,7 @@
 from pandas.io.json import json_normalize
 from emily_conf import emily_config as config
 from emily_modules import run_command
+from datetime import datetime
 from fuzzywuzzy import fuzz
 from fnmatch import fnmatch
 import pandas as pd
@@ -48,10 +49,14 @@ class Emily(threading.Thread):
             c,addr = self.s.accept()
             user_input = c.recv(4096)
             printlog(user_input,'USER')
+            emily_start_time = datetime.now()
             response,session_vars = match_input(__remove_punctuation__(user_input),self.brain,session_vars)
             printlog(response,'EMILY',noprint=True)
             c.send(response)
             c.close()
+
+            emily_response_time = datetime.now() - emily_start_time
+            logging.debug("Emily Response Time: {} seconds".format("%.3f" % emily_response_time.total_seconds()))
 
             session_vars = clear_stars(session_vars)
             if logging_level == 'DEBUG':
@@ -129,9 +134,9 @@ def match_input(user_input,brain,session_vars):
         logging.debug("Matched: {}".format(match.pattern))
         session_vars = check_stars(match.pattern,user_input,session_vars)
         response,session_vars = parse_template(match.template,brain,session_vars)
-        return response,session_vars
     else:
-        return "I'm sorry, I don't know what you're asking.",session_vars
+        response = "I'm sorry, I don't know what you're asking."
+    return response,session_vars
 
 
 def check_stars(pattern,user_input,session_vars):
@@ -150,27 +155,33 @@ def parse_template(template,brain,session_vars):
         # Direct Response
         if 'vars' in template:
             session_vars = set_vars(session_vars,template)
+        if 'preset' in template:
+            session_vars = reset_vars(session_vars,template,key='preset')
         if has_vars.match(template['response']):
             response = replace_vars(session_vars,template['response'])
         else:
             response = template['response']
         if 'reset' in template:
-            session_vars = reset_vars(session_vars,template)
+            session_vars = reset_vars(session_vars,template,key='reset')
         return response,session_vars
     elif template['type'] == 'U':
         # Redirect
         if 'vars' in template:
             session_vars = set_vars(session_vars,template)
-        if 'reset' in template:
-            session_vars = reset_vars(session_vars,template)
+        if 'preset' in template:
+            session_vars = reset_vars(session_vars,template,key='preset')
         redirect = replace_vars(session_vars,template['redirect'])
         logging.info("Redirecting with: {}".format(redirect))
         response,session_vars = match_input(redirect,brain,session_vars)
+        if 'reset' in template:
+            session_vars = reset_vars(session_vars,template,key='reset')
         return response,session_vars
     elif template['type'] == 'W':
         # Run command
         command = replace_vars(session_vars,template['command'])
         logging.debug("Running Command: {}".format(command))
+        if 'preset' in template:
+            session_vars = reset_vars(session_vars,template,key='preset')
         if 'presponse' in template:
             presponse = replace_vars(session_vars,template['presponse'])
             printlog(presponse,'EMILY',presponse=True)
@@ -180,7 +191,7 @@ def parse_template(template,brain,session_vars):
             session_vars = set_vars(session_vars,template,command_result)
         response = replace_vars(session_vars,template['response'],command_result)
         if 'reset' in template:
-            session_vars = reset_vars(session_vars,template)
+            session_vars = reset_vars(session_vars,template,key='reset')
         return response,session_vars
     elif template['type'] == 'E':
         # Pick random template
@@ -192,6 +203,8 @@ def parse_template(template,brain,session_vars):
         # Run command with redirect
         command = replace_vars(session_vars,template['command'])
         logging.debug("Running Command: {}".format(command))
+        if 'preset' in template:
+            session_vars = reset_vars(session_vars,template,key='preset')
         if 'presponse' in template:
             presponse = replace_vars(session_vars,template['presponse'])
             printlog(presponse,'EMILY',presponse=True)
@@ -203,7 +216,7 @@ def parse_template(template,brain,session_vars):
         logging.info("Redirecting with: {}".format(redirect))
         response,session_vars = match_input(redirect,brain,session_vars)
         if 'reset' in template:
-            session_vars = reset_vars(session_vars,template)
+            session_vars = reset_vars(session_vars,template,key='reset')
         return response,session_vars
     elif template['type'] == 'Y':
         # Condition
@@ -242,9 +255,9 @@ def set_vars(session_vars,template,command_result=None):
     return session_vars
 
 
-def reset_vars(session_vars,template):
+def reset_vars(session_vars,template,key='reset'):
     try:
-        for var in template['reset']:
+        for var in template[key]:
             if var == 'TOPIC':
                 session_vars[var] = 'NONE'
                 logging.info("Reset 'TOPIC' to 'NONE'")
@@ -323,6 +336,7 @@ def start_emily(web_socket=False):
             c, addr = s.accept()
             user_input = c.recv(4096)
             printlog(user_input,'USER')
+            emily_start_time = datetime.now()
             response,session_vars = match_input(__remove_punctuation__(user_input),brain,session_vars)
             printlog(response,'EMILY',noprint=True)
             c.send(response)
@@ -334,8 +348,12 @@ def start_emily(web_socket=False):
                 username = session_vars['NAME']
             user_input = raw_input('{}>  '.format(username.ljust(10)))
             printlog(user_input,'USER')
+            emily_start_time = datetime.now()
             response,session_vars = match_input(__remove_punctuation__(user_input),brain,session_vars)
             printlog(response,'EMILY')
+
+        emily_response_time = datetime.now() - emily_start_time
+        logging.debug("Emily Response Time: {} seconds".format("%.3f" % emily_response_time.total_seconds()))
 
         session_vars = clear_stars(session_vars)
         if logging_level == 'DEBUG':
