@@ -1,3 +1,4 @@
+from datetime import datetime
 import traceback
 import logging
 import sys
@@ -5,17 +6,22 @@ import os
 
 def run(command):
     try:
+        start_time = datetime.now()
         return_value = eval(command)
-        return {'success': True, 'response': return_value}
+        result = {'success': True, 'response': return_value}
     except NameError, e:
         module = str(e).split("'")[1]
-        return re_run(command,module)
+        result = re_run(command,module)
     except:
         logging.error("Error running command in {}".format(__file__))
         logging.error("{}".format(sys.exc_info()[0]))
         logging.error("{}".format(sys.exc_info()[1]))
         response = "...well, this is embarrassing. I seem to be having trouble running commands right now using {}".format(__file__)
-        return {'success': False, 'response': response}
+        result = {'success': False, 'response': response}
+    finally:
+        exec_time = datetime.now() - start_time
+        logging.debug("Command Execution Time: {} seconds".format("%.3f" % exec_time.total_seconds()))
+        return result
 
 def re_run(command,module):
     try:
