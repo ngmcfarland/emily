@@ -17,56 +17,58 @@ import os
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
-curdir = os.path.dirname(__file__)
-logfile = os.path.join(curdir, config.log_file)
-logging_level = config.logging_level
-numeric_level = getattr(logging, logging_level.upper(), None)
-if not isinstance(numeric_level, int):
-    raise ValueError('Invalid log level: {}'.format(logging_level))
-
-logging.basicConfig(filename=logfile, filemode='w', format='%(asctime)s | %(levelname)-8s | %(funcName)-15s | %(message)s', datefmt='%H:%M:%S', level=numeric_level)
-
 
 class Emily(threading.Thread):
     def __init__(self,more_brains=[],more_vars={},disable_emily_defaults=False):
         super(Emily, self).__init__()
-        self.brain = __load_data__(more_brains,disable_emily_defaults)
-        self.more_vars = more_vars
-        self.s = socket.socket()
-        logging.debug("Socket successfully created")
-        self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.s.bind(('',config.emily_port))
-        logging.debug("socket bound to {}".format(config.emily_port))
-        self.s.listen(5)
-        logging.debug("socket is listening")
+        try:
+            self.s = socket.socket()
+            self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            self.s.bind(('',config.emily_port))
+            self.s.listen(5)
+            self.already_started = False
+            logging = __init_logging__()
+            logging.debug("Socket successfully created and listening on port {}".format(config.emily_port))
+        except socket.error,err:
+            if err.errno == 48:
+                logging = __init_logging__(already_started=True)
+                logging.debug("Emily already started")
+                self.already_started = True
+            else:
+                print(err)
+        finally:
+            self.brain = __load_data__(more_brains,disable_emily_defaults)
+            self.more_vars = more_vars
+
 
     def run(self):
         session_vars = { 'TOPIC':'NONE' }
         for key in self.more_vars.keys():
             session_vars[key] = self.more_vars[key]
         logging.debug("Session Variables: {}".format(session_vars))
-        while True:
-            c,addr = self.s.accept()
-            user_input = c.recv(4096)
-            printlog(user_input,'USER')
-            emily_start_time = datetime.now()
-            response,session_vars = match_input(__remove_punctuation__(user_input),self.brain,session_vars)
-            printlog(response,'EMILY',noprint=True)
-            c.send(response)
-            c.close()
+        if not self.already_started:
+            while True:
+                c,addr = self.s.accept()
+                user_input = c.recv(4096)
+                printlog(user_input,'USER')
+                emily_start_time = datetime.now()
+                response,session_vars = match_input(__remove_punctuation__(user_input),self.brain,session_vars)
+                printlog(response,'EMILY',noprint=True)
+                c.send(response)
+                c.close()
 
-            emily_response_time = datetime.now() - emily_start_time
-            logging.debug("Emily Response Time: {} seconds".format("%.3f" % emily_response_time.total_seconds()))
+                emily_response_time = datetime.now() - emily_start_time
+                logging.debug("Emily Response Time: {} seconds".format("%.3f" % emily_response_time.total_seconds()))
 
-            session_vars = clear_stars(session_vars)
-            if logging_level == 'DEBUG':
-                logging.debug("Session Variables:")
-                for var in session_vars:
-                    logging.debug(" * {}: {}".format(var,session_vars[var]))
+                session_vars = clear_stars(session_vars)
+                if config.logging_level.upper() == 'DEBUG':
+                    logging.debug("Session Variables:")
+                    for var in session_vars:
+                        logging.debug(" * {}: {}".format(var,session_vars[var]))
 
-            if user_input.upper() in ['Q','QUIT','EXIT','BYE']:
-                self.s.close()
-                break
+                if user_input.upper() in ['Q','QUIT','EXIT','BYE']:
+                    self.s.close()
+                    break
 
     def send(self,message):
         new_s = socket.socket()
@@ -81,6 +83,7 @@ class Emily(threading.Thread):
 # Internal Functions
 
 def __load_data__(more_brains=[],disable_emily_defaults=False):
+    curdir = os.path.dirname(__file__)
     brain_dir = os.path.join(curdir, config.brain_dir)
     if disable_emily_defaults:
         brain_files = more_brains
@@ -105,6 +108,21 @@ def __load_data__(more_brains=[],disable_emily_defaults=False):
     results = results.reset_index(drop=True)
     logging.info("Loaded {} brain files".format(len(brain_files)))
     return results
+
+
+def __init_logging__(already_started=False):
+    curdir = os.path.dirname(__file__)
+    logfile = os.path.join(curdir, config.log_file)
+    logging_level = config.logging_level
+    numeric_level = getattr(logging, logging_level.upper(), None)
+    if not isinstance(numeric_level, int):
+        raise ValueError('Invalid log level: {}'.format(logging_level))
+    
+    if not already_started:
+        logging.basicConfig(filename=logfile, filemode='w', format='%(asctime)s | %(levelname)-8s | %(funcName)-15s | %(message)s', datefmt='%H:%M:%S', level=numeric_level)
+    else:
+        logging.basicConfig(filename=logfile, format='%(asctime)s | %(levelname)-8s | %(funcName)-15s | %(message)s', datefmt='%H:%M:%S', level=numeric_level)
+    return logging
 
 
 def __remove_punctuation__(input_string):
@@ -317,6 +335,7 @@ def printlog(response,speaker,presponse=False,noprint=False):
 # Main Driver
 
 def start_emily(web_socket=False):
+    logging = __init_logging__()
     brain = __load_data__()
     # topic = 'NONE'
     session_vars = { 'TOPIC':'NONE' }
@@ -356,7 +375,7 @@ def start_emily(web_socket=False):
         logging.debug("Emily Response Time: {} seconds".format("%.3f" % emily_response_time.total_seconds()))
 
         session_vars = clear_stars(session_vars)
-        if logging_level == 'DEBUG':
+        if config.logging_level.upper() == 'DEBUG':
             logging.debug("Session Variables:")
             for var in session_vars:
                 logging.debug(" * {}: {}".format(var,session_vars[var]))
