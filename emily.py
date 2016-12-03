@@ -1,11 +1,13 @@
 from pandas.io.json import json_normalize
 from emily_conf import emily_config as config
+from emily_modules import emily_sessions
 from emily_modules import run_command
 from datetime import datetime
 from fuzzywuzzy import fuzz
 from fnmatch import fnmatch
 import pandas as pd
 import threading
+import urlparse
 import logging
 import socket
 import string
@@ -42,7 +44,7 @@ class Emily(threading.Thread):
 
 
     def run(self):
-        session_vars = { 'TOPIC':'NONE' }
+        session_vars = { 'topic':'NONE' }
         for key in self.more_vars.keys():
             session_vars[key] = self.more_vars[key]
         logging.debug("Session Variables: {}".format(session_vars))
@@ -134,8 +136,8 @@ def __remove_punctuation__(input_string):
 # Core Logic
 
 def match_input(user_input,brain,session_vars):
-    if session_vars['TOPIC'] != 'NONE':
-        match_topics = brain[brain.topic == session_vars['TOPIC']]
+    if session_vars['topic'] != 'NONE':
+        match_topics = brain[brain.topic == session_vars['topic']]
         match_patterns = match_topics[match_topics.apply(lambda x: fnmatch(user_input.upper(),x['pattern']),axis=1)]
         if not match_patterns.empty:
             match_patterns['ratio'] = match_patterns.pattern.apply(fuzz.ratio,args=(user_input.upper(),))
@@ -162,8 +164,8 @@ def check_stars(pattern,user_input,session_vars):
         match_stars = re.compile(r"^{}$".format(pattern.replace('*','([A-Za-z0-9\s!\.\':]*)')),re.IGNORECASE)
         rematch = match_stars.match(user_input)
         for i in range(1,match_stars.groups+1):
-            session_vars['STAR{}'.format(i)] = rematch.group(i)
-            logging.debug("Set '{}' to '{}'".format('STAR{}'.format(i),rematch.group(i)))
+            session_vars['star{}'.format(i)] = rematch.group(i)
+            logging.debug("Set '{}' to '{}'".format('star{}'.format(i),rematch.group(i)))
     return session_vars
 
 
@@ -268,20 +270,20 @@ def set_vars(session_vars,template,command_result=None):
             value = replace_vars(session_vars,var['value'],command_result)
         else:
             value = replace_vars(session_vars,var['value'])
-        session_vars[var['name']] = value
-        logging.info("Set '{}' to '{}'".format(var['name'],value))
+        session_vars[var['name'].lower()] = value
+        logging.info("Set '{}' to '{}'".format(var['name'].lower(),value))
     return session_vars
 
 
 def reset_vars(session_vars,template,key='reset'):
     try:
         for var in template[key]:
-            if var == 'TOPIC':
-                session_vars[var] = 'NONE'
-                logging.info("Reset 'TOPIC' to 'NONE'")
+            if var.lower() == 'topic':
+                session_vars[var.lower()] = 'NONE'
+                logging.info("Reset 'topic' to 'NONE'")
             else:
-                popped_value = session_vars.pop(var)
-                logging.info("Removed session variable '{}' with value '{}'".format(var,popped_value))
+                popped_value = session_vars.pop(var.lower())
+                logging.info("Removed session variable '{}' with value '{}'".format(var.lower(),popped_value))
     except:
         pass
     finally:
@@ -299,17 +301,17 @@ def replace_vars(session_vars,response,command_result=None):
                     replace_these = re.findall(r"\{\{([A-Za-z0-9_]*)\}\}",response)
                     for var in replace_these:
                         try:
-                            response = response.replace("".join(["{{",var,"}}"]),str(command_result['response'][var]))
+                            response = response.replace("".join(["{{",var.lower(),"}}"]),str(command_result['response'][var.lower()]))
                         except KeyError:
                             pass
             else:
                 response = command_result['response']
         replace_stars = re.findall(r"\{\{(\d*)\}\}",response)
         for star in replace_stars:
-            response = response.replace("".join(["{{",star,"}}"]),session_vars["STAR{}".format(star)])
+            response = response.replace("".join(["{{",star,"}}"]),session_vars["star{}".format(star)])
         replace_these = re.findall(r"\{\{([A-Za-z0-9_]*)\}\}",response)
         for var in replace_these:
-            response = response.replace("".join(["{{",var,"}}"]),str(session_vars[var]))
+            response = response.replace("".join(["{{",var.lower(),"}}"]),str(session_vars[var.lower()]))
         return response
     except KeyError:
         return response
@@ -317,7 +319,7 @@ def replace_vars(session_vars,response,command_result=None):
 
 def clear_stars(session_vars):
     for key in session_vars.keys():
-        if re.search(r"STAR\d*",key):
+        if re.search(r"star\d*",key):
             null = session_vars.pop(key)
     return session_vars
 
@@ -332,15 +334,50 @@ def printlog(response,speaker,presponse=False,noprint=False):
     logging.info("{}: {}".format(speaker.upper(),response))
     logging.info("")
 
+def parse_http_input(input_text):
+    verb,path = get_http_verb(input_text)
+    if verb == 'POST':
+        message = None
+        post_vars = get_post_vars(input_text)
+    elif verb == 'GET':
+        if path.lower() == '/health':
+            message = 'SUCCESS'
+        else:
+            message = None
+        post_vars = None
+    logging.debug("Message: {}".format(message))
+    return message,post_vars
+
+
+def get_http_verb(input_text):
+    http_verb_line = input_text.split("\n")[0]
+    http_verb = http_verb_line.split(" ")[0]
+    http_path = http_verb_line.split(" ")[1]
+    logging.debug("Verb: {}, Path: {}".format(http_verb,http_path))
+    return http_verb,http_path
+
+
+def get_post_vars(post_text):
+    post_vars = {}
+    post_var_string = post_text.split("\n")[-1]
+    post_vars_temp = urlparse.parse_qs(post_var_string)
+    logging.debug("POST variables: {}".format(json.dumps(post_vars_temp)))
+    for var in post_vars_temp:
+        var_value = post_vars_temp[var][0]
+        if var == 'session_id':
+            post_vars[var] = int(var_value)
+        else:
+            post_vars[var] = var_value
+    return post_vars
+
+
 # Main Driver
 
 def start_emily(web_socket=False):
     logging = __init_logging__()
     brain = __load_data__()
-    # topic = 'NONE'
-    session_vars = { 'TOPIC':'NONE' }
+    session_vars = { 'topic':'NONE' }
     if web_socket:
-        session_vars['SOCKET'] = True
         s = socket.socket()
         logging.debug("Socket successfully created")
         s.bind(('', config.emily_port))
@@ -356,15 +393,40 @@ def start_emily(web_socket=False):
             user_input = c.recv(4096)
             printlog(user_input,'USER')
             emily_start_time = datetime.now()
-            response,session_vars = match_input(__remove_punctuation__(user_input),brain,session_vars)
-            printlog(response,'EMILY',noprint=True)
-            c.send(response)
+            http_message,post_vars = parse_http_input(user_input)
+            if http_message:
+                response_body = http_message
+            else:
+                # If this is a new session (no id provided) start new session
+                if 'session_id' not in post_vars:
+                    post_vars['session_id'] = emily_sessions.create_new_session()
+                    logging.info("New session ID: {}".format(post_vars['session_id']))
+                # Get session vars by id
+                session_vars = emily_sessions.get_session_vars(session_id=post_vars['session_id'])
+                response,session_vars = match_input(__remove_punctuation__(post_vars['message']),brain,session_vars)
+                printlog(response,'EMILY',noprint=True)
+                response_body = json.dumps({'response':response,'session_id':post_vars['session_id']})
+            response_headers = {
+                    'Content-Type': 'text/html; encoding=utf8',
+                    'Content-Length': len(response_body),
+                    'Connection': 'close',
+                }
+            response_headers_raw = ''.join('%s: %s\n' % (k, v) for k, v in response_headers.iteritems())
+            # Reply as HTTP/1.1 server, saying "HTTP OK" (code 200).
+            response_proto = 'HTTP/1.1'
+            response_status = '200'
+            response_status_text = 'OK' # this can be random
+            # sending all this stuff
+            c.send('%s %s %s' % (response_proto, response_status, response_status_text))
+            c.send(response_headers_raw)
+            c.send('\n') # to separate headers from body
+            c.send(response_body)
             c.close()
         else:
-            if 'NAME' not in session_vars.keys():
+            if 'name' not in session_vars.keys():
                 username = 'User'
             else:
-                username = session_vars['NAME']
+                username = session_vars['name']
             user_input = raw_input('{}>  '.format(username.ljust(10)))
             printlog(user_input,'USER')
             emily_start_time = datetime.now()
@@ -380,9 +442,14 @@ def start_emily(web_socket=False):
             for var in session_vars:
                 logging.debug(" * {}: {}".format(var,session_vars[var]))
 
-        if user_input.upper() in ['QUIT','Q','EXIT','BYE']:
-            if web_socket:
-                s.close()
+        if web_socket:
+            if post_vars:
+                if post_vars['message'].upper() in ['QUIT','Q','EXIT','BYE']:
+                    emily_sessions.remove_session(session_id=post_vars['session_id'])
+                    logging.info("Removed session: {}".format(post_vars['session_id']))
+                else:
+                    emily_sessions.set_session_vars(session_id=post_vars['session_id'],session_vars=session_vars)
+        elif user_input.upper() in ['QUIT','Q','EXIT','BYE']:
             break
 
 

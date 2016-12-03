@@ -4,3 +4,4 @@
 *.pyc
 notes
 env
+emily_modules/conf/session_vars.json
