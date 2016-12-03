@@ -85,7 +85,7 @@
                                 "type": "V",
                                 "vars": [
                                     {
-                                        "name": "TOPIC",
+                                        "name": "topic",
                                         "value": "DENTISTJOKE"
                                     }
                                 ],
@@ -95,7 +95,7 @@
                                 "type": "V",
                                 "vars": [
                                     {
-                                        "name": "TOPIC",
+                                        "name": "topic",
                                         "value": "CHICKENCOOPJOKE"
                                     }
                                 ],
@@ -129,7 +129,7 @@
                                 "type": "V",
                                 "vars": [
                                     {
-                                        "name": "TOPIC",
+                                        "name": "topic",
                                         "value": "SWISSJOKE"
                                     }
                                 ],
@@ -139,7 +139,7 @@
                                 "type": "V",
                                 "vars": [
                                     {
-                                        "name": "TOPIC",
+                                        "name": "topic",
                                         "value": "HIPSTERJOKE"
                                     }
                                 ],
@@ -149,7 +149,7 @@
                                 "type": "V",
                                 "vars": [
                                     {
-                                        "name": "TOPIC",
+                                        "name": "topic",
                                         "value": "SCARECROWJOKE"
                                     }
                                 ],
@@ -167,12 +167,7 @@
                     "pattern": "*",
                     "template": {
                         "type": "V",
-                        "vars": [
-                            {
-                                "name": "TOPIC",
-                                "value": "NONE"
-                            }
-                        ],
+                        "reset": ["topic"],
                         "response": "Tooth Hurt-y!"
                     }
                 }
@@ -185,12 +180,7 @@
                     "pattern": "*",
                     "template": {
                         "type": "V",
-                        "vars": [
-                            {
-                                "name": "TOPIC",
-                                "value": "NONE"
-                            }
-                        ],
+                        "reset": ["topic"],
                         "response": "Because if they had four, they would be called chicken sedans!"
                     }
                 }
@@ -203,12 +193,7 @@
                     "pattern": "*",
                     "template": {
                         "type": "V",
-                        "vars": [
-                            {
-                                "name": "TOPIC",
-                                "value": "NONE"
-                            }
-                        ],
+                        "reset": ["topic"],
                         "response": "Well the flag is a big plus..."
                     }
                 }
@@ -221,12 +206,7 @@
                     "pattern": "*",
                     "template": {
                         "type": "V",
-                        "vars": [
-                            {
-                                "name": "TOPIC",
-                                "value": "NONE"
-                            }
-                        ],
+                        "reset": ["topic"],
                         "response": "An Instagram..."
                     }
                 }
@@ -239,12 +219,7 @@
                     "pattern": "*",
                     "template": {
                         "type": "V",
-                        "vars": [
-                            {
-                                "name": "TOPIC",
-                                "value": "NONE"
-                            }
-                        ],
+                        "reset": ["topic"],
                         "response": "Because he was outstanding in his field..."
                     }
                 }

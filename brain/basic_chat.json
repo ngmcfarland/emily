@@ -59,7 +59,7 @@
                                 "pattern": "*",
                                 "template": {
                                     "type": "V",
-                                    "response": "Your name is {{NAME}}!"
+                                    "response": "Your name is {{name}}!"
                                 }
                             }
                         ],
@@ -219,14 +219,14 @@
                     "pattern": "*",
                     "template": {
                         "type": "V",
-                        "response": "Hello {{NAME}}!",
+                        "response": "Hello {{name}}!",
                         "vars": [
                             {
-                                "name": "NAME",
+                                "name": "name",
                                 "value": "{{1}}"
                             }
                         ],
-                        "reset": ["TOPIC"]
+                        "reset": ["topic"]
                     }
                 }
             ]

@@ -8,7 +8,7 @@
                     "pattern": "CURRENT TIME",
                     "template": {
                         "type": "W",
-                        "command": "datetime.datetime.now().strftime('%I:%M %p')",
+                        "command": "datetime.now().strftime('%I:%M %p')",
                         "response": "It is currently {{}}"
                     }
                 },
@@ -16,7 +16,7 @@
                     "pattern": "CURRENT DATE",
                     "template": {
                         "type": "W",
-                        "command": "datetime.datetime.now().strftime('%B %d, %Y')",
+                        "command": "datetime.now().strftime('%B %d, %Y')",
                         "response": "Today is {{}}"
                     }
                 },

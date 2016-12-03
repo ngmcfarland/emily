@@ -19,11 +19,11 @@ Example brain file structure:
                         "type": "V",
                         "vars": [
                             {
-                                "name": "MY_TEMP_VAR",
+                                "name": "my_temp_var",
                                 "value": "I set this"
                             }
                         ]
-                        "response": "I matched it! I also set MY_TEMP_VAR to: {{MY_TEMP_VAR}}"
+                        "response": "I matched it! I also set my_temp_var to: {{my_temp_var}}"
                     }
                 }
             ] 
@@ -38,9 +38,9 @@ Subjects are currently just metadata for where responses are defined.
 
 ## Topics
 
-Topics allow Emily to understand things in context, and provide structure for back-and-forth conversations. At all times, there is a session variable with the name "TOPIC". Most of the time, topic is set to "NONE", so any responses from brain files containing "NONE" topics will be matched.
+Topics allow Emily to understand things in context, and provide structure for back-and-forth conversations. At all times, there is a session variable with the name "topic". Most of the time, topic is set to "NONE", so any responses from brain files containing "NONE" topics will be matched.
 
-A category in a brain file can temporarily set the "TOPIC" variable to a different topic to have Emily search for matching patterns in that topic first. If a pattern is not matched in the specific topic set by a category, Emily will always check for matches in the "NONE" topic before answering with a default response.
+A category in a brain file can temporarily set the "topic" variable to a different topic to have Emily search for matching patterns in that topic first. If a pattern is not matched in the specific topic set by a category, Emily will always check for matches in the "NONE" topic before answering with a default response.
 
 See the personality brain file for examples of topic usage.
 
@@ -86,28 +86,28 @@ Inside of any response template type, you can include an optional parameter for 
 ```json
 "vars": [
     {
-        "name": "MY_VAR",
+        "name": "my_var",
         "value": "This is the value"
     },
     {
-        "name": "MY_OTHER_VAR",
+        "name": "my_other_var",
         "value": "This is the other value"
     }
 ]
 ```
 
-By convention, variable names should be uppercase with underscore-separated words.
+By convention, variable names should be lowercase with underscore-separated words.
 
-Variables can be removed or reset to their defaults (like in the case of the "TOPIC" variable) by including this parameter in any response template:
+Variables can be removed or reset to their defaults (like in the case of the "topic" variable) by including this parameter in any response template:
 
 ```json
-"reset": ["MY_VAR","TOPIC"]
+"reset": ["my_var","topic"]
 ```
 
 Variables can be referenced by name using the following syntax:
 
 ```json
-"response": "My variable value is: {{MY_VAR}}"
+"response": "My variable value is: {{my_var}}"
 ```
 
 When stars ("\*") are used in the "pattern" value of the category, their matched values can be referenced using the following syntax:

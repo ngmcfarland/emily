@@ -32,7 +32,7 @@
                     "pattern": "HOW LONG WILL IT TAKE TO GET HOME",
                     "template": {
                         "type": "Y",
-                        "var": "HOME",
+                        "var": "home",
                         "conditions": [
                             {
                                 "pattern": "*",
@@ -40,7 +40,7 @@
                                     "type": "V",
                                     "vars": [
                                         {
-                                            "name": "TOPIC",
+                                            "name": "topic",
                                             "value": "LOCATION"
                                         }
                                     ],
@@ -52,7 +52,7 @@
                             "type": "V",
                             "vars": [
                                 {
-                                    "name": "TOPIC",
+                                    "name": "topic",
                                     "value": "HOME"
                                 }
                             ],
@@ -80,13 +80,10 @@
                             {
                                 "name": "LOCATION",
                                 "value": "{{1}}"
-                            },
-                            {
-                                "name": "TOPIC",
-                                "value": "NONE"
                             }
                         ],
-                        "redirect": "TRAVEL {{LOCATION}} TO {{HOME}}"
+                        "reset": ["topic"],
+                        "redirect": "TRAVEL {{location}} TO {{home}}"
                     }
                 }
             ]
@@ -100,11 +97,11 @@
                         "type": "V",
                         "vars": [
                             {
-                                "name": "HOME",
+                                "name": "home",
                                 "value": "{{1}}"
                             },
                             {
-                                "name": "TOPIC",
+                                "name": "topic",
                                 "value": "LOCATION"
                             }
                         ],
