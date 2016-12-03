@@ -52,34 +52,45 @@ class Emily(threading.Thread):
             while True:
                 c,addr = self.s.accept()
                 user_input = c.recv(4096)
-                printlog(user_input,'USER')
+                user_input = json.loads(user_input)
+                printlog(user_input['message'],'USER')
                 emily_start_time = datetime.now()
-                response,session_vars = match_input(__remove_punctuation__(user_input),self.brain,session_vars)
+                response,session_vars = match_input(user_input=__remove_punctuation__(str(user_input['message'])),brain=self.brain,session_vars=user_input['session_vars'],noprint=True)
                 printlog(response,'EMILY',noprint=True)
-                c.send(response)
-                c.close()
 
                 emily_response_time = datetime.now() - emily_start_time
                 logging.debug("Emily Response Time: {} seconds".format("%.3f" % emily_response_time.total_seconds()))
 
                 session_vars = clear_stars(session_vars)
+                c.send(json.dumps({'response':response,'session_vars':session_vars}))
+                c.close()
                 if config.logging_level.upper() == 'DEBUG':
                     logging.debug("Session Variables:")
                     for var in session_vars:
                         logging.debug(" * {}: {}".format(var,session_vars[var]))
 
-                if user_input.upper() in ['Q','QUIT','EXIT','BYE']:
+                if user_input['message'].upper() in ['Q','QUIT','EXIT','BYE'] and emily_sessions.get_session_count() == 0:
                     self.s.close()
                     break
 
-    def send(self,message):
+    def send(self,message,session_id=None):
         new_s = socket.socket()
         port = config.emily_port
         new_s.connect(('localhost',port))
-        new_s.send(message)
+        if not session_id:
+            session_id = emily_sessions.create_new_session(default_session_vars=config.default_session_vars)
+            logging.info("New session ID: {}".format(session_id))
+        session_vars = emily_sessions.get_session_vars(session_id=session_id)
+        new_s.send(json.dumps({'message':message,'session_vars':session_vars}))
         response = new_s.recv(4096)
+        response = json.loads(response)
         new_s.close()
-        return response
+        if message.upper() in ['QUIT','Q','EXIT','BYE']:
+            emily_sessions.remove_session(session_id=session_id)
+            logging.info("Removed session: {}".format(session_id))
+        else:
+            emily_sessions.set_session_vars(session_id=session_id,session_vars=response['session_vars'])
+        return response['response'],session_id
 
 
 # Internal Functions
@@ -135,28 +146,26 @@ def __remove_punctuation__(input_string):
 
 # Core Logic
 
-def match_input(user_input,brain,session_vars):
+def match_input(user_input,brain,session_vars,noprint=False):
     if session_vars['topic'] != 'NONE':
         match_topics = brain[brain.topic == session_vars['topic']]
         match_patterns = match_topics[match_topics.apply(lambda x: fnmatch(user_input.upper(),x['pattern']),axis=1)]
-        if not match_patterns.empty:
-            match_patterns['ratio'] = match_patterns.pattern.apply(fuzz.ratio,args=(user_input.upper(),))
-            match = match_patterns.loc[match_patterns.ratio.idxmax()]
-            logging.debug("Matched: {}".format(match.pattern))
-            session_vars = check_stars(match.pattern,user_input,session_vars)
-            response,session_vars = parse_template(match.template,brain,session_vars)
-            return response,session_vars
-    match_topics = brain[brain.topic == 'NONE']
-    match_patterns = match_topics[match_topics.apply(lambda x: fnmatch(user_input.upper(),x['pattern']),axis=1)]
-    if not match_patterns.empty:
-        match_patterns['ratio'] = match_patterns.pattern.apply(fuzz.ratio,args=(user_input.upper(),))
-        match = match_patterns.loc[match_patterns.ratio.idxmax()]
-        logging.debug("Matched: {}".format(match.pattern))
-        session_vars = check_stars(match.pattern,user_input,session_vars)
-        response,session_vars = parse_template(match.template,brain,session_vars)
+        if match_patterns.empty:
+            match_topics = brain[brain.topic == 'NONE']
+            match_patterns = match_topics[match_topics.apply(lambda x: fnmatch(user_input.upper(),x['pattern']),axis=1)]
     else:
+        match_topics = brain[brain.topic == 'NONE']
+        match_patterns = match_topics[match_topics.apply(lambda x: fnmatch(user_input.upper(),x['pattern']),axis=1)]
+    if match_patterns.empty:
         response = "I'm sorry, I don't know what you're asking."
+        return response,session_vars
+    match_patterns['ratio'] = match_patterns.pattern.apply(fuzz.ratio,args=(user_input.upper(),))
+    match = match_patterns.loc[match_patterns.ratio.idxmax()]
+    logging.debug("Matched: {}".format(match.pattern))
+    session_vars = check_stars(match.pattern,user_input,session_vars)
+    response,session_vars = parse_template(template=match.template,brain=brain,session_vars=session_vars,noprint=noprint)
     return response,session_vars
+
 
 
 def check_stars(pattern,user_input,session_vars):
@@ -169,7 +178,7 @@ def check_stars(pattern,user_input,session_vars):
     return session_vars
 
 
-def parse_template(template,brain,session_vars):
+def parse_template(template,brain,session_vars,noprint=False):
     has_vars = re.compile(r"^.*\{\{.*\}\}.*$", re.IGNORECASE)
     if template['type'] == 'V':
         # Direct Response
@@ -192,7 +201,7 @@ def parse_template(template,brain,session_vars):
             session_vars = reset_vars(session_vars,template,key='preset')
         redirect = replace_vars(session_vars,template['redirect'])
         logging.info("Redirecting with: {}".format(redirect))
-        response,session_vars = match_input(redirect,brain,session_vars)
+        response,session_vars = match_input(user_input=redirect,brain=brain,session_vars=session_vars,noprint=noprint)
         if 'reset' in template:
             session_vars = reset_vars(session_vars,template,key='reset')
         return response,session_vars
@@ -202,7 +211,7 @@ def parse_template(template,brain,session_vars):
         logging.debug("Running Command: {}".format(command))
         if 'preset' in template:
             session_vars = reset_vars(session_vars,template,key='preset')
-        if 'presponse' in template:
+        if not noprint and 'presponse' in template:
             presponse = replace_vars(session_vars,template['presponse'])
             printlog(presponse,'EMILY',presponse=True)
         command_result = run_command.run(command)
@@ -217,7 +226,7 @@ def parse_template(template,brain,session_vars):
         # Pick random template
         logging.info("Choosing random response")
         template = template['responses'][random.randint(0,len(template['responses'])-1)]
-        response,session_vars = parse_template(template,brain,session_vars)
+        response,session_vars = parse_template(template=template,brain=brain,session_vars=session_vars,noprint=noprint)
         return response,session_vars
     elif template['type'] == 'WU':
         # Run command with redirect
@@ -225,7 +234,7 @@ def parse_template(template,brain,session_vars):
         logging.debug("Running Command: {}".format(command))
         if 'preset' in template:
             session_vars = reset_vars(session_vars,template,key='preset')
-        if 'presponse' in template:
+        if not noprint and 'presponse' in template:
             presponse = replace_vars(session_vars,template['presponse'])
             printlog(presponse,'EMILY',presponse=True)
         command_result = run_command.run(command)
@@ -234,7 +243,7 @@ def parse_template(template,brain,session_vars):
             session_vars = set_vars(session_vars,template,command_result)
         redirect = replace_vars(session_vars,template['redirect'],command_result)
         logging.info("Redirecting with: {}".format(redirect))
-        response,session_vars = match_input(redirect,brain,session_vars)
+        response,session_vars = match_input(user_input=redirect,brain=brain,session_vars=session_vars,noprint=noprint)
         if 'reset' in template:
             session_vars = reset_vars(session_vars,template,key='reset')
         return response,session_vars
@@ -245,7 +254,7 @@ def parse_template(template,brain,session_vars):
             if template['var'] in session_vars:
                 for condition in template['conditions']:
                     if fnmatch(session_vars[template['var']],condition['pattern']):
-                        response,session_vars = parse_template(condition['template'],brain,session_vars)
+                        response,session_vars = parse_template(template=condition['template'],brain=brain,session_vars=session_vars,noprint=noprint)
                         condition_matched = True
                         break
         else:
@@ -254,11 +263,11 @@ def parse_template(template,brain,session_vars):
                 if re.search(r"\{\{.*\}\}",check):
                     break
                 if eval(check):
-                    response,session_vars = parse_template(condition['template'],brain,session_vars)
+                    response,session_vars = parse_template(template=condition['template'],brain=brain,session_vars=session_vars,noprint=noprint)
                     condition_matched = True
                     break
         if not condition_matched:
-            response,session_vars = parse_template(template['fallback'],brain,session_vars)
+            response,session_vars = parse_template(template=template['fallback'],brain=brain,session_vars=session_vars,noprint=noprint)
         return response,session_vars
     else:
         return "ERROR: malformed response template",session_vars
@@ -403,7 +412,7 @@ def start_emily(web_socket=False):
                     logging.info("New session ID: {}".format(post_vars['session_id']))
                 # Get session vars by id
                 session_vars = emily_sessions.get_session_vars(session_id=post_vars['session_id'])
-                response,session_vars = match_input(__remove_punctuation__(post_vars['message']),brain,session_vars)
+                response,session_vars = match_input(user_input=__remove_punctuation__(post_vars['message']),brain=brain,session_vars=session_vars,noprint=True)
                 printlog(response,'EMILY',noprint=True)
                 response_body = json.dumps({'response':response,'session_id':post_vars['session_id']})
             response_headers = {

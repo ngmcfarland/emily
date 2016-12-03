@@ -26,6 +26,12 @@ class DecimalEncoder(json.JSONEncoder):
         return super(DecimalEncoder, self).default(o)
 
 
+def get_session_count():
+    with open(vars_file,'r') as f:
+        all_session_vars = json.loads(f.read())
+    return len(all_session_vars)
+
+
 def get_session_vars(session_id):
     if source == 'LOCAL':
         with open(vars_file,'r') as f:
@@ -91,7 +97,7 @@ def set_session_vars(session_id,session_vars):
         print("ERROR: Unrecognized source: {}".format(config.source))
 
 
-def create_new_session():
+def create_new_session(default_session_vars=None):
     # Identify used session ids
     if source == 'LOCAL':
         with open(vars_file,'r') as f:
@@ -102,7 +108,10 @@ def create_new_session():
             # If generated session id already in use, get another
             session_id = get_random_session_id()
         # Set default session vars using new id
-        set_session_vars(session_id=session_id,session_vars=config.default_session_vars)
+        if default_session_vars:
+            set_session_vars(session_id=session_id,session_vars=default_session_vars)
+        else:
+            set_session_vars(session_id=session_id,session_vars=config.default_session_vars)
         return session_id
     elif source == 'DYNAMODB':
         dynamodb = boto3.resource("dynamodb", region_name=config.region)

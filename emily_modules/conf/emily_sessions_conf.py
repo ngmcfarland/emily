@@ -3,7 +3,7 @@
 source = 'LOCAL'
 
 # Core variables
-default_session_vars = {'topic':'NONE','item_tag':'NONE','order': {'items':[]},'options': {}}
+default_session_vars = {'topic':'NONE'}
 min_id = 10000
 max_id = 99999
 
