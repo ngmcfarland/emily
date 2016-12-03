@@ -53,7 +53,7 @@
                     "pattern": "WHAT IS MY NAME",
                     "template": {
                         "type": "Y",
-                        "var": "NAME",
+                        "var": "name",
                         "conditions": [
                             {
                                 "pattern": "*",
@@ -68,7 +68,7 @@
                             "response": "I'm sorry, I don't think we've been introduced. I'm Emily. What's your name?",
                             "vars": [
                                 {
-                                    "name": "TOPIC",
+                                    "name": "topic",
                                     "value": "INTRODUCE"
                                 }
                             ]
