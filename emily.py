@@ -44,10 +44,9 @@ class Emily(threading.Thread):
 
 
     def run(self):
-        session_vars = { 'topic':'NONE' }
+        default_session_vars = config.default_session_vars
         for key in self.more_vars.keys():
-            session_vars[key] = self.more_vars[key]
-        logging.debug("Session Variables: {}".format(session_vars))
+            default_session_vars[key] = self.more_vars[key]
         if not self.already_started:
             while True:
                 c,addr = self.s.accept()
@@ -55,42 +54,43 @@ class Emily(threading.Thread):
                 user_input = json.loads(user_input)
                 printlog(user_input['message'],'USER')
                 emily_start_time = datetime.now()
-                response,session_vars = match_input(user_input=__remove_punctuation__(str(user_input['message'])),brain=self.brain,session_vars=user_input['session_vars'],noprint=True)
+                session_id = user_input['session_id']
+                if not session_id:
+                    session_id = emily_sessions.create_new_session(default_session_vars=default_session_vars)
+                    logging.info("New session ID: {}".format(session_id))
+                session_vars = emily_sessions.get_session_vars(session_id=session_id)
+                response,session_vars = match_input(user_input=__remove_punctuation__(str(user_input['message'])),brain=self.brain,session_vars=session_vars,noprint=True)
                 printlog(response,'EMILY',noprint=True)
+                c.send(json.dumps({'response':response,'session_id':session_id}))
+                c.close()
 
                 emily_response_time = datetime.now() - emily_start_time
                 logging.debug("Emily Response Time: {} seconds".format("%.3f" % emily_response_time.total_seconds()))
 
                 session_vars = clear_stars(session_vars)
-                c.send(json.dumps({'response':response,'session_vars':session_vars}))
-                c.close()
                 if config.logging_level.upper() == 'DEBUG':
                     logging.debug("Session Variables:")
                     for var in session_vars:
                         logging.debug(" * {}: {}".format(var,session_vars[var]))
 
-                if user_input['message'].upper() in ['Q','QUIT','EXIT','BYE'] and emily_sessions.get_session_count() == 0:
-                    self.s.close()
-                    break
+                if user_input['message'].upper() in ['Q','QUIT','EXIT','BYE']:
+                    emily_sessions.remove_session(session_id=session_id)
+                    logging.info("Removed session: {}".format(session_id))
+                    if emily_sessions.get_session_count() == 0:
+                        self.s.close()
+                        break
+                else:
+                    emily_sessions.set_session_vars(session_id=session_id,session_vars=session_vars)
 
     def send(self,message,session_id=None):
         new_s = socket.socket()
         port = config.emily_port
         new_s.connect(('localhost',port))
-        if not session_id:
-            session_id = emily_sessions.create_new_session(default_session_vars=config.default_session_vars)
-            logging.info("New session ID: {}".format(session_id))
-        session_vars = emily_sessions.get_session_vars(session_id=session_id)
-        new_s.send(json.dumps({'message':message,'session_vars':session_vars}))
+        new_s.send(json.dumps({'message':message,'session_id':session_id}))
         response = new_s.recv(4096)
         response = json.loads(response)
         new_s.close()
-        if message.upper() in ['QUIT','Q','EXIT','BYE']:
-            emily_sessions.remove_session(session_id=session_id)
-            logging.info("Removed session: {}".format(session_id))
-        else:
-            emily_sessions.set_session_vars(session_id=session_id,session_vars=response['session_vars'])
-        return response['response'],session_id
+        return response['response'],response['session_id']
 
 
 # Internal Functions
