@@ -1,0 +1,134 @@
+{
+    "organization": {
+        "name": "Keyphase",
+        "address1": "1058 Sherwood Drive",
+        "address2": "Minneapolis, Missouri 46734",
+        "country": "Cameroon",
+        "website": "http://www.villalane.com/",
+        "mission": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "market share": 21.57
+    },
+    "staff": [
+        {
+            "hire date": "06/05/1994",
+            "shift start time": "07:01AM",
+            "ID card number": "365e7168-432b-41e0-9c93-df2bdbc0c514",
+            "employee ID": 0,
+            "first name": "Celestina",
+            "last name": "Lomeli",
+            "email": "max.stanton@y-com.com",
+            "phone number": "(171) 252-6146",
+            "part-time": true,
+            "department": "Facilities"
+        },
+        {
+            "hire date": "04/11/1987",
+            "shift start time": "07:49AM",
+            "ID card number": "10a0a027-8b4d-4b9c-ad7d-bd0228a7a01c",
+            "employee ID": 1,
+            "first name": "Felicitas",
+            "last name": "Casteris",
+            "email": "rick.torff@physcone.com",
+            "phone number": "(879) 775-2063",
+            "part-time": true,
+            "department": "Sales"
+        },
+        {
+            "hire date": "12/06/2013",
+            "shift start time": "09:10AM",
+            "ID card number": "f326eb29-082f-4ea0-aacd-88a7dd1a8172",
+            "employee ID": 2,
+            "first name": "Felicitas",
+            "last name": "Kinnaman",
+            "email": "cordell.vittadini@biotechi.com",
+            "phone number": "(672) 889-3578",
+            "part-time": false,
+            "department": "Sales"
+        },
+        {
+            "hire date": "12/01/1978",
+            "shift start time": "07:35AM",
+            "ID card number": "b9216248-09a3-4a8c-99d6-c8ba9f069f74",
+            "employee ID": 3,
+            "first name": "Earline",
+            "last name": "Kinnaman",
+            "email": "rosalina.fredexric@zonice.com",
+            "phone number": "(843) 690-4488",
+            "part-time": true,
+            "department": "Facilities"
+        },
+        {
+            "hire date": "02/11/1999",
+            "shift start time": "07:53AM",
+            "ID card number": "c7e49d15-9b65-4c96-8c97-e4c6d8ed1bd6",
+            "employee ID": 4,
+            "first name": "Rene",
+            "last name": "Wacquant",
+            "email": "yuko.margaitis@quadtech.com",
+            "phone number": "(513) 584-8343",
+            "part-time": false,
+            "department": "IT"
+        },
+        {
+            "hire date": "09/21/1977",
+            "shift start time": "07:18AM",
+            "ID card number": "36b6e092-8d25-41e9-9caa-b812418faced",
+            "employee ID": 5,
+            "first name": "Lottie",
+            "last name": "Cichon",
+            "email": "rowena.pieraccini@y-com.com",
+            "phone number": "(292) 138-5996",
+            "part-time": true,
+            "department": "IT"
+        },
+        {
+            "hire date": "12/28/1976",
+            "shift start time": "07:58AM",
+            "ID card number": "d3da85ea-591e-4ab3-94f1-2cae4288f199",
+            "employee ID": 6,
+            "first name": "Bessie",
+            "last name": "Afzal-khan",
+            "email": "nadia.bickmore@ventostreet.com",
+            "phone number": "(438) 318-3846",
+            "part-time": true,
+            "department": "Facilities"
+        },
+        {
+            "hire date": "01/29/1993",
+            "shift start time": "08:52AM",
+            "ID card number": "2d9f8655-a8fb-49e2-92d4-8d19d189d874",
+            "employee ID": 7,
+            "first name": "Brittaney",
+            "last name": "Daboni",
+            "email": "vincent.pesarin@bamcon.com",
+            "phone number": "(490) 533-9389",
+            "part-time": true,
+            "department": "IT"
+        },
+        {
+            "hire date": "08/03/2007",
+            "shift start time": "07:06AM",
+            "ID card number": "ded4615c-3c4d-40c9-abb5-805eb965c411",
+            "employee ID": 8,
+            "first name": "Earnestine",
+            "last name": "Gabor",
+            "email": "dulcie.gabor@zonice.com",
+            "phone number": "(367) 411-3222",
+            "part-time": false,
+            "department": "IT"
+        },
+        {
+            "hire date": "08/18/1971",
+            "shift start time": "08:13AM",
+            "ID card number": "c88a8e5a-6dd2-413b-9de7-03483133e4e2",
+            "employee ID": 9,
+            "first name": "Judie",
+            "last name": "Corgain",
+            "email": "esther.landenna@gravejob.com",
+            "phone number": "(545) 928-9022",
+            "part-time": false,
+            "department": "Sales"
+        }
+    ]
+}
