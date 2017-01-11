@@ -59,7 +59,12 @@ class Emily(threading.Thread):
                     session_id = emily_sessions.create_new_session(default_session_vars=default_session_vars)
                     logging.info("New session ID: {}".format(session_id))
                 session_vars = emily_sessions.get_session_vars(session_id=session_id)
-                response,session_vars = match_input(user_input=__remove_punctuation__(str(user_input['message'])),brain=self.brain,session_vars=session_vars,noprint=True)
+                # Apply optional filters before sending to brain
+                intent,new_input = apply_input_filters(user_input=str(user_input['message']))
+                if new_input:
+                    response,session_vars = match_input(user_input=__remove_punctuation__(new_input),brain=self.brain,session_vars=session_vars,intent=intent,noprint=True)
+                else:
+                    response,session_vars = match_input(user_input=__remove_punctuation__(str(user_input['message'])),brain=self.brain,session_vars=session_vars,intent=intent,noprint=True)
                 printlog(response,'EMILY',noprint=True)
                 c.send(json.dumps({'response':response,'session_id':session_id}))
                 c.close()
@@ -160,15 +165,19 @@ def __remove_punctuation__(input_string):
 
 # Core Logic
 
-def match_input(user_input,brain,session_vars,noprint=False):
+def match_input(user_input,brain,session_vars,intent=None,noprint=False):
+    if intent:
+        intent_brain = brain[(brain.intent == intent) | (brain.intent == 'DEFAULT')]
+    else:
+        intent_brain = brain
     if session_vars['topic'] != 'NONE':
-        match_topics = brain[brain.topic == session_vars['topic']]
+        match_topics = intent_brain[intent_brain.topic == session_vars['topic']]
         match_patterns = match_topics[match_topics.apply(lambda x: fnmatch(user_input.upper(),x['pattern']),axis=1)]
         if match_patterns.empty:
-            match_topics = brain[brain.topic == 'NONE']
+            match_topics = intent_brain[intent_brain.topic == 'NONE']
             match_patterns = match_topics[match_topics.apply(lambda x: fnmatch(user_input.upper(),x['pattern']),axis=1)]
     else:
-        match_topics = brain[brain.topic == 'NONE']
+        match_topics = intent_brain[intent_brain.topic == 'NONE']
         match_patterns = match_topics[match_topics.apply(lambda x: fnmatch(user_input.upper(),x['pattern']),axis=1)]
     if match_patterns.empty:
         response = "I'm sorry, I don't know what you're asking."
@@ -177,7 +186,7 @@ def match_input(user_input,brain,session_vars,noprint=False):
     match = match_patterns.loc[match_patterns.ratio.idxmax()]
     logging.debug("Matched: {}".format(match.pattern))
     session_vars = check_stars(match.pattern,user_input,session_vars)
-    response,session_vars = parse_template(template=match.template,brain=brain,session_vars=session_vars,noprint=noprint)
+    response,session_vars = parse_template(template=match.template,brain=intent_brain,session_vars=session_vars,noprint=noprint)
     return response,session_vars
 
 
@@ -357,6 +366,35 @@ def printlog(response,speaker,presponse=False,noprint=False):
     logging.info("{}: {}".format(speaker.upper(),response))
     logging.info("")
 
+
+def apply_input_filters(user_input):
+    if config.intent_filter:
+        logging.debug("Applying this intent filter to user input: {}".format(config.intent_command))
+        intent_command = config.intent_command.replace('user_input',user_input)
+        command_result = run_command.run(intent_command)
+        if command_result['success']:
+            logging.info("Determined intent: {}".format(command_result['response']))
+            intent = command_result['response']
+        else:
+            logging.error("Failed to apply intent filter: {}".format(intent_command))
+            intent = None
+    else:
+        intent = None
+    if config.preformat_filter:
+        logging.debug("Applying this preformat filter to user input: {}".format(config.preformat_command))
+        preformat_command = config.preformat_command.replace('user_input',user_input)
+        command_result = run_command.run(preformat_command)
+        if command_result['success']:
+            logging.info("Preformatted input to: {}".format(command_result['response']))
+            new_input = command_result['response']
+        else:
+            logging.error("Failed to apply preformat filter: {}".format(preformat_command))
+            new_input = None
+    else:
+        new_input = None
+    return intent,new_input
+
+
 def parse_http_input(input_text):
     verb,path = get_http_verb(input_text)
     if verb == 'POST':
@@ -426,7 +464,12 @@ def start_emily(web_socket=False):
                     logging.info("New session ID: {}".format(post_vars['session_id']))
                 # Get session vars by id
                 session_vars = emily_sessions.get_session_vars(session_id=post_vars['session_id'])
-                response,session_vars = match_input(user_input=__remove_punctuation__(post_vars['message']),brain=brain,session_vars=session_vars,noprint=True)
+                # Apply optional filters before sending to brain
+                intent,new_input = apply_input_filters(user_input=post_vars['message'])
+                if new_input:
+                    response,session_vars = match_input(user_input=__remove_punctuation__(new_input),brain=brain,session_vars=session_vars,intent=intent,noprint=True)
+                else:
+                    response,session_vars = match_input(user_input=__remove_punctuation__(post_vars['message']),brain=brain,session_vars=session_vars,intent=intent,noprint=True)
                 printlog(response,'EMILY',noprint=True)
                 response_body = json.dumps({'response':response,'session_id':post_vars['session_id']})
             response_headers = {
@@ -453,7 +496,12 @@ def start_emily(web_socket=False):
             user_input = raw_input('{}>  '.format(username.ljust(10)))
             printlog(user_input,'USER')
             emily_start_time = datetime.now()
-            response,session_vars = match_input(__remove_punctuation__(user_input),brain,session_vars)
+            # Apply optional filters before sending to brain
+            intent,new_input = apply_input_filters(user_input=user_input)
+            if new_input:
+                response,session_vars = match_input(user_input=__remove_punctuation__(new_input),brain=brain,session_vars=session_vars,intent=intent)
+            else:
+                response,session_vars = match_input(user_input=__remove_punctuation__(user_input),brain=brain,session_vars=session_vars,intent=intent)
             printlog(response,'EMILY')
 
         emily_response_time = datetime.now() - emily_start_time
