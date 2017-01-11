@@ -106,21 +106,35 @@ def __load_data__(more_brains=[],disable_emily_defaults=False):
     logging.info("Loading brain files: {}".format(brain_files))
     with open('{}/default.json'.format(brain_dir),'r') as f:
         data = json.loads(f.read())
-    results = json_normalize(data['topics'],'categories',['topic'])
+    brain = json_normalize(data['topics'],'categories',['topic'])
+    brain['intent'] = data['intent']
     for filename in brain_files:
         if filename != '{}/default.json'.format(brain_dir) and fnmatch(filename,'*.json'):
             try:
                 with open(filename,'r') as f:
                     data = json.loads(f.read())
-                results = results.append(json_normalize(data['topics'],'categories',['topic']))
+                temp_df = json_normalize(data['topics'],'categories',['topic'])
+                temp_df['intent'] = data['intent']
+                brain = brain.append(temp_df)
             except:
                 print("Failed to load {}".format(filename))
                 logging.error("Failed to load {}".format(filename))
                 print("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
                 logging.error("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
-    results = results.reset_index(drop=True)
+    if 'utterances' in brain.columns:
+        brain = __expand_utterances__(brain)
+    brain = brain.reset_index(drop=True)
     logging.info("Loaded {} brain files".format(len(brain_files)))
-    return results
+    return brain
+
+
+def __expand_utterances__(brain):
+    rows = []
+    brain.loc[brain['utterances'].isnull(),['utterances']] = brain.loc[brain['utterances'].isnull(),'utterances'].apply(lambda x: [])
+    _ = brain.apply(lambda row: [rows.append([row['intent'],utterance,{'type':'U','redirect':row['pattern']},row['topic'],[]]) for utterance in row.utterances], axis=1)
+    brain = brain.append(pd.DataFrame(rows, columns=brain.columns))
+    brain.drop('utterances',axis=1,inplace=True)
+    return brain
 
 
 def __init_logging__(already_started=False):

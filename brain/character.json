@@ -1,5 +1,5 @@
 {
-    "subject": "CHARACTER",
+    "intent": "CHARACTER",
     "topics": [
         {
             "topic": "NONE",
@@ -9,28 +9,12 @@
                     "template": {
                         "type": "V",
                         "response": "I started off as a machine learning experiment, or \"M.L.E.\""
-                    }
-                },
-                {
-                    "pattern": "WHY IS YOUR NAME EMILY",
-                    "template": {
-                        "type": "U",
-                        "redirect": "WHY EMILY"
-                    }
-                },
-                {
-                    "pattern": "WHY ARE YOU EMILY",
-                    "template": {
-                        "type": "U",
-                        "redirect": "WHY EMILY"
-                    }
-                },
-                {
-                    "pattern": "WHY ARE YOU NAMED EMILY",
-                    "template": {
-                        "type": "U",
-                        "redirect": "WHY EMILY"
-                    }
+                    },
+                    "utterances": [
+                        "WHY IS YOUR NAME EMILY",
+                        "WHY ARE YOU EMILY",
+                        "WHY ARE YOU NAMED EMILY"
+                    ]
                 },
                 {
                     "pattern": "HOW OLD ARE YOU",

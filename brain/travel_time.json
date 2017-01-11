@@ -1,5 +1,5 @@
 {
-    "subject": "TRAVEL_TIME",
+    "intent": "TRAVEL_TIME",
     "topics": [
         {
             "topic": "NONE",
@@ -58,14 +58,10 @@
                             ],
                             "response": "Where is home for you?"
                         }
-                    }
-                },
-                {
-                    "pattern": "HOW LONG WILL IT TAKE ME TO GET HOME",
-                    "template": {
-                        "type": "U",
-                        "redirect": "HOW LONG WILL IT TAKE TO GET HOME"
-                    }
+                    },
+                    "utterances": [
+                        "HOW LONG WILL IT TAKE ME TO GET HOME"
+                    ]
                 }
             ]
         },

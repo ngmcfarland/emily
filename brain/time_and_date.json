@@ -1,5 +1,5 @@
 {
-    "subject": "TIME_AND_DATE",
+    "intent": "TIME_AND_DATE",
     "topics": [
         {
             "topic": "NONE",
@@ -10,7 +10,12 @@
                         "type": "W",
                         "command": "datetime.now().strftime('%I:%M %p')",
                         "response": "It is currently {{}}"
-                    }
+                    },
+                    "utterances": [
+                        "WHAT TIME IS IT",
+                        "WHAT IS THE TIME",
+                        "DO YOU HAVE THE TIME"
+                    ]
                 },
                 {
                     "pattern": "CURRENT DATE",
@@ -18,49 +23,12 @@
                         "type": "W",
                         "command": "datetime.now().strftime('%B %d, %Y')",
                         "response": "Today is {{}}"
-                    }
-                },
-                {
-                    "pattern": "WHAT IS TODAY",
-                    "template": {
-                        "type": "U",
-                        "redirect": "CURRENT DATE"
-                    }
-                },
-                {
-                    "pattern": "WHAT IS TODAYS DATE",
-                    "template": {
-                        "type": "U",
-                        "redirect": "CURRENT DATE"
-                    }
-                },
-                {
-                    "pattern": "WHAT IS THE DATE",
-                    "template": {
-                        "type": "U",
-                        "redirect": "CURRENT DATE"
-                    }
-                },
-                {
-                    "pattern": "WHAT TIME IS IT",
-                    "template": {
-                        "type": "U",
-                        "redirect": "CURRENT TIME"
-                    }
-                },
-                {
-                    "pattern": "WHAT IS THE TIME",
-                    "template": {
-                        "type": "U",
-                        "redirect": "CURRENT TIME"
-                    }
-                },
-                {
-                    "pattern": "DO YOU HAVE THE TIME",
-                    "template": {
-                        "type": "U",
-                        "redirect": "CURRENT TIME"
-                    }
+                    },
+                    "utterances": [
+                        "WHAT IS TODAY",
+                        "WHAT IS TODAYS DATE",
+                        "WHAT IS THE DATE"
+                    ]
                 }
             ]
         }

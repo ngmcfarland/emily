@@ -1,5 +1,5 @@
 {
-    "subject": "PERSONALITY",
+    "intent": "PERSONALITY",
     "topics": [
         {
             "topic": "NONE",
@@ -9,28 +9,20 @@
                     "template": {
                         "type": "V",
                         "response": "I'm glad you think I'm funny"
-                    }
+                    },
+                    "utterances": [
+                        "* FUNNY"
+                    ]
                 },
                 {
                     "pattern": "NICE",
                     "template": {
                         "type": "V",
                         "response": "Thanks!"
-                    }
-                },
-                {
-                    "pattern": "THATS A GOOD ONE",
-                    "template": {
-                        "type": "U",
-                        "redirect": "NICE"
-                    }
-                },
-                {
-                    "pattern": "* FUNNY",
-                    "template": {
-                        "type": "U",
-                        "redirect": "HAHA"
-                    }
+                    },
+                    "utterances": [
+                        "THATS A GOOD ONE"
+                    ]
                 },
                 {
                     "pattern": "TELL ME A PUN",

@@ -1,5 +1,5 @@
 {
-    "subject": "WEATHER",
+    "intent": "WEATHER",
     "topics": [
         {
             "topic": "NONE",
@@ -46,7 +46,11 @@
                         "type": "WU",
                         "command": "get_location.where_am_i('CITY')",
                         "redirect": "TEMPERATURE IN {{}}"
-                    }
+                    },
+                    "utterances": [
+                        "HOW HOT IS IT OUTSIDE",
+                        "HOW COLD IS IT OUTSIDE"
+                    ]
                 },
                 {
                     "pattern": "WHAT TIME IS SUNRISE",
@@ -54,7 +58,10 @@
                         "type": "WU",
                         "command": "get_location.where_am_i('CITY')",
                         "redirect": "SUNRISE IN {{}}"
-                    }
+                    },
+                    "utterances": [
+                        "WHEN IS SUNRISE"
+                    ]
                 },
                 {
                     "pattern": "WHAT TIME IS SUNSET",
@@ -62,35 +69,10 @@
                         "type": "WU",
                         "command": "get_location.where_am_i('CITY')",
                         "redirect": "SUNSET IN {{}}"
-                    }
-                },
-                {
-                    "pattern": "HOW HOT IS IT OUTSIDE",
-                    "template": {
-                        "type": "U",
-                        "redirect": "WHAT IS THE TEMPERATURE"
-                    }
-                },
-                {
-                    "pattern": "HOW COLD IS IT OUTSIDE",
-                    "template": {
-                        "type": "U",
-                        "redirect": "WHAT IS THE TEMPERATURE"
-                    }
-                },
-                {
-                    "pattern": "WHEN IS SUNSET",
-                    "template": {
-                        "type": "U",
-                        "redirect": "WHAT TIME IS SUNSET"
-                    }
-                },
-                {
-                    "pattern": "WHEN IS SUNRISE",
-                    "template": {
-                        "type": "U",
-                        "redirect": "WHAT TIME IS SUNRISE"
-                    }
+                    },
+                    "utterances": [
+                        "WHAT TIME IS SUNSET"
+                    ]
                 }
             ]
         }

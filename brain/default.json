@@ -1,5 +1,5 @@
 {
-    "subject": "DEFAULT",
+    "intent": "DEFAULT",
     "topics": [
         {
             "topic": "NONE",
@@ -9,28 +9,12 @@
                     "template": {
                         "type": "V",
                         "response": "Bye!"
-                    }
-                },
-                {
-                    "pattern": "Q",
-                    "template": {
-                        "type": "U",
-                        "redirect": "QUIT"
-                    }
-                },
-                {
-                    "pattern": "EXIT",
-                    "template": {
-                        "type": "U",
-                        "redirect": "QUIT"
-                    }
-                },
-                {
-                    "pattern": "BYE",
-                    "template": {
-                        "type": "U",
-                        "redirect": "QUIT"
-                    }
+                    },
+                    "utterances": [
+                        "Q",
+                        "EXIT",
+                        "BYE"
+                    ]
                 },
                 {
                     "pattern": "*",

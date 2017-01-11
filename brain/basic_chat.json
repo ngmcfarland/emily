@@ -1,5 +1,5 @@
 {
-    "subject": "BASIC_CHAT",
+    "intent": "BASIC_CHAT",
     "topics": [
         {
             "topic": "NONE",
@@ -100,49 +100,15 @@
                                 "response": "Hey!"
                             }
                         ]
-                    }
-                },
-                {
-                    "pattern": "GOOD MORNING *",
-                    "template": {
-                        "type": "U",
-                        "redirect": "HI"
-                    }
-                },
-                {
-                    "pattern": "GOOD MORNING",
-                    "template": {
-                        "type": "U",
-                        "redirect": "HI"
-                    }
-                },
-                {
-                    "pattern": "GOOD AFTERNOON *",
-                    "template": {
-                        "type": "U",
-                        "redirect": "HI"
-                    }
-                },
-                {
-                    "pattern": "GOOD AFTERNOON",
-                    "template": {
-                        "type": "U",
-                        "redirect": "HI"
-                    }
-                },
-                {
-                    "pattern": "GOOD EVENING *",
-                    "template": {
-                        "type": "U",
-                        "redirect": "HI"
-                    }
-                },
-                {
-                    "pattern": "GOOD EVENING",
-                    "template": {
-                        "type": "U",
-                        "redirect": "HI"
-                    }
+                    },
+                    "utterances": [
+                        "GOOD MORNING *",
+                        "GOOD MORNING",
+                        "GOOD AFTERNOON *",
+                        "GOOD AFTERNOON",
+                        "GOOD EVENING *",
+                        "GOOD EVENING"
+                    ]
                 },
                 {
                     "pattern": "THANKS",
@@ -166,42 +132,12 @@
                                 "response": "You know I got you bro"
                             }
                         ]
-                    }
-                },
-                {
-                    "pattern": "THANK YOU",
-                    "template": {
-                        "type": "U",
-                        "redirect": "THANKS"
-                    }
-                },
-                {
-                    "pattern": "THANK YOU *",
-                    "template": {
-                        "type": "U",
-                        "redirect": "THANKS"
-                    }
-                },
-                {
-                    "pattern": "THANKS *",
-                    "template": {
-                        "type": "U",
-                        "redirect": "THANKS"
-                    }
-                },
-                {
-                    "pattern": "APPLES ARE * BANANAS ARE *",
-                    "template": {
-                        "type": "V",
-                        "response": "{{1}} apples, {{2}} bananas"
-                    }
-                },
-                {
-                    "pattern": "APPLES ARE *",
-                    "template": {
-                        "type": "V",
-                        "response": "{{1}} apples"
-                    }
+                    },
+                    "utterances": [
+                        "THANK YOU",
+                        "THANK YOU *",
+                        "THANKS *"
+                    ]
                 }
             ]
         },
