@@ -137,7 +137,7 @@ def __expand_utterances__(brain):
     rows = []
     brain.loc[brain['utterances'].isnull(),['utterances']] = brain.loc[brain['utterances'].isnull(),'utterances'].apply(lambda x: [])
     _ = brain.apply(lambda row: [rows.append([row['intent'],utterance,{'type':'U','redirect':row['pattern']},row['topic'],[]]) for utterance in row.utterances], axis=1)
-    brain = brain.append(pd.DataFrame(rows, columns=brain.columns))
+    brain = brain.append(pd.DataFrame(rows, columns=['intent','pattern','template','topic','utterances']))
     brain.drop('utterances',axis=1,inplace=True)
     return brain
 
