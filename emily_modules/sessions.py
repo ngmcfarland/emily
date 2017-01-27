@@ -1,4 +1,4 @@
-from conf import emily_sessions_conf as config
+from conf import sessions_conf as config
 import decimal
 import random
 import json
