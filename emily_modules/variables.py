@@ -6,7 +6,7 @@ import os
 
 def check_stars(pattern,user_input,session_vars):
     if re.search(r"\*",pattern):
-        match_stars = re.compile(r"^{}$".format(pattern.replace('*','([A-Za-z0-9\s!\.\':]*)')),re.IGNORECASE)
+        match_stars = re.compile(r"^{}$".format(pattern.replace('*','(.*)')),re.IGNORECASE)
         rematch = match_stars.match(user_input)
         for i in range(1,match_stars.groups+1):
             session_vars['star{}'.format(i)] = rematch.group(i)
@@ -34,13 +34,23 @@ def set_vars(session_vars,template,command_result=None):
 
 def reset_vars(session_vars,template,key='reset'):
     try:
-        for var in template[key]:
-            if var.lower() == 'topic':
-                session_vars[var.lower()] = 'NONE'
-                logging.info("Reset 'topic' to 'NONE'")
-            else:
-                popped_value = session_vars.pop(var.lower())
-                logging.info("Removed session variable '{}' with value '{}'".format(var.lower(),popped_value))
+        if len(template[key]) == 1 and template[key][0].upper() == 'ALL':
+            try:
+                logging.info("Resetting session variables to defaults")
+                session_vars = session_vars['default_session_vars']
+            except KeyError:
+                pass
+        else:
+            for var in template[key]:
+                try:
+                    if var.lower() == 'topic':
+                        session_vars[var.lower()] = 'NONE'
+                        logging.info("Reset 'topic' to 'NONE'")
+                    else:
+                        popped_value = session_vars.pop(var.lower())
+                        logging.info("Removed session variable '{}' with value '{}'".format(var.lower(),popped_value))
+                except KeyError:
+                    pass
     except:
         pass
     finally:

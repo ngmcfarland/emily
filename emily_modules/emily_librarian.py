@@ -78,24 +78,25 @@ def process_attribute(root,attribute,index,utterances,indexes,used_ids):
     # Get a new attribute id
     attribute_id,used_ids = generate_id(used_ids)
     attribute_type = get_attribute_type(root,attribute)
-    indexes[attribute_id] = {'type':attribute_type,'index':index}
-    if attribute_type == 'object':
-        if isinstance(attribute,basestring):
-            utterances.append({'key':attribute.lower(),'value':None,'pointer':attribute_id})
-        for child in root[attribute]:
-            child_type = get_attribute_type(root[attribute],child)
-            if child_type in ['string','bool','number']:
-                if not isinstance(root[attribute][child],int) and not isinstance(root[attribute][child],bool) and not isinstance(root[attribute][child],float):
-                    value = root[attribute][child].lower()
+    if attribute_type != 'pass':
+        indexes[attribute_id] = {'type':attribute_type,'index':index}
+        if attribute_type == 'object':
+            if isinstance(attribute,basestring):
+                utterances.append({'key':attribute.lower(),'value':None,'pointer':attribute_id})
+            for child in root[attribute]:
+                child_type = get_attribute_type(root[attribute],child)
+                if child_type in ['string','bool','number']:
+                    if not isinstance(root[attribute][child],int) and not isinstance(root[attribute][child],bool) and not isinstance(root[attribute][child],float):
+                        value = root[attribute][child].lower()
+                    else:
+                        value = str(root[attribute][child])
+                    utterances.append({'key':child.lower(),'value':value,'pointer':attribute_id})
                 else:
-                    value = str(root[attribute][child])
-                utterances.append({'key':child.lower(),'value':value,'pointer':attribute_id})
-            else:
-                utterances,indexes,used_ids = process_attribute(root[attribute],child,index+[child],utterances,indexes,used_ids)
-    elif attribute_type == 'array':
-        utterances.append({'key':attribute.lower(),'value':None,'pointer':attribute_id})
-        for i,child in enumerate(root[attribute]):
-            utterances,indexes,used_ids = process_attribute(root[attribute],i,index+[i],utterances,indexes,used_ids)
+                    utterances,indexes,used_ids = process_attribute(root[attribute],child,index+[child],utterances,indexes,used_ids)
+        elif attribute_type == 'array':
+            utterances.append({'key':attribute.lower(),'value':None,'pointer':attribute_id})
+            for i,child in enumerate(root[attribute]):
+                utterances,indexes,used_ids = process_attribute(root[attribute],i,index+[i],utterances,indexes,used_ids)
     return utterances,indexes,used_ids
 
 
@@ -110,6 +111,8 @@ def get_attribute_type(root,attribute):
         attribute_type = 'bool'
     elif isinstance(root[attribute],int) or isinstance(root[attribute],float):
         attribute_type = 'number'
+    else:
+        attribute_type = 'pass'
     return attribute_type
 
 

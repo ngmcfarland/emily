@@ -17,3 +17,7 @@ intent_command: null
 #   Emily will run the command and pass the user's input to your function. She will expect
 #   a string value in return, and use that value as the new input to pass to the brain files.
 preformat_command: null
+
+# For use with conversations. If a starting node is specified, Emily will begin the conversation
+#   with that node and continue from there.
+starting_node: null

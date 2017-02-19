@@ -8,6 +8,7 @@ def run(command):
     try:
         start_time = datetime.now()
         return_value = eval(command)
+        logging.debug("Ran Command: {}".format(command))
         result = {'success': True, 'response': return_value}
     except NameError, e:
         module = str(e).split("'")[1]
@@ -27,6 +28,7 @@ def re_run(command,module):
     try:
         exec("import {}".format(module))
         rerun_value = eval(command)
+        logging.debug("Ran Command: {}".format(command))
         return {'success': True, 'response': rerun_value}
     except:
         logging.error("Error running {} in {}".format(command,__file__))
