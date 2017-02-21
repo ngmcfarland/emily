@@ -13,32 +13,36 @@ import os
 def match_input(user_input,brain,session_vars,nodes=None,intent=None,noprint=False):
     if 'next_node' not in session_vars or session_vars['next_node'] is None:
         if intent:
-            intent_brain = brain[(brain.intent == intent) | (brain.intent == 'DEFAULT')]
+            intent_brain = [x for x in brain if x['intent'] in [intent,'DEFAULT']]
         else:
-            intent_brain = brain
-        if session_vars['topic'] != 'NONE':
-            match_topics = intent_brain[intent_brain.topic == session_vars['topic']]
-            match_patterns = match_topics[match_topics.apply(lambda x: fnmatch(user_input.upper(),x['pattern']),axis=1)]
-            if match_patterns.empty:
-                match_topics = intent_brain[intent_brain.topic == 'NONE']
-                match_patterns = match_topics[match_topics.apply(lambda x: fnmatch(user_input.upper(),x['pattern']),axis=1)]
+            intent_brain = list(brain)
+        match_patterns = match_input_by_topic(user_input=user_input,brain=intent_brain,topic=session_vars['topic'])
+        if session_vars['topic'] != 'NONE' and len(match_patterns) == 0:
+            match_patterns = match_input_by_topic(user_input=user_input,brain=intent_brain,topic='NONE')
+        if len(match_patterns) > 0:
+            match_object = sorted(match_patterns,key=lambda match: match['confidence'],reverse=True)[0]
+            logging.debug("Matched: {}".format(match_object['pattern']))
+            session_vars = variables.check_stars(pattern=match_object['pattern'],user_input=user_input,session_vars=session_vars)
+            response,session_vars = parse_template(template=match_object['template'],brain=intent_brain,session_vars=session_vars,user_input=user_input,nodes=nodes,noprint=noprint)
+            session_vars = variables.clear_stars(session_vars=session_vars)
         else:
-            match_topics = intent_brain[intent_brain.topic == 'NONE']
-            match_patterns = match_topics[match_topics.apply(lambda x: fnmatch(user_input.upper(),x['pattern']),axis=1)]
-        if match_patterns.empty:
-            response = "I'm sorry, I don't know what you're asking."
-            return response,session_vars
-        match_patterns['ratio'] = match_patterns.pattern.apply(fuzz.ratio,args=(user_input.upper(),))
-        match = match_patterns.loc[match_patterns.ratio.idxmax()]
-        logging.debug("Matched: {}".format(match.pattern))
-        session_vars = variables.check_stars(pattern=match.pattern,user_input=user_input,session_vars=session_vars)
-        response,session_vars = parse_template(template=match.template,brain=intent_brain,session_vars=session_vars,user_input=user_input,nodes=nodes,noprint=noprint)
-        session_vars = variables.clear_stars(session_vars=session_vars)
+            response = "I'm sorry, I don't know what you are asking."
     else:
         responses,session_vars = conversations.process_node(node=nodes[session_vars['next_node']],nodes=nodes,session_vars=session_vars,responses=[],user_input=user_input)
         # Right now, process_node returns a list of responses. May use this globally later, but for now, I'm just joining the responses to make one.
         response = " ".join(responses)
     return response,session_vars
+
+
+def match_input_by_topic(user_input,brain,topic):
+    matches = []
+    topic_brain = [x for x in brain if x['topic'].upper() == topic.upper()]
+    for topic in topic_brain:
+        if fnmatch(user_input.upper(),topic['pattern']):
+            match = dict(topic)
+            match['confidence'] = fuzz.ratio(topic['pattern'],user_input.upper())
+            matches.append(match)
+    return matches
 
 
 def parse_template(template,brain,session_vars,user_input,nodes=None,noprint=False):

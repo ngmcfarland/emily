@@ -1,6 +1,4 @@
-from pandas.io.json import json_normalize
 from fuzzywuzzy import fuzz
-import pandas as pd
 import run_command
 import logging
 import string
@@ -9,21 +7,23 @@ import sys
 import re
 import os
 
-pd.options.mode.chained_assignment = None  # default='warn'
 
 def load_data(brain_files=[]):
     brain_files = [file for file in brain_files if file.endswith('.json')]
     logging.info("Loading brain files: {}".format(brain_files))
-    brain = pd.DataFrame()
+    brain_count = len(brain_files)
+    brain = []
     conversations = {}
     for filename in brain_files:
         try:
             with open(filename,'r') as f:
                 data = json.loads(f.read())
-            temp_df = json_normalize(data['topics'],'categories',['topic'])
-            temp_df['intent'] = data['intent']
-            brain = brain.append(temp_df)
-            # load conversations
+            for topic in data['topics']:
+                for category in topic['categories']:
+                    brain.append({'intent':data['intent'],'topic':topic['topic'],'pattern':category['pattern'],'template':category['template']})
+                    if 'utterances' in category:
+                        for utterance in category['utterances']:
+                            brain.append({'intent':data['intent'],'topic':topic['topic'],'pattern':utterance,'template':category['template']})
             if 'conversations' in data:
                 conversations = get_conversations(data=data,conversations=conversations)
         except:
@@ -31,10 +31,8 @@ def load_data(brain_files=[]):
             logging.error("Failed to load {}".format(filename))
             print("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
             logging.error("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
-    if 'utterances' in brain.columns:
-        brain = expand_utterances(brain)
-    brain = brain.reset_index(drop=True)
-    logging.info("Loaded {} brain files".format(len(brain_files)))
+            brain_count -= 1
+    logging.info("Loaded {} brain files".format(brain_count))
     return brain,conversations
 
 
