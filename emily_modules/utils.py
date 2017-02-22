@@ -20,10 +20,15 @@ def load_data(brain_files=[]):
                 data = json.loads(f.read())
             for topic in data['topics']:
                 for category in topic['categories']:
-                    brain.append({'intent':data['intent'],'topic':topic['topic'],'pattern':category['pattern'],'template':category['template']})
+                    if 'node' in category['template'] and '.' not in category['template']['node']:
+                        category_template = dict(category['template'])
+                        category_template['node'] = "{}.{}".format(data['intent'].lower(),category['template']['node'])
+                    else:
+                        category_template = dict(category['template'])
+                    brain.append({'intent':data['intent'],'topic':topic['topic'],'pattern':category['pattern'],'template':category_template})
                     if 'utterances' in category:
                         for utterance in category['utterances']:
-                            brain.append({'intent':data['intent'],'topic':topic['topic'],'pattern':utterance,'template':category['template']})
+                            brain.append({'intent':data['intent'],'topic':topic['topic'],'pattern':utterance,'template':category_template})
             if 'conversations' in data:
                 conversations = get_conversations(data=data,conversations=conversations)
         except:
