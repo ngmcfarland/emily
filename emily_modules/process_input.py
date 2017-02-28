@@ -1,8 +1,6 @@
+from . import conversations,run_command,variables,utils
 from fuzzywuzzy import fuzz
 from fnmatch import fnmatch
-import conversations
-import run_command
-import variables
 import logging
 import random
 import sys
@@ -80,7 +78,7 @@ def parse_template(template,brain,session_vars,user_input,nodes=None,noprint=Fal
             session_vars = variables.reset_vars(session_vars,template,key='preset')
         if not noprint and 'presponse' in template:
             presponse = variables.replace_vars(session_vars,template['presponse'])
-            printlog(presponse,'EMILY',presponse=True)
+            utils.printlog(presponse,'EMILY',presponse=True)
         command_result = run_command.run(command)
         logging.debug("Command Result: {}".format(command_result))
         if 'vars' in template:
@@ -103,7 +101,7 @@ def parse_template(template,brain,session_vars,user_input,nodes=None,noprint=Fal
             session_vars = variables.reset_vars(session_vars,template,key='preset')
         if not noprint and 'presponse' in template:
             presponse = variables.replace_vars(session_vars,template['presponse'])
-            printlog(presponse,'EMILY',presponse=True)
+            utils.printlog(presponse,'EMILY',presponse=True)
         command_result = run_command.run(command)
         logging.debug("Command Result: {}".format(command_result))
         if 'vars' in template:

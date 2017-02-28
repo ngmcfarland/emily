@@ -1,16 +1,20 @@
-from conf import sessions_conf as config
 import decimal
 import random
 import json
+import yaml
 import sys
 import os
 
-source = config.source.upper()
+curdir = os.path.dirname(__file__)
+config_file = 'conf/sessions_conf.yaml'
+with open(os.path.join(curdir,config_file),'r') as f:
+    config = yaml.load(f.read())
+
+source = config['source'].upper()
 if source == 'DYNAMODB':
     import boto3
 
-curdir = os.path.dirname(__file__)
-vars_file = os.path.join(curdir, config.vars_file)
+vars_file = os.path.join(curdir, config['vars_file'])
 if not os.path.isfile(vars_file):
     with open(vars_file,'w') as f:
         f.write(json.dumps({}))
@@ -43,8 +47,8 @@ def get_session_vars(session_id):
         finally:
             return session_vars
     elif source == 'DYNAMODB':
-        dynamodb = boto3.resource("dynamodb", region_name=config.region)
-        table = dynamodb.Table(config.dynamo_table)
+        dynamodb = boto3.resource("dynamodb", region_name=config['region'])
+        table = dynamodb.Table(config['dynamo_table'])
         try:
             response = table.get_item(Key={'session_id': session_id})
         except ClientError as e:
@@ -58,7 +62,7 @@ def get_session_vars(session_id):
         finally:
             return session_vars
     else:
-        print("ERROR: Unrecognized source: {}".format(config.source))
+        print("ERROR: Unrecognized source: {}".format(source))
         return {}
 
 
@@ -72,8 +76,8 @@ def set_session_vars(session_id,session_vars):
     elif source == 'DYNAMODB':
         # Check if session_id already exists
         old_session_vars = get_session_vars(session_id)
-        dynamodb = boto3.resource("dynamodb", region_name=config.region)
-        table = dynamodb.Table(config.dynamo_table)
+        dynamodb = boto3.resource("dynamodb", region_name=config['region'])
+        table = dynamodb.Table(config['dynamo_table'])
         if len(old_session_vars) > 0:
             # perform an update
             try:
@@ -94,7 +98,7 @@ def set_session_vars(session_id,session_vars):
             except ClientError as e:
                 print(e.response['Error']['Message'])
     else:
-        print("ERROR: Unrecognized source: {}".format(config.source))
+        print("ERROR: Unrecognized source: {}".format(source))
 
 
 def create_new_session(default_session_vars=None):
@@ -111,11 +115,11 @@ def create_new_session(default_session_vars=None):
         if default_session_vars:
             set_session_vars(session_id=session_id,session_vars=default_session_vars)
         else:
-            set_session_vars(session_id=session_id,session_vars=config.default_session_vars)
+            set_session_vars(session_id=session_id,session_vars=config['default_session_vars'])
         return session_id
     elif source == 'DYNAMODB':
-        dynamodb = boto3.resource("dynamodb", region_name=config.region)
-        table = dynamodb.Table(config.dynamo_table)
+        dynamodb = boto3.resource("dynamodb", region_name=config['region'])
+        table = dynamodb.Table(config['dynamo_table'])
         try:
             response = table.scan(ProjectionExpression='session_id')
         except ClientError as e:
@@ -132,15 +136,15 @@ def create_new_session(default_session_vars=None):
                 # If generated session id already in use, get another
                 session_id = get_random_session_id()
             # Set default session vars using new id
-            set_session_vars(session_id=session_id,session_vars=config.default_session_vars)
+            set_session_vars(session_id=session_id,session_vars=config['default_session_vars'])
             return session_id
     else:
-        print("ERROR: Unrecognized source: {}".format(config.source))
+        print("ERROR: Unrecognized source: {}".format(source))
         return None
 
 
 def get_random_session_id():
-    return random.randint(config.min_id,config.max_id)
+    return random.randint(config['min_id'],config['max_id'])
 
 
 def remove_session(session_id):
@@ -151,11 +155,11 @@ def remove_session(session_id):
         with open(vars_file,'w') as f:
             f.write(json.dumps(all_session_vars))
     elif source == 'DYNAMODB':
-        dynamodb = boto3.resource("dynamodb", region_name=config.region)
-        table = dynamodb.Table(config.dynamo_table)
+        dynamodb = boto3.resource("dynamodb", region_name=config['region'])
+        table = dynamodb.Table(config['dynamo_table'])
         try:
             response = table.delete_item(Key={'session_id':session_id})
         except ClientError as e:
             print(e.response['Error']['Message'])
     else:
-        print("ERROR: Unrecognized source: {}".format(config.source))
+        print("ERROR: Unrecognized source: {}".format(source))

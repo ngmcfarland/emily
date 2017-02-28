@@ -1,6 +1,6 @@
 from fuzzywuzzy import fuzz
+from . import utils
 import string
-import utils
 import json
 import sys
 import re

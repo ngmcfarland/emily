@@ -1,5 +1,5 @@
-from fuzzywuzzy import process
-from fuzzywuzzy import fuzz
+from fuzzywuzzy import fuzz,process
+from six import string_types
 from fnmatch import fnmatch
 import random
 import string
@@ -81,7 +81,7 @@ def process_attribute(root,attribute,index,utterances,indexes,used_ids):
     if attribute_type != 'pass':
         indexes[attribute_id] = {'type':attribute_type,'index':index}
         if attribute_type == 'object':
-            if isinstance(attribute,basestring):
+            if isinstance(attribute,string_types):
                 utterances.append({'key':attribute.lower(),'value':None,'pointer':attribute_id})
             for child in root[attribute]:
                 child_type = get_attribute_type(root[attribute],child)
@@ -105,7 +105,7 @@ def get_attribute_type(root,attribute):
         attribute_type = 'object'
     elif isinstance(root[attribute],list):
         attribute_type = 'array'
-    elif isinstance(root[attribute],basestring):
+    elif isinstance(root[attribute],string_types):
         attribute_type = 'string'
     elif isinstance(root[attribute],bool):
         attribute_type = 'bool'

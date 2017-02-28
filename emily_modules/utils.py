@@ -1,5 +1,5 @@
 from fuzzywuzzy import fuzz
-import run_command
+from . import run_command
 import logging
 import string
 import json
@@ -82,7 +82,12 @@ def init_logging(log_file,logging_level,already_started=False):
 def remove_punctuation(input_string):
     # string.punctuation evaluates to:
     #   !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
-    return str(input_string).translate(string.maketrans("",""),string.punctuation)
+    # Compatibility with Python 2.x and 3.x
+    if sys.version_info >= (3,0):
+        result = str(input_string).translate(str.maketrans("","",string.punctuation))
+    else:
+        result = str(input_string).translate(string.maketrans("",""),string.punctuation)
+    return result
 
 
 def printlog(response,speaker,presponse=False,noprint=False):

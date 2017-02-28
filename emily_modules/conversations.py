@@ -1,34 +1,10 @@
-import yes_no_parser
-import run_command
+from . import yes_no_parser,run_command
 import logging
 import random
 import json
 import sys
 import re
 import os
-
-
-def main():
-    session_vars = {}
-    conversation_file = 'sports.json'
-    starting_node = 'greeting'
-    with open(conversation_file,'r') as f:
-        conversation_data = json.loads(f.read())
-    brain = conversation_data['conversations']
-    responses,session_vars = process_node(node=brain[starting_node],brain=brain,session_vars=session_vars,responses=[])
-    while True:
-        print("\n")
-        for response in responses:
-            print("{}>  {}\n".format('Emily'.ljust(10),response))
-        if session_vars['next_node'] is None:
-            print("\n{}>  Bye!\n".format('Emily'.ljust(10)))
-            break
-        user_input = raw_input("{}>  ".format('User'.ljust(10)))
-        if user_input.upper() in ['QUIT','Q','EXIT','BYE']:
-            print("\n{}>  Bye!\n".format('Emily'.ljust(10)))
-            break
-        responses,session_vars = process_node(node=brain[session_vars['next_node']],nodes=brain,session_vars=session_vars,responses=[],user_input=user_input)
-            
 
 
 def process_node(node,nodes,session_vars,responses,user_input=None):
@@ -115,7 +91,3 @@ def process_node(node,nodes,session_vars,responses,user_input=None):
         response = "Unrecognized node_type: {}".format(node['node_type'])
         responses.append(response)
     return responses,session_vars
-
-
-if __name__ == '__main__':
-    main()

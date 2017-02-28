@@ -15,9 +15,12 @@ def check_stars(pattern,user_input,session_vars):
 
 
 def clear_stars(session_vars):
-    for key in session_vars.keys():
+    pop_these = []
+    for key in session_vars:
         if re.search(r"star\d*",key):
-            null = session_vars.pop(key)
+            pop_these.append(key)
+    for key in pop_these:
+        null = session_vars.pop(key)
     return session_vars
 
 

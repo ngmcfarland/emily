@@ -2,6 +2,8 @@ from emily_modules import sessions,variables,process_input,utils,run_command,sen
 from flask_cors import CORS,cross_origin
 from flask import Flask,request
 from datetime import datetime
+from six import string_types
+from six.moves import input
 import threading
 import logging
 import socket
@@ -44,7 +46,7 @@ class Emily(threading.Thread):
                 brain_files = ["{}/{}".format(brain_dir,file) for file in os.listdir(brain_dir)]
                 brain_files += more_brains
             self.brain,self.nodes = utils.load_data(brain_files=brain_files)
-        except socket.error,err:
+        except socket.error as err:
             if err.errno == 48:
                 logging = utils.init_logging(log_file=os.path.join(curdir,config['log_file']),logging_level=config['logging_level'],already_started=True)
                 logging.debug("Emily already started")
@@ -65,7 +67,7 @@ class Emily(threading.Thread):
             while True:
                 c,addr = self.s.accept()
                 user_input = c.recv(4096)
-                user_input = json.loads(user_input)
+                user_input = json.loads(user_input.decode())
                 utils.printlog(response=user_input['message'],speaker='USER')
                 emily_start_time = datetime.now()
                 session_id = user_input['session_id']
@@ -77,7 +79,7 @@ class Emily(threading.Thread):
                 intent,new_input = utils.apply_input_filters(user_input=str(user_input['message']),intent_command=config['intent_command'],preformat_command=config['preformat_command'])
                 response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),brain=self.brain,session_vars=session_vars,nodes=self.nodes,intent=intent,noprint=True)
                 utils.printlog(response=response,speaker='EMILY',noprint=True)
-                c.send(json.dumps({'response':response,'session_id':session_id}))
+                c.send(json.dumps({'response':response,'session_id':session_id}).encode())
                 c.close()
 
                 emily_response_time = datetime.now() - emily_start_time
@@ -101,9 +103,9 @@ class Emily(threading.Thread):
         new_s = socket.socket()
         port = config['emily_port']
         new_s.connect(('localhost',port))
-        new_s.send(json.dumps({'message':message,'session_id':session_id}))
+        new_s.send(json.dumps({'message':message,'session_id':session_id}).encode())
         response = new_s.recv(4096)
-        response = json.loads(response)
+        response = json.loads(response.decode())
         new_s.close()
         return response['response'],response['session_id']
 
@@ -135,7 +137,7 @@ def chat():
             session_id = None
             response = 'Please include session ID in request. Session ID can be obtained by performing a GET against /get_session'
         else:
-            session_id = int(content['session_id']) if isinstance(content['session_id'],basestring) else content['session_id']
+            session_id = int(content['session_id']) if isinstance(content['session_id'],string_types) else content['session_id']
             message = content['message']
             response,session_id = send_message.send(message=message,session_id=session_id)
         response = json.dumps({'response':response,'session_id':session_id})
@@ -144,7 +146,7 @@ def chat():
             response = 'Please include session ID in request. Session ID can be obtained by performing a GET against /get_session'
         else:
             session_id = request.form['session_id']
-            if isinstance(session_id,basestring):
+            if isinstance(session_id,string_types):
                 session_id = int(session_id)
             message = request.form['message']
             response,session_id = send_message.send(message=message,session_id=session_id)
@@ -154,7 +156,7 @@ def chat():
 def start_emily(more_brains=[],disable_emily_defaults=False,**alt_config):
     session = Emily(more_brains=more_brains,disable_emily_defaults=disable_emily_defaults,**alt_config)
     session.start()
-    app.run(debug=True)
+    return app
 
 
 def chat():
@@ -168,7 +170,7 @@ def chat():
     print("")
     while True:
         username = session_vars['name'] if 'name' in session_vars else 'User'
-        user_input = raw_input('{}>  '.format(username.ljust(10)))
+        user_input = input('{}>  '.format(username.ljust(10)))
         utils.printlog(response=user_input,speaker='USER')
         emily_start_time = datetime.now()
         # Apply optional filters before sending to brain
