@@ -6,18 +6,7 @@ import sys
 import os
 
 curdir = os.path.dirname(__file__)
-config_file = 'conf/sessions_conf.yaml'
-with open(os.path.join(curdir,config_file),'r') as f:
-    config = yaml.load(f.read())
 
-source = config['source'].upper()
-if source == 'DYNAMODB':
-    import boto3
-
-vars_file = os.path.join(curdir, config['vars_file'])
-if not os.path.isfile(vars_file):
-    with open(vars_file,'w') as f:
-        f.write(json.dumps({}))
 
 # Helper class to convert a DynamoDB item to JSON.
 class DecimalEncoder(json.JSONEncoder):
@@ -30,15 +19,23 @@ class DecimalEncoder(json.JSONEncoder):
         return super(DecimalEncoder, self).default(o)
 
 
-def get_session_count():
-    with open(vars_file,'r') as f:
+def init_config(session_vars_path):
+    file_path = os.path.join(curdir,session_vars_path)
+    if not os.path.isfile(file_path):
+        with open(file_path,'w') as f:
+            f.write(json.dumps({}))
+
+
+def get_session_count(session_vars_path):
+    with open(os.path.join(curdir,session_vars_path),'r') as f:
         all_session_vars = json.loads(f.read())
     return len(all_session_vars)
 
 
-def get_session_vars(session_id):
-    if source == 'LOCAL':
-        with open(vars_file,'r') as f:
+def get_session_vars(session_id,source,session_vars_path,region='us-east-1'):
+    if source.upper() == 'LOCAL':
+        init_config(session_vars_path=session_vars_path)
+        with open(os.path.join(curdir,session_vars_path),'r') as f:
             all_session_vars = json.loads(f.read())
         try:
             session_vars = all_session_vars[str(session_id)]
@@ -46,9 +43,11 @@ def get_session_vars(session_id):
             session_vars = {}
         finally:
             return session_vars
-    elif source == 'DYNAMODB':
-        dynamodb = boto3.resource("dynamodb", region_name=config['region'])
-        table = dynamodb.Table(config['dynamo_table'])
+    elif source.upper() == 'DYNAMODB':
+        if 'boto3' not in sys.modules:
+            import boto3
+        dynamodb = boto3.resource("dynamodb", region_name=region.lower())
+        table = dynamodb.Table(session_vars_path)
         try:
             response = table.get_item(Key={'session_id': session_id})
         except ClientError as e:
@@ -66,18 +65,21 @@ def get_session_vars(session_id):
         return {}
 
 
-def set_session_vars(session_id,session_vars):
-    if source == 'LOCAL':
-        with open(vars_file,'r') as f:
+def set_session_vars(session_id,session_vars,source,session_vars_path,region='us-east-1'):
+    if source.upper() == 'LOCAL':
+        init_config(session_vars_path=session_vars_path)
+        with open(os.path.join(curdir,session_vars_path),'r') as f:
             all_session_vars = json.loads(f.read())
         all_session_vars[str(session_id)] = session_vars
-        with open(vars_file,'w') as f:
+        with open(os.path.join(curdir,session_vars_path),'w') as f:
             f.write(json.dumps(all_session_vars))
-    elif source == 'DYNAMODB':
+    elif source.upper() == 'DYNAMODB':
+        if 'boto3' not in sys.modules:
+            import boto3
         # Check if session_id already exists
-        old_session_vars = get_session_vars(session_id)
-        dynamodb = boto3.resource("dynamodb", region_name=config['region'])
-        table = dynamodb.Table(config['dynamo_table'])
+        old_session_vars = get_session_vars(session_id=session_id,source=source,session_vars_path=session_vars_path,region=region)
+        dynamodb = boto3.resource("dynamodb", region_name=region.lower())
+        table = dynamodb.Table(session_vars_path)
         if len(old_session_vars) > 0:
             # perform an update
             try:
@@ -101,10 +103,11 @@ def set_session_vars(session_id,session_vars):
         print("ERROR: Unrecognized source: {}".format(source))
 
 
-def create_new_session(default_session_vars=None):
+def create_new_session(default_session_vars,source,session_vars_path,region='us-east-1'):
     # Identify used session ids
-    if source == 'LOCAL':
-        with open(vars_file,'r') as f:
+    if source.upper() == 'LOCAL':
+        init_config(session_vars_path=session_vars_path)
+        with open(os.path.join(curdir,session_vars_path),'r') as f:
             all_session_vars = json.loads(f.read())
         used_session_ids = all_session_vars.keys()
         session_id = get_random_session_id()
@@ -112,14 +115,13 @@ def create_new_session(default_session_vars=None):
             # If generated session id already in use, get another
             session_id = get_random_session_id()
         # Set default session vars using new id
-        if default_session_vars:
-            set_session_vars(session_id=session_id,session_vars=default_session_vars)
-        else:
-            set_session_vars(session_id=session_id,session_vars=config['default_session_vars'])
+        set_session_vars(session_id=session_id,session_vars=default_session_vars,source=source,session_vars_path=session_vars_path,region=region)
         return session_id
-    elif source == 'DYNAMODB':
-        dynamodb = boto3.resource("dynamodb", region_name=config['region'])
-        table = dynamodb.Table(config['dynamo_table'])
+    elif source.upper() == 'DYNAMODB':
+        if 'boto3' not in sys.modules:
+            import boto3
+        dynamodb = boto3.resource("dynamodb", region_name=region.lower())
+        table = dynamodb.Table(session_vars_path)
         try:
             response = table.scan(ProjectionExpression='session_id')
         except ClientError as e:
@@ -136,27 +138,30 @@ def create_new_session(default_session_vars=None):
                 # If generated session id already in use, get another
                 session_id = get_random_session_id()
             # Set default session vars using new id
-            set_session_vars(session_id=session_id,session_vars=config['default_session_vars'])
+            set_session_vars(session_id=session_id,session_vars=default_session_vars,source=source,session_vars_path=session_vars_path,region=region)
             return session_id
     else:
         print("ERROR: Unrecognized source: {}".format(source))
         return None
 
 
-def get_random_session_id():
-    return random.randint(config['min_id'],config['max_id'])
+def get_random_session_id(min_id=10000,max_id=99999):
+    return random.randint(min_id,max_id)
 
 
-def remove_session(session_id):
-    if source == 'LOCAL':
-        with open(vars_file,'r') as f:
+def remove_session(session_id,source,session_vars_path,region='us-east-1'):
+    if source.upper() == 'LOCAL':
+        init_config(session_vars_path=session_vars_path)
+        with open(os.path.join(curdir,session_vars_path),'r') as f:
             all_session_vars = json.loads(f.read())
         all_session_vars.pop(str(session_id))
-        with open(vars_file,'w') as f:
+        with open(os.path.join(curdir,session_vars_path),'w') as f:
             f.write(json.dumps(all_session_vars))
-    elif source == 'DYNAMODB':
-        dynamodb = boto3.resource("dynamodb", region_name=config['region'])
-        table = dynamodb.Table(config['dynamo_table'])
+    elif source.upper() == 'DYNAMODB':
+        if 'boto3' not in sys.modules:
+            import boto3
+        dynamodb = boto3.resource("dynamodb", region_name=region.lower())
+        table = dynamodb.Table(session_vars_path)
         try:
             response = table.delete_item(Key={'session_id':session_id})
         except ClientError as e:
