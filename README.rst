@@ -2,6 +2,30 @@
 Emily
 =====
 
+Emily is a fully functional chatbot platform built in Python. Emily can be customized and controlled using `brain files`_ written in a simple JSON structure, and can also be configured to run your own custom Python code.
+
+.. _brain files: brain/README.rst
+
+Requirements
+============
+
+- Python 2.7 or later
+- `fuzzywuzzy <https://github.com/seatgeek/fuzzywuzzy>`_ - Fuzzy string matching
+    - Uses `python-Levenshtein <https://github.com/miohtama/python-Levenshtein>`_
+- `Flask <https://github.com/pallets/flask>`_ - Web Server Microframework in Python
+
+Installation
+============
+
+Using PIP
+
+.. code-block:: bash
+
+    $ pip install emily
+
+Usage
+=====
+
 Command Line Example:
 ---------------------
 

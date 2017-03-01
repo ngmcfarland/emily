@@ -1,0 +1,104 @@
+{
+  "intent": "sports",
+  "topics": [
+    {
+      "topic": "NONE",
+      "categories": [
+        {
+          "pattern": "ASK ME ABOUT SPORTS",
+          "template": {
+            "type": "C",
+            "node": "greeting"
+          }
+        }
+      ]
+    }
+  ],
+  "conversations": {
+    "greeting": {
+      "node_type": "response",
+      "responses": [
+        "Hey there!",
+        "Hi!",
+        "Hello!"
+      ],
+      "error_node": "catch_all",
+      "next_node": "do_you_like_sports"
+    },
+    "do_you_like_sports": {
+      "node_type": "response",
+      "responses": [
+        "Do you like sports?",
+        "Are you a fan of sports?"
+      ],
+      "error_node": "catch_all",
+      "next_node": "check_like_sports"
+    },
+    "check_like_sports": {
+      "node_type": "yes_no_logic",
+      "error_node": "catch_all",
+      "yes_node": "what_team",
+      "yes_prime_node": "check_sport",
+      "no_node": "nice_chatting",
+      "no_prime_node": "nice_chatting",
+      "unknown_node": "nice_chatting"
+    },
+    "what_team": {
+      "node_type": "response",
+      "responses": [
+        "What team do you like?",
+        "What is your favorite team?"
+      ],
+      "error_node": "catch_all",
+      "next_node": "check_sport"
+    },
+    "check_sport": {
+      "node_type": "string_logic",
+      "command": "sports.get_sport('{user_input}')",
+      "error_node": "catch_all",
+      "baseball": "baseball_response",
+      "football": "football_response",
+      "unknown_node": "mark_unknown_team"
+    },
+    "baseball_response": {
+      "node_type": "response",
+      "responses": [
+        "The {team} are a great baseball team!",
+        "I love watching the {team} play baseball!"
+      ],
+      "error_node": "catch_all"
+    },
+    "football_response": {
+      "node_type": "response",
+      "responses": [
+        "The {team} are great at football!"
+      ],
+      "error_node": "catch_all"
+    },
+    "mark_unknown_team": {
+      "node_type": "simple_logic",
+      "command": "sports.mark_unknown('{team}')",
+      "error_node": "catch_all",
+      "next_node": "unknown_team_response"
+    },
+    "unknown_team_response": {
+      "node_type": "response",
+      "responses": [
+        "I've never heard of the {team}. I'll have to check them out!"
+      ],
+      "error_node": "catch_all"
+    },
+    "nice_chatting": {
+      "node_type": "response",
+      "responses": [
+        "Well, it was nice chatting!"
+      ]
+    },
+    "catch_all": {
+      "node_type": "error",
+      "response": [
+        "Something went wrong in my coversation flow..."
+      ]
+    }
+  }
+}

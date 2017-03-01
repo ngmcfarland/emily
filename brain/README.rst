@@ -96,7 +96,7 @@ Templates direct Emily on how to respond when a pattern or utterance is matched.
  E       Choose random template from array         "responses"                          personality.json - "TELL ME A JOKE"
  WU      Run command, then redirect to pattern     "presponse", "command", "redirect"   While supported, this functionality better achieved through conversations.
  Y       Choose response based on variable value   "var", "conditions", "fallback"      basic_chat.json - "WHAT IS MY NAME"
- C       Start a conversation                      "node"                               None
+ C       Start a conversation                      "node"                               sports.json - "ASK ME ABOUT SPORTS"
 ======= ========================================= ==================================== ============================================================================
 
 ============ ============= ==========================================================================================================================
@@ -201,6 +201,8 @@ Topics, patterns, and templates are useful for intelligently responding to a wid
 Conversations create a simple way of defining a flow of questions and responses which can mimic natural speech. They allow Emily to easily go deeper on one subject without losing context or getting confused.
 
   *When writing a brain file, use topics to go wide, and conversations to go deep.*
+
+For an example of conversations, look at the "sports.json" brain file and the "sports.py" module in emily/emily_modules.
 
 Nodes
 ~~~~~
