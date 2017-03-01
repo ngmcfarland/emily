@@ -92,6 +92,18 @@ The sample brain files included with Emily provide a good introduction to Emily'
               "command": "my_submodule.my_function()",
               "response": "Run function and print result here: {{}}"
             }
+          },
+          {
+            "pattern": "QUIT",
+            "template": {
+              "type": "V",
+              "response": "Bye!"
+            },
+            "utterances": [
+              "EXIT",
+              "Q",
+              "BYE"
+            ]
           }
         ]
       }
@@ -145,6 +157,23 @@ The sample brain files included with Emily provide a good introduction to Emily'
 
     if __name__ == '__main__':
         chatbot(*sys.argv[1:]) if len(sys.argv) > 1 else chatbot()
+
+**Example Run**
+
+.. code-block:: bash
+
+  $ python my_module.py chat
+  User >  When I say this
+
+  Emily >  You say this
+
+  User >  but when I say this
+
+  Emily >  Run function and print result here: The Result
+
+  User >  exit
+
+  Emily >  Bye!
 
 Configuration Options
 ---------------------
