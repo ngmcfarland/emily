@@ -158,6 +158,7 @@ def chat():
 def start_emily(more_brains=[],disable_emily_defaults=False,**alt_config):
     session = Emily(more_brains=more_brains,disable_emily_defaults=disable_emily_defaults,**alt_config)
     session.start()
+    print("Web Server Started...")
     return app
 
 
@@ -198,4 +199,5 @@ if __name__ == '__main__':
     elif len(sys.argv) == 2:
         start_emily(sys.argv[1])
     else:
-        start_emily()
+        application = start_emily()
+        application.run()
