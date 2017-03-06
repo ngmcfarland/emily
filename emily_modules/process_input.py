@@ -9,27 +9,33 @@ import os
 
 
 def match_input(user_input,brain,session_vars,nodes=None,intent=None,noprint=False):
-    if 'next_node' not in session_vars or session_vars['next_node'] is None:
-        if intent:
-            intent_brain = [x for x in brain if x['intent'] in [intent,'DEFAULT']]
+    try:
+        if 'next_node' not in session_vars or session_vars['next_node'] is None:
+            if intent:
+                intent_brain = [x for x in brain if x['intent'] in [intent,'DEFAULT']]
+            else:
+                intent_brain = list(brain)
+            match_patterns = match_input_by_topic(user_input=user_input,brain=intent_brain,topic=session_vars['topic'])
+            if session_vars['topic'] != 'NONE' and len(match_patterns) == 0:
+                match_patterns = match_input_by_topic(user_input=user_input,brain=intent_brain,topic='NONE')
+            if len(match_patterns) > 0:
+                match_object = sorted(match_patterns,key=lambda match: match['confidence'],reverse=True)[0]
+                logging.debug("Matched: {}".format(match_object['pattern']))
+                session_vars = variables.check_stars(pattern=match_object['pattern'],user_input=user_input,session_vars=session_vars)
+                response,session_vars = parse_template(template=match_object['template'],brain=intent_brain,session_vars=session_vars,user_input=user_input,nodes=nodes,noprint=noprint)
+                session_vars = variables.clear_stars(session_vars=session_vars)
+            else:
+                response = "I'm sorry, I don't know what you are asking."
         else:
-            intent_brain = list(brain)
-        match_patterns = match_input_by_topic(user_input=user_input,brain=intent_brain,topic=session_vars['topic'])
-        if session_vars['topic'] != 'NONE' and len(match_patterns) == 0:
-            match_patterns = match_input_by_topic(user_input=user_input,brain=intent_brain,topic='NONE')
-        if len(match_patterns) > 0:
-            match_object = sorted(match_patterns,key=lambda match: match['confidence'],reverse=True)[0]
-            logging.debug("Matched: {}".format(match_object['pattern']))
-            session_vars = variables.check_stars(pattern=match_object['pattern'],user_input=user_input,session_vars=session_vars)
-            response,session_vars = parse_template(template=match_object['template'],brain=intent_brain,session_vars=session_vars,user_input=user_input,nodes=nodes,noprint=noprint)
-            session_vars = variables.clear_stars(session_vars=session_vars)
-        else:
-            response = "I'm sorry, I don't know what you are asking."
-    else:
-        responses,session_vars = conversations.process_node(node=nodes[session_vars['next_node']],nodes=nodes,session_vars=session_vars,responses=[],user_input=user_input)
-        # Right now, process_node returns a list of responses. May use this globally later, but for now, I'm just joining the responses to make one.
-        response = " ".join(responses)
-    return response,session_vars
+            responses,session_vars = conversations.process_node(node_tag=session_vars['next_node'],nodes=nodes,session_vars=session_vars,responses=[],user_input=user_input)
+            # Right now, process_node returns a list of responses. May use this globally later, but for now, I'm just joining the responses to make one.
+            response = " ".join(responses)
+    except:
+        logging.error("{}".format(sys.exc_info()[0]))
+        logging.error("{}".format(sys.exc_info()[1]))
+        response = "I'm sorry, I don't know what you are asking."
+    finally:
+        return response,session_vars
 
 
 def match_input_by_topic(user_input,brain,topic):
@@ -142,7 +148,7 @@ def parse_template(template,brain,session_vars,user_input,nodes=None,noprint=Fal
             session_vars = variables.reset_vars(session_vars,template,key='preset')
         next_node = variables.replace_vars(session_vars,template['node'])
         logging.info("Directing to conversation node: {}".format(next_node))
-        responses,session_vars = conversations.process_node(node=nodes[next_node],nodes=nodes,session_vars=session_vars,responses=[],user_input=user_input)
+        responses,session_vars = conversations.process_node(node_tag=next_node,nodes=nodes,session_vars=session_vars,responses=[],user_input=user_input)
         # Right now, process_node returns a list of responses. May use this globally later, but for now, I'm just joining the responses to make one.
         response = " ".join(responses)
         if 'reset' in template:
