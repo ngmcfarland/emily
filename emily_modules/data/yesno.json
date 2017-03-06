@@ -9,6 +9,9 @@
   {"alias": "NAH", "meaning": "NO"},
   {"alias": "NOT", "meaning": "NO"},
   {"alias": "NAH", "meaning": "NO"},
+  {"alias": "NOT QUITE", "meaning": "NO"},
+  {"alias": "I DONT THINK SO", "meaning": "NO"},
+  {"alias": "NOT REALLY", "meaning": "NO"},
   {"alias": "YES", "meaning": "YES"},
   {"alias": "YEA", "meaning": "YES"},
   {"alias": "YEAH", "meaning": "YES"},
@@ -33,5 +36,6 @@
   {"alias": "YA", "meaning": "YES"},
   {"alias": "CORRECT", "meaning": "YES"},
   {"alias": "EXACTLY", "meaning": "YES"},
-  {"alias": "LOOKS GOOD", "meaning": "YES"}
+  {"alias": "LOOKS GOOD", "meaning": "YES"},
+  {"alias": "I THINK SO", "meaning": "YES"}
 ]}
