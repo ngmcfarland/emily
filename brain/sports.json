@@ -97,7 +97,7 @@
     "catch_all": {
       "node_type": "error",
       "response": [
-        "Something went wrong in my coversation flow..."
+        "Something went wrong in my conversation flow..."
       ]
     }
   }
