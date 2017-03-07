@@ -46,11 +46,12 @@ def process_node(node_tag,nodes,session_vars,responses,user_input=None):
         result = run_command.run(command)
         command_response = result['response']
         if result['success']:
-            for var in command_response:
-                if isinstance(command_response[var],dict):
-                    session_vars[var] = json.dumps(command_response[var])
-                else:
-                    session_vars[var] = command_response[var]
+            if isinstance(command_response,dict):
+                for var in command_response:
+                    if isinstance(command_response[var],dict):
+                        session_vars[var] = json.dumps(command_response[var])
+                    else:
+                        session_vars[var] = command_response[var]
             responses,session_vars = process_node(node_tag=node['next_node'],nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
         else:
             if 'error_node' in node:
