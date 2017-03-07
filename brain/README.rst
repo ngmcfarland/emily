@@ -4,7 +4,7 @@ Brain Files
 
 Emily's brain files are configuration files that help drive her ability to answer questions and perform actions.
 Emily can parse and understand both JSON and YAML brain files. The YAML syntax is easier for a human to read and write, and the JSON syntax is easier generate using code.
-Both syntaxes have the same parameters, and can access the same features.
+Both syntaxes have the same parameters, and can access the same features. Sample code in this document will use the JSON syntax.
 
 Structure
 ---------
@@ -93,7 +93,7 @@ Example YAML brain file structure:
 Intents
 -------
 
-By convention, intents are the uppercase equivalent of the brain file name. If "intent_command" is specified in Emily's settings, Emily will attempt to match the result string from the intent command to the intent of one of her brain files. More info <here>.
+By convention, intents are the uppercase equivalent of the brain file name. If "intent_command" is specified in Emily's settings, Emily will attempt to match the result string from the intent command to the intent of one of her brain files.
 
 Topics
 ------
@@ -131,7 +131,7 @@ Templates direct Emily on how to respond when a pattern or utterance is matched.
  V       Direct response                           "response"                           basic_chat.json - "HELLO"
  U       Redirect to different pattern             "redirect"                           Primarily used for re-formatting user input
  W       Run command                               "presponse", "command", "response"   time_and_date.json - "CURRENT TIME"
- E       Choose random template from array         "responses"                          personality.json - "TELL ME A JOKE"
+ E       Choose random template from array         "responses"                          jokes.yaml - "TELL ME A JOKE"
  WU      Run command, then redirect to pattern     "presponse", "command", "redirect"   While supported, this functionality better achieved through conversations.
  Y       Choose response based on variable value   "var", "conditions", "fallback"      basic_chat.json - "WHAT IS MY NAME"
  C       Start a conversation                      "node"                               sports.json - "ASK ME ABOUT SPORTS"
@@ -245,7 +245,7 @@ For an example of conversations, look at the "sports.json" brain file and the "s
 Nodes
 ~~~~~
 
-The "conversations" attribute in the brain file is a JSON object containing conversation nodes. Each node has a unique key by which it is referenced.
+The "conversations" attribute in the brain file is a JSON or YAML object containing conversation nodes. Each node has a unique key by which it is referenced.
 
 The values chosen for node keys are irrelevant save for the fact that they must be unique *within that brain file*. Randomly generated keys can be used, but it is recommended that logical key values be used for human readability.
 
