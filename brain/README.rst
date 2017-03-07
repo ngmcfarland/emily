@@ -57,6 +57,8 @@ Example JSON brain file structure:
     }
   }
 
+Example YAML brain file structure:
+
 .. code-block:: yaml
 
   intent: example
