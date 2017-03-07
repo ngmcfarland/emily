@@ -3,21 +3,26 @@ from . import run_command
 import logging
 import string
 import json
+import yaml
 import sys
 import re
 import os
 
 
 def load_data(brain_files=[]):
-    brain_files = [file for file in brain_files if file.endswith('.json')]
+    brain_files = [file for file in brain_files if file.lower().endswith('.json') or file.lower().endswith('.yaml')]
     logging.info("Loading brain files: {}".format(brain_files))
     brain_count = len(brain_files)
     brain = []
     conversations = {}
     for filename in brain_files:
         try:
-            with open(filename,'r') as f:
-                data = json.loads(f.read())
+            if filename.lower().endswith('.json'):
+                with open(filename,'r') as f:
+                    data = json.loads(f.read())
+            elif filename.lower().endswith('.yaml'):
+                with open(filename,'r') as f:
+                    data = yaml.load(f.read())
             for topic in data['topics']:
                 for category in topic['categories']:
                     if 'node' in category['template'] and '.' not in category['template']['node']:
@@ -25,6 +30,10 @@ def load_data(brain_files=[]):
                         category_template['node'] = "{}.{}".format(data['intent'].lower(),category['template']['node'])
                     else:
                         category_template = dict(category['template'])
+                    if category_template['type'] == 'E':
+                        for i,template in enumerate(category_template['responses']):
+                            if 'node' in template and '.' not in template['node']:
+                                category_template['responses'][i]['node'] = "{}.{}".format(data['intent'].lower(),template['node'])
                     brain.append({'intent':data['intent'],'topic':topic['topic'],'pattern':category['pattern'],'template':category_template})
                     if 'utterances' in category:
                         for utterance in category['utterances']:
