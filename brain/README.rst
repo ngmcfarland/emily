@@ -2,17 +2,19 @@
 Brain Files
 ===========
 
-Emily's brain files are JSON files that help drive her ability to answer questions and perform actions.
+Emily's brain files are configuration files that help drive her ability to answer questions and perform actions.
+Emily can parse and understand both JSON and YAML brain files. The YAML syntax is easier for a human to read and write, and the JSON syntax is easier generate using code.
+Both syntaxes have the same parameters, and can access the same features.
 
 Structure
 ---------
 
-Example brain file structure:
+Example JSON brain file structure:
 
 .. code-block:: json
 
   {
-    "intent": "EXAMPLE",
+    "intent": "example",
     "topics": [
       {
         "topic": "NONE",
@@ -30,7 +32,8 @@ Example brain file structure:
               "response": "I matched it! I also set my_temp_var to: {{my_temp_var}}"
             },
             "utterances": [
-              "OR MATCH THIS TEXT"
+              "OR MATCH THIS TEXT",
+              "OR MATCH * TEXT"
             ]
           }
         ] 
@@ -53,6 +56,37 @@ Example brain file structure:
       }
     }
   }
+
+.. code-block:: yaml
+
+  intent: example
+  topics:
+    -
+      topic: NONE
+      categories:
+        -
+          pattern: MATCH THIS TEXT
+          template:
+            type: V
+            vars:
+              -
+                name: my_temp_var
+                value: I set this
+            response: I matched it! I also set my_temp_var to: {{my_temp_var}}
+          utterances:
+            - OR MATCH THIS TEXT
+            - "OR MATCH * TEXT"
+  conversations:
+    example_node:
+      node_type: response
+      responses:
+        - Say this
+        - Or this
+      next_node: example_node_2
+    example_node_2: {
+      node_type: response
+      responses:
+        - Also say this
 
 Intents
 -------
@@ -81,6 +115,8 @@ Patterns and Utterances
 Emily does support the use of stars ("\*") in patterns. Meaning, a pattern of "HELLO \*" will match a user's input of "Hello, World!". Note that all punctuation (including apostrophes) are stripped from the user's input when matching patterns.
 
 Utterances follow the same conventions as patterns. The list of utterances is simply a convenience so that a single template can be accessed by multiple patterns.
+
+Note: YAML syntax requires that patterns or utterances that contain a "*" be enclosed in double quotes. See YAML example above.
 
 Templates
 ~~~~~~~~~
