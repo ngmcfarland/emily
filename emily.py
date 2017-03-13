@@ -45,7 +45,7 @@ class Emily(threading.Thread):
                 brain_dir = os.path.join(curdir, config['brain_dir'])
                 brain_files = ["{}/{}".format(brain_dir,file) for file in os.listdir(brain_dir)]
                 brain_files += more_brains
-            self.brain,self.nodes = utils.load_data(brain_files=brain_files)
+            self.brain = utils.load_data(brain_files=brain_files)
         except socket.error as err:
             if err.errno == 48:
                 logging = utils.init_logging(log_file=os.path.join(curdir,config['log_file']),logging_level=config['logging_level'],already_started=True)
@@ -77,7 +77,7 @@ class Emily(threading.Thread):
                 session_vars = sessions.get_session_vars(session_id=session_id,source=config['source'],session_vars_path=config['session_vars_path'],region=config['region'])
                 # Apply optional filters before sending to brain
                 intent,new_input = utils.apply_input_filters(user_input=str(user_input['message']),intent_command=config['intent_command'],preformat_command=config['preformat_command'])
-                response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),brain=self.brain,session_vars=session_vars,nodes=self.nodes,intent=intent,noprint=True)
+                response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),brain=self.brain,session_vars=session_vars,intent=intent)
                 utils.printlog(response=response,speaker='EMILY',noprint=True)
                 c.send(json.dumps({'response':response,'session_id':session_id}).encode())
                 c.close()
@@ -166,7 +166,7 @@ def chat():
     logging = utils.init_logging(log_file=config['log_file'],logging_level=config['logging_level'])
     brain_dir = os.path.join(curdir, config['brain_dir'])
     brain_files = ["{}/{}".format(brain_dir,file) for file in os.listdir(brain_dir)]
-    brain,nodes = utils.load_data(brain_files=brain_files)
+    brain = utils.load_data(brain_files=brain_files)
     session_vars = config['default_session_vars']
     session_vars['default_session_vars'] = dict(config['default_session_vars'])
     session_vars['next_node'] = config['starting_node']
@@ -178,7 +178,7 @@ def chat():
         emily_start_time = datetime.now()
         # Apply optional filters before sending to brain
         intent,new_input = utils.apply_input_filters(user_input=user_input)
-        response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),brain=brain,session_vars=session_vars,nodes=nodes,intent=intent)
+        response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),brain=brain,session_vars=session_vars,intent=intent)
         utils.printlog(response=response,speaker='EMILY')
 
         emily_response_time = datetime.now() - emily_start_time

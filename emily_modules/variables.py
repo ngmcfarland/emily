@@ -60,28 +60,14 @@ def reset_vars(session_vars,template,key='reset'):
         return session_vars
 
 
-def replace_vars(session_vars,response,command_result=None):
+def replace_vars(session_vars,response):
     try:
-        if command_result:
-            if command_result['success']:
-                replace_results = re.findall(r"\{\{\}\}",response)
-                for result in replace_results:
-                    response = response.replace("{{}}",str(command_result['response']))
-                if isinstance(command_result['response'],dict):
-                    replace_these = re.findall(r"\{\{([A-Za-z0-9_]*)\}\}",response)
-                    for var in replace_these:
-                        try:
-                            response = response.replace("".join(["{{",var.lower(),"}}"]),str(command_result['response'][var.lower()]))
-                        except KeyError:
-                            pass
-            else:
-                response = command_result['response']
-        replace_stars = re.findall(r"\{\{(\d*)\}\}",response)
+        replace_stars = re.findall(r"\{(\d*)\}",response)
         for star in replace_stars:
-            response = response.replace("".join(["{{",star,"}}"]),session_vars["star{}".format(star)])
-        replace_these = re.findall(r"\{\{([A-Za-z0-9_]*)\}\}",response)
+            response = response.replace("".join(["{",star,"}"]),session_vars["star{}".format(star)])
+        replace_these = re.findall(r"\{([A-Za-z0-9_]*)\}",response)
         for var in replace_these:
-            response = response.replace("".join(["{{",var.lower(),"}}"]),str(session_vars[var.lower()]))
+            response = response.replace("".join(["{",var.lower(),"}"]),str(session_vars[var.lower()]))
         return response
     except KeyError:
         return response

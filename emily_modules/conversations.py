@@ -1,4 +1,4 @@
-from . import yes_no_parser,run_command
+from . import yes_no_parser,run_command,variables
 import logging
 import random
 import json
@@ -9,38 +9,113 @@ import os
 
 def process_node(node_tag,nodes,session_vars,responses,user_input=None):
     node = nodes[node_tag]
+    conversation = 'default'
     logging.debug("Processing {} node: {}".format(node['node_type'],node_tag))
-    response = 'Not yet set'
-    session_vars['next_node'] = None
+    if 'vars' in node:
+        session_vars = variables.set_vars(session_vars,node)
+    if 'preset' in node:
+        session_vars = variables.reset_vars(session_vars,node,key='preset')
     if node['node_type'] == 'response':
-        logging.debug("Getting random response from: {}".format(node['responses']))
-        response = node['responses'][random.randint(0,len(node['responses'])-1)] if len(node['responses']) > 1 else node['responses'][0]
-        replace_vars = re.findall(r"\{([^\{\}]*)\}",response,re.IGNORECASE)
-        for var in replace_vars:
-            try:
-                response = re.sub(r"\{"+var+r"\}",session_vars[var],response,re.IGNORECASE)
-            except KeyError:
-                pass
-        responses.append(response)
-        session_vars['next_node'] = node['next_node'] if 'next_node' in node else None
-        if session_vars['next_node'] is not None and nodes[session_vars['next_node']]['node_type'] in ['response','error']:
-            responses,session_vars = process_node(node_tag=session_vars['next_node'],nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
-    elif node['node_type'] == 'error':
-        logging.debug("Getting random response from: {}".format(node['responses']))
-        response = node['responses'][random.randint(0,len(node['responses'])-1)] if len(node['responses']) > 1 else node['responses'][0]
-        replace_vars = re.findall(r"\{([^\{\}]*)\}",response,re.IGNORECASE)
-        for var in replace_vars:
-            try:
-                response = re.sub(r"\{"+var+r"\}",session_vars[var],response,re.IGNORECASE)
-            except KeyError:
-                pass
-        responses.append(response)
+        responses,session_vars,success = response_node(node=node,session_vars=session_vars,responses=responses)
+        if success:
+            session_vars['next_node'] = node['next_node'] if 'next_node' in node else None
+            if 'chain' not in node or node['chain'] == True:
+                if session_vars['next_node'] is not None and nodes[session_vars['next_node']]['node_type'] == 'response':
+                    responses,session_vars,conversation = process_node(node_tag=session_vars['next_node'],nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
+    elif node['node_type'] == 'router':
+        next_node,success = router_node(node=node)
+        if success and next_node is not None:
+            responses,session_vars,conversation = process_node(node_tag=next_node,nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
+    elif node['node_type'] == 'random':
+        next_node,success = random_node(node=node)
+        if success and next_node is not None:
+            responses,session_vars,conversation = process_node(node_tag=next_node,nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
     elif node['node_type'] == 'simple_logic':
-        command = node['command'].replace('{user_input}',user_input) if user_input is not None else node['command']
+        session_vars,success = simple_logic_node(node=node,session_vars=session_vars,user_input=user_input)
+        if success:
+            session_vars['next_node'] = node['next_node'] if 'next_node' in node else None
+            if ('chain' not in node or node['chain'] == True) and session_vars['next_node'] is not None:
+                responses,session_vars,conversation = process_node(node_tag=session_vars['next_node'],nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
+    elif node['node_type'] == 'string_logic':
+        next_node,success = string_logic_node(node=node,session_vars=session_vars,user_input=user_input)
+        if success and next_node is not None:
+            responses,session_vars,conversation = process_node(node_tag=next_node,nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
+    elif node['node_type'] == 'yes_no_logic':
+        next_node,success = yes_no_logic_node(node=node,user_input=user_input)
+        if success and next_node is not None:
+            responses,session_vars,conversation = process_node(node_tag=next_node,nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
+    else:
+        response = "Unrecognized node_type: {}".format(node['node_type'])
+        responses.append(response)
+        success = False
+    if not success:
+        if 'error_node' in node:
+            responses,session_vars = process_node(node_tag=node['error_node'],nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
+        else:
+            response = "Failed to process node: {}".format(node_tag)
+            responses.append(response)
+        conversation = 'default'
+    else:
+        conversation = node['conversation'] if 'conversation' in node else conversation
+    if 'reset' in node:
+        session_vars = variables.reset_vars(session_vars,node,key='reset')
+    return responses,session_vars,conversation
+
+
+def response_node(node,session_vars,responses):
+    try:
+        success = False
+        logging.debug("Getting random response from: {}".format(node['responses']))
+        response = node['responses'][random.randint(0,len(node['responses'])-1)]
+        replace_vars = re.findall(r"\{([^\{\}]*)\}",response,re.IGNORECASE)
+        for var in replace_vars:
+            try:
+                response = re.sub(r"\{"+var+r"\}",str(session_vars[var]),response,re.IGNORECASE)
+            except KeyError:
+                pass
+        responses.append(response)
+        success = True
+    except KeyError as e:
+        logging.error("Response node missing attribute: {}".format(e))
+    finally:
+        return responses,session_vars,success
+
+
+def router_node(node):
+    try:
+        success = False
+        next_node = True
+        next_node = node['next_node']
+        success = True
+    except KeyError as e:
+        logging.error("Router node missing attribute: {}".format(e))
+    return next_node,success
+
+
+def random_node(node):
+    try:
+        success = False
+        next_node = None
+        logging.debug("Getting random node from: {}".format(node['node_options']))
+        next_node = node['node_options'][random.randint(0,len(node['node_options'])-1)]
+        success = True
+    except KeyError as e:
+        logging.error("Random node missing attribute: {}".format(e))
+    finally:
+        return next_node,success
+
+
+def simple_logic_node(node,session_vars,user_input):
+    try:
+        success = False
+        if '{user_input}' in node['command'] and user_input is not None:
+            command = node['command'].replace('{user_input}',user_input)
+        else:
+            command = node['command']
         replace_vars = re.findall(r"\{([^\{\}]*)\}",command,re.IGNORECASE)
         for var in replace_vars:
             try:
-                command = re.sub(r"\{"+var+r"\}",session_vars[var],command,re.IGNORECASE)
+                command = re.sub(r"\{"+var+r"\}",str(session_vars[var]),command,re.IGNORECASE)
             except KeyError:
                 pass
         result = run_command.run(command)
@@ -52,28 +127,46 @@ def process_node(node_tag,nodes,session_vars,responses,user_input=None):
                         session_vars[var] = json.dumps(command_response[var])
                     else:
                         session_vars[var] = command_response[var]
-            responses,session_vars = process_node(node_tag=node['next_node'],nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
-        else:
-            if 'error_node' in node:
-                responses,session_vars = process_node(node_tag=node['error_node'],nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
             else:
-                response = "Failed to run command: {}".format(command)
-                responses.append(response)
-    elif node['node_type'] == 'yes_no_logic':
+                session_vars['command_response'] = command_response
+            success = True
+    except KeyError as e:
+        logging.error("Simple logic node missing attribute: {}".format(e))
+    finally:
+        return session_vars,success
+
+
+def yes_no_logic_node(node,user_input):
+    try:
+        success = False
+        next_node = None
         result = yes_no_parser.check_input(user_input=user_input)
         logging.debug("Yes/No Result: {}".format(result['result']))
         if result['result'] == 'yes':
-            responses,session_vars = process_node(node_tag=node['yes_node'],nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
+            next_node = node['yes_node']
         elif result['result'] == 'yes_prime':
-            responses,session_vars = process_node(node_tag=node['yes_prime_node'],nodes=nodes,session_vars=session_vars,responses=responses,user_input=result['user_input'])
+            next_node = node['yes_prime_node']
         elif result['result'] == 'no':
-            responses,session_vars = process_node(node_tag=node['no_node'],nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
+            next_node = node['no_node']
         elif result['result'] == 'no_prime':
-            responses,session_vars = process_node(node_tag=node['no_prime_node'],nodes=nodes,session_vars=session_vars,responses=responses,user_input=result['user_input'])
+            next_node = node['no_prime_node']
         else:
-            responses,session_vars = process_node(node_tag=node['unknown_node'],nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
-    elif node['node_type'] == 'string_logic':
-        command = node['command'].replace('{user_input}',user_input) if user_input is not None else node['command']
+            next_node = node['unknown_node']
+        success = True
+    except KeyError as e:
+        logging.error("Yes/No logic node missing attribute: {}".format(e))
+    finally:
+        return next_node,success
+
+
+def string_logic_node(node,session_vars,user_input):
+    try:
+        success = False
+        next_node = None
+        if '{user_input}' in node['command'] and user_input is not None:
+            command = node['command'].replace('{user_input}',user_input)
+        else:
+            command = node['command']
         replace_vars = re.findall(r"\{([^\{\}]*)\}",command,re.IGNORECASE)
         for var in replace_vars:
             try:
@@ -90,16 +183,11 @@ def process_node(node_tag,nodes,session_vars,responses,user_input=None):
                 else:
                     session_vars[var] = command_response[var]
             if command_response['string'].lower() in node.keys():
-                responses,session_vars = process_node(node_tag=node[command_response['string'].lower()],nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
+                next_node = node[command_response['string'].lower()]
             else:
-                responses,session_vars = process_node(node_tag=node['unknown_node'],nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
-        else:
-            if 'error_node' in node:
-                responses,session_vars = process_node(node_tag=node['error_node'],nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
-            else:
-                response = "Failed to run command: {}".format(command)
-                responses.append(response)
-    else:
-        response = "Unrecognized node_type: {}".format(node['node_type'])
-        responses.append(response)
-    return responses,session_vars
+                next_node = node['unknown_node']
+            success = True
+    except KeyError as e:
+        logging.error("String logic node missing attribute: {}".format(e))
+    finally:
+        return next_node,success

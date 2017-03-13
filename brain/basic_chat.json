@@ -1,171 +1,69 @@
 {
-    "intent": "BASIC_CHAT",
-    "topics": [
-        {
-            "topic": "NONE",
-            "categories": [
-                {
-                    "pattern": "HELP",
-                    "template": {
-                        "type": "U",
-                        "redirect": "HELP SUGGESTIONS Hey! I'm Emily. You can say things to me like:"
-                    }
-                },
-                {
-                    "pattern": "HELP SUGGESTIONS *",
-                    "template": {
-                        "type": "E",
-                        "responses": [
-                            {
-                                "type": "V",
-                                "response": "{{1}} 'What time is it?'"
-                            },
-                            {
-                                "type": "V",
-                                "response": "{{1}} 'Tell me a joke'"
-                            },
-                            {
-                                "type": "V",
-                                "response": "{{1}} 'What is the answer to the ultimate question of life, the universe, and everything?'"
-                            },
-                            {
-                                "type": "V",
-                                "response": "{{1}} 'Why is your name Emily?'"
-                            }
-                        ]
-                    }
-                },
-                {
-                    "pattern": "HELLO",
-                    "template": {
-                        "type": "V",
-                        "response": "Hello!"
-                    }
-                },
-                {
-                    "pattern": "WHAT IS YOUR NAME",
-                    "template": {
-                        "type": "V",
-                        "response": "My name is Emily"
-                    }
-                },
-                {
-                    "pattern": "WHAT IS MY NAME",
-                    "template": {
-                        "type": "Y",
-                        "var": "name",
-                        "conditions": [
-                            {
-                                "pattern": "*",
-                                "template": {
-                                    "type": "V",
-                                    "response": "Your name is {{name}}!"
-                                }
-                            }
-                        ],
-                        "fallback": {
-                            "type": "V",
-                            "response": "I'm sorry, I don't think we've been introduced. I'm Emily. What's your name?",
-                            "vars": [
-                                {
-                                    "name": "topic",
-                                    "value": "INTRODUCE"
-                                }
-                            ]
-                        }
-                    }
-                },
-                {
-                    "pattern": "HELLO *",
-                    "template": {
-                        "type": "V",
-                        "response": "Hey there!"
-                    }
-                },
-                {
-                    "pattern": "HI",
-                    "template": {
-                        "type": "E",
-                        "responses": [
-                            {
-                                "type": "V",
-                                "response": "Well hello there!"
-                            },
-                            {
-                                "type": "V",
-                                "response": "Howdy!"
-                            },
-                            {
-                                "type": "V",
-                                "response": "Hey!"
-                            }
-                        ]
-                    },
-                    "utterances": [
-                        "GOOD MORNING *",
-                        "GOOD MORNING",
-                        "GOOD AFTERNOON *",
-                        "GOOD AFTERNOON",
-                        "GOOD EVENING *",
-                        "GOOD EVENING"
-                    ]
-                },
-                {
-                    "pattern": "THANKS",
-                    "template": {
-                        "type": "E",
-                        "responses": [
-                            {
-                                "type": "V",
-                                "response": "You're welcome"
-                            },
-                            {
-                                "type": "V",
-                                "response": "My pleasure!"
-                            },
-                            {
-                                "type": "V",
-                                "response": "Anytime!"
-                            },
-                            {
-                                "type": "V",
-                                "response": "You know I got you bro"
-                            }
-                        ]
-                    },
-                    "utterances": [
-                        "THANK YOU",
-                        "THANK YOU *",
-                        "THANKS *"
-                    ]
-                }
-            ]
-        },
-        {
-            "topic": "INTRODUCE",
-            "categories": [
-                {
-                    "pattern": "MY NAME IS *",
-                    "template": {
-                        "type": "U",
-                        "redirect": "{{1}}"
-                    }
-                },
-                {
-                    "pattern": "*",
-                    "template": {
-                        "type": "V",
-                        "response": "Hello {{name}}!",
-                        "vars": [
-                            {
-                                "name": "name",
-                                "value": "{{1}}"
-                            }
-                        ],
-                        "reset": ["topic"]
-                    }
-                }
-            ]
-        }
-    ]
+  "intent": "basic_chat",
+  "conversations": {
+    "default": {
+      "help_preface": {
+        "node_type": "response",
+        "pattern": "help",
+        "utterances": [
+          "help me",
+          "i need help"
+        ],
+        "responses": [
+          "Hey! I'm Emily. You can say things to me like:"
+        ],
+        "next_node": "help"
+      },
+      "help": {
+        "node_type": "response",
+        "responses": [
+          "'What time is it?'",
+          "'Tell me a joke'",
+          "'What is the answer to the ultimate question of life, the universe, and everything?'",
+          "'Why is your name Emily?'"
+        ]
+      },
+      "hello": {
+        "node_type": "response",
+        "pattern": "hello",
+        "utterances": [
+          "hi",
+          "hey",
+          "hey *",
+          "hi *",
+          "hello *"
+        ],
+        "responses": [
+          "Hello!",
+          "Hi!",
+          "Hey there!"
+        ]
+      },
+      "what_is_your_name": {
+        "node_type": "response",
+        "pattern": "what is your name",
+        "utterances": [
+          "what do they call you"
+        ],
+        "responses": [
+          "My name is Emily"
+        ]
+      },
+      "thanks": {
+        "node_type": "response",
+        "pattern": "thanks",
+        "utterances": [
+          "thank you",
+          "thank you *",
+          "thanks *"
+        ],
+        "responses": [
+          "You're welcome",
+          "My pleasure!",
+          "Anytime!",
+          "You know I got you"
+        ]
+      }
+    }
+  }
 }

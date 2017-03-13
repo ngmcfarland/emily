@@ -1,187 +1,176 @@
-intent: jokes
-topics:
-  -
-    topic: NONE
-    categories:
-      -
-        pattern: HAHA
-        template:
-          type: V
-          response: I'm glad you think I'm funny
-        utterances:
-          - "* FUNNY"
-          - HA HA
-          - HA
-      -
-        pattern: NICE
-        template:
-          type: V
-          response: Thanks!
-        utterances:
-          - THATS A GOOD ONE
-      -
-        pattern: TELL ME A PUN
-        template:
-          type: E
-          responses:
-            -
-              type: V
-              response: Can February March? No, but April May...
-            -
-              type: V
-              response: My wedding day was so beautiful. Even the cake was in tiers...
-            -
-              type: V
-              response: A steak pun is a rare medium well done...
-            -
-              type: V
-              response: Today a girl said she recognized me from vegetarian club, but I'm sure I've never met herbivore.
-            -
-              type: V
-              response: Without geometry life is pointless.
-            -
-              type: V
-              response: I am terrified of elevators. I'm going to start taking steps to avoid them...
-            -
-              type: V
-              response: I heard there's a new type of broom out, it's sweeping the nation.
-            -
-              type: V
-              response: Velcro... What a rip-off.
-            -
-              type: V
-              response: I'm reading a book on the history of glue - can't put it down.
-      -
-        pattern: TELL ME A JOKE
-        template:
-          type: E
-          responses:
-            -
-              type: V
-              vars:
-                -
-                  name: topic
-                  value: DENTISTJOKE
-              response: What time did the man go to the dentist?
-            -
-              type: V
-              vars:
-                -
-                  name: topic
-                  value: CHICKENCOOPJOKE
-              response: Why do chicken coops only have two doors?
-            -
-              type: C
-              node: knock_knock
-            -
-              type: V
-              response: I used to have a job at the calendar factory, but I got fired because I took a few days off...
-            -
-              type: V
-              response: Two guys walk into a bar. The third one ducks...
-            -
-              type: V
-              response: A three legged dog walks into town and says, "I'm looking for the man who shot my paw"...
-            -
-              type: V
-              response: I heard that there's a new store called Moderation. They have everything there...
-            -
-              type: V
-              response: If you're struggling to think of what to get someone for Christmas. Get them a fridge and watch their face light up when they open it.
-            - 
-              type: V
-              response: You know what I've noticed lately? People are making apocalypse jokes like there's no tomorrow.
-            -
-              type: V
-              vars:
-                -
-                  name: topic
-                  value: SWISSJOKE
-              response: What's the advantage of living in Switzerland?
-            -
-              type: V
-              vars:
-                -
-                  name: topic
-                  value: HIPSTERJOKE
-              response: How much does a hipster weigh?
-            -
-              type: V
-              vars:
-                -
-                  name: topic
-                  value: SCARECROWJOKE
-              response: Why did the scarecrow win an award?
-  -
-    topic: DENTISTJOKE
-    categories:
-      -
-        pattern: "*"
-        template:
-          type: V
-          reset:
-            - topic
-          response: Tooth Hurt-y!
-  -
-    topic: CHICKENCOOPJOKE
-    categories:
-      -
-        pattern: "*"
-        template:
-          type: V
-          reset:
-            - topic
-          response: Because if they had four, they would be called chicken sedans!
-  -
-    topic: SWISSJOKE
-    categories:
-      -
-        pattern: "*"
-        template:
-          type: V
-          reset:
-            - topic
-          response: Well the flag is a big plus...
-  -
-    topic: HIPSTERJOKE
-    categories:
-      -
-        pattern: "*"
-        template:
-          type: V
-          reset:
-            - topic
-          response: An instagram...
-  -
-    topic: SCARECROWJOKE
-    categories:
-      -
-        pattern: "*"
-        template:
-          type: V
-          reset:
-            - topic
-          response: Because he was outstanding in his field...
+intent: new_jokes
 conversations:
-  knock_knock:
-    node_type: response
-    responses:
-      - Knock knock...
-    next_node: knock_knock_wait
-  knock_knock_wait:
-    node_type: simple_logic
-    command: None
-    next_node: whos_there
-  whos_there:
-    node_type: response
-    responses:
-      - A broken pencil
-    next_node: whos_there_wait
-  whos_there_wait:
-    node_type: simple_logic
-    command: None
-    next_node: a_broken_pencil_who
-  a_broken_pencil_who:
-    node_type: response
-    responses:
-      - Never mind, it's pointless...
+  default:
+    ha_ha:
+      node_type: response
+      pattern: haha
+      utterances:
+        - "* funny"
+        - ha
+      responses:
+        - I'm glad you think I'm funny
+    nice_joke:
+      node_type: response
+      pattern: nice joke
+      utterances:
+        - thats a good one
+        - nice
+      responses:
+        - Thanks!
+    tell_pun:
+      node_type: response
+      pattern: tell me a pun
+      utterances:
+        - i want to hear a pun
+        - do you know any puns
+        - got any puns
+        - are you punny
+      responses:
+        - Can February March? No, but April May...
+        - My wedding day was so beautiful. Even the cake was in tiers...
+        - A steak pun is a rare medium well done...
+        - Today a girl said she recognized me from vegetarian club, but I'm sure I've never met herbivore.
+        - Without geometry life is pointless.
+        - I am terrified of elevators. I'm going to start taking steps to avoid them...
+        - I heard there's a new type of broom out, it's sweeping the nation.
+        - Velcro... What a rip-off.
+        - I'm reading a book on the history of glue - can't put it down.
+    tell_joke:
+      node_type: random
+      pattern: tell me a joke
+      utterances:
+        - i want to hear a joke
+        - do you know any jokes
+        - got any jokes
+      node_options:
+        - one_liners
+        - dentist
+        - chicken_coop
+        - swiss
+        - hipster
+        - scarecrow
+        - pencil
+    one_liners:
+      node_type: response
+      responses:
+        - I used to have a job at the calendar factory, but I got fired because I took a few days off...
+        - Two guys walk into a bar. The third one ducks...
+        - A three legged dog walks into town and says, "I'm looking for the man who shot my paw"...
+        - I heard that there's a new store called Moderation. They have everything there...
+        - If you're struggling to think of what to get someone for Christmas. Get them a fridge and watch their face light up when they open it.
+        - You know what I've noticed lately? People are making apocalypse jokes like there's no tomorrow.
+    dentist:
+      node_type: response
+      responses:
+        - What time did the man go to the dentist?
+      vars:
+        -
+          name: answer
+          value: Tooth Hurt-y!
+      chain: False
+      conversation: joke_answers
+    chicken_coop:
+      node_type: response
+      responses:
+        - Why do chicken coops only have two doors?
+      vars:
+        -
+          name: answer
+          value: Because if they had four, they would be called chicken sedans!
+      chain: False
+      conversation: joke_answers
+    swiss:
+      node_type: response
+      responses:
+        - What's the advantage of living in Switzerland?
+      vars:
+        -
+          name: answer
+          value: Well the flag is a big plus...
+      chain: False
+      conversation: joke_answers
+    hipster:
+      node_type: response
+      responses:
+        - How much does a hipster weigh?
+      vars:
+        -
+          name: answer
+          value: An Instagram...
+      chain: False
+      conversation: joke_answers
+    scarecrow:
+      node_type: response
+      responses:
+        - Why did the scarecrow win an award?
+      vars:
+        -
+          name: answer
+          value: Because he was outstanding in his field...
+      chain: False
+      conversation: joke_answers
+    pencil:
+      node_type: response
+      responses:
+        - Knock knock
+      vars:
+        -
+          name: who_1
+          value: A pencil
+        -
+          name: who_2
+          value: Never mind, it's pointless
+      chain: False
+      conversation: knock_knock_answers
+  joke_answers:
+    dont_know:
+      node_type: router
+      pattern: i dont know
+      utterances:
+        - im not sure
+        - "i dont know *"
+      next_node: answer_joke
+    right_answer:
+      node_type: response
+      pattern: "{answer}"
+      responses:
+        - You're right!
+        - You got it!
+      reset:
+        - answer
+    wrong_answer:
+      node_type: response
+      pattern: "*"
+      responses:
+        - "Not quite. The answer is: "
+      next_node: answer_joke
+    answer_joke:
+      node_type: response
+      responses:
+        - "{answer}"
+      reset:
+        - answer
+  knock_knock_answers:
+    whos_there:
+      node_type: response
+      pattern: whos there
+      utterances:
+        - who is there
+        - whose there
+      responses:
+        - "{who_1}"
+      chain: False
+      conversation: knock_knock_answers
+    star_who:
+      node_type: response
+      pattern: "{who_1} who"
+      responses:
+        - "{who_2}"
+      reset:
+        - who_1
+        - who_2
+    catch_all:
+      node_type: response
+      pattern: "*"
+      responses:
+        - That's not how you answer a knock knock joke...

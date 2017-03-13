@@ -1,4 +1,4 @@
-from . import conversations,run_command,variables,utils
+from . import conversations,variables,utils
 from fuzzywuzzy import fuzz
 from fnmatch import fnmatch
 import logging
@@ -8,28 +8,30 @@ import re
 import os
 
 
-def match_input(user_input,brain,session_vars,nodes=None,intent=None,noprint=False):
+def match_input(user_input,brain,session_vars,intent=None):
     try:
         if 'next_node' not in session_vars or session_vars['next_node'] is None:
-            if intent:
-                intent_brain = [x for x in brain if x['intent'] in [intent,'DEFAULT']]
+            logging.debug("Next node not defined. Checking user input against patterns.")
+            # Filter patterns by intent if intent was determined already
+            if intent is not None:
+                patterns = {}
+                for key in brain['patterns']:
+                    if key.split('.')[0] == intent.lower():
+                        patterns[key] = brain['patterns'][key]
             else:
-                intent_brain = list(brain)
-            match_patterns = match_input_by_topic(user_input=user_input,brain=intent_brain,topic=session_vars['topic'])
-            if session_vars['topic'] != 'NONE' and len(match_patterns) == 0:
-                match_patterns = match_input_by_topic(user_input=user_input,brain=intent_brain,topic='NONE')
-            if len(match_patterns) > 0:
-                match_object = sorted(match_patterns,key=lambda match: match['confidence'],reverse=True)[0]
-                logging.debug("Matched: {}".format(match_object['pattern']))
-                session_vars = variables.check_stars(pattern=match_object['pattern'],user_input=user_input,session_vars=session_vars)
-                response,session_vars = parse_template(template=match_object['template'],brain=intent_brain,session_vars=session_vars,user_input=user_input,nodes=nodes,noprint=noprint)
-                session_vars = variables.clear_stars(session_vars=session_vars)
-            else:
-                response = "I'm sorry, I don't know what you are asking."
+                patterns = brain['patterns']
+            conversation = session_vars['conversation'] if 'conversation' in session_vars else 'default'
+            best_match = match_patterns(user_input=user_input.lower(),patterns=patterns,conversation=conversation,session_vars=session_vars)
+            next_node = best_match[2] if best_match is not None else None
         else:
-            responses,session_vars = conversations.process_node(node_tag=session_vars['next_node'],nodes=nodes,session_vars=session_vars,responses=[],user_input=user_input)
-            # Right now, process_node returns a list of responses. May use this globally later, but for now, I'm just joining the responses to make one.
+            next_node = session_vars['next_node']
+        if next_node is not None:
+            # Process the conversation node
+            responses,session_vars,conversation = conversations.process_node(node_tag=next_node,nodes=brain['nodes'],session_vars=session_vars,responses=[],user_input=user_input)
+            session_vars['conversation'] = conversation
             response = " ".join(responses)
+        else:
+            response = "I'm sorry, I don't know what you are asking."
     except:
         logging.error("{}".format(sys.exc_info()[0]))
         logging.error("{}".format(sys.exc_info()[1]))
@@ -38,121 +40,97 @@ def match_input(user_input,brain,session_vars,nodes=None,intent=None,noprint=Fal
         return response,session_vars
 
 
-def match_input_by_topic(user_input,brain,topic):
-    matches = []
-    topic_brain = [x for x in brain if x['topic'].upper() == topic.upper()]
-    for topic in topic_brain:
-        if fnmatch(user_input.upper(),topic['pattern']):
-            match = dict(topic)
-            match['confidence'] = fuzz.ratio(topic['pattern'],user_input.upper())
-            matches.append(match)
-    return matches
-
-
-def parse_template(template,brain,session_vars,user_input,nodes=None,noprint=False):
-    has_vars = re.compile(r"^.*\{\{.*\}\}.*$", re.IGNORECASE)
-    if template['type'] == 'V':
-        # Direct Response
-        if 'vars' in template:
-            session_vars = variables.set_vars(session_vars,template)
-        if 'preset' in template:
-            session_vars = variables.reset_vars(session_vars,template,key='preset')
-        if has_vars.match(template['response']):
-            response = variables.replace_vars(session_vars,template['response'])
+def match_patterns(user_input,patterns,conversation,session_vars):
+    r_weight = 1      # Weight for fuzz.ratio function
+    pr_weight = 0.7   # Weight for fuzz.partial_ratio function
+    intent = None
+    # Get patterns that match the conversation
+    if conversation != 'default':
+        intent = conversation.split('.')[0]
+        search_patterns = []
+        for key in patterns:
+            # filter patterns to nodes that match '<intent>.<conversation>.*'
+            if ".".join(key.split('.')[:2]).lower() == conversation.lower():
+                for pattern in patterns[key]:
+                    if re.search(r"\{[A-Za-z0-9_\-\.]+\}",pattern[0]):
+                        new_pattern = variables.replace_vars(session_vars=session_vars,response=pattern[0])
+                        search_patterns.append((new_pattern,pattern[1]))
+                    else:
+                        search_patterns.append(pattern)
+        if conversation.split('.')[1] == 'default':
+            convo_match = None
+            convo_default_match = score_patterns(user_input=user_input,search_patterns=search_patterns,r_weight=r_weight,pr_weight=pr_weight)
         else:
-            response = template['response']
-        if 'reset' in template:
-            session_vars = variables.reset_vars(session_vars,template,key='reset')
-        return response,session_vars
-    elif template['type'] == 'U':
-        # Redirect
-        if 'vars' in template:
-            session_vars = variables.set_vars(session_vars,template)
-        if 'preset' in template:
-            session_vars = variables.reset_vars(session_vars,template,key='preset')
-        redirect = variables.replace_vars(session_vars,template['redirect'])
-        logging.info("Redirecting with: {}".format(redirect))
-        response,session_vars = match_input(user_input=redirect,brain=brain,session_vars=session_vars,nodes=nodes,noprint=noprint)
-        if 'reset' in template:
-            session_vars = variables.reset_vars(session_vars,template,key='reset')
-        return response,session_vars
-    elif template['type'] == 'W':
-        # Run command
-        command = variables.replace_vars(session_vars,template['command'])
-        logging.debug("Running Command: {}".format(command))
-        if 'preset' in template:
-            session_vars = variables.reset_vars(session_vars,template,key='preset')
-        if not noprint and 'presponse' in template:
-            presponse = variables.replace_vars(session_vars,template['presponse'])
-            utils.printlog(presponse,'EMILY',presponse=True)
-        command_result = run_command.run(command)
-        logging.debug("Command Result: {}".format(command_result))
-        if 'vars' in template:
-            session_vars = variables.set_vars(session_vars,template,command_result)
-        response = variables.replace_vars(session_vars,template['response'],command_result)
-        if 'reset' in template:
-            session_vars = variables.reset_vars(session_vars,template,key='reset')
-        return response,session_vars
-    elif template['type'] == 'E':
-        # Pick random template
-        logging.info("Choosing random response")
-        template = template['responses'][random.randint(0,len(template['responses'])-1)]
-        response,session_vars = parse_template(template=template,brain=brain,session_vars=session_vars,user_input=user_input,nodes=nodes,noprint=noprint)
-        return response,session_vars
-    elif template['type'] == 'WU':
-        # Run command with redirect
-        command = variables.replace_vars(session_vars,template['command'])
-        logging.debug("Running Command: {}".format(command))
-        if 'preset' in template:
-            session_vars = variables.reset_vars(session_vars,template,key='preset')
-        if not noprint and 'presponse' in template:
-            presponse = variables.replace_vars(session_vars,template['presponse'])
-            utils.printlog(presponse,'EMILY',presponse=True)
-        command_result = run_command.run(command)
-        logging.debug("Command Result: {}".format(command_result))
-        if 'vars' in template:
-            session_vars = variables.set_vars(session_vars,template,command_result)
-        redirect = variables.replace_vars(session_vars,template['redirect'],command_result)
-        logging.info("Redirecting with: {}".format(redirect))
-        response,session_vars = match_input(user_input=redirect,brain=brain,session_vars=session_vars,nodes=nodes,noprint=noprint)
-        if 'reset' in template:
-            session_vars = variables.reset_vars(session_vars,template,key='reset')
-        return response,session_vars
-    elif template['type'] == 'Y':
-        # Condition
-        condition_matched = False
-        if 'var' in template:
-            if template['var'] in session_vars:
-                for condition in template['conditions']:
-                    if fnmatch(session_vars[template['var']],condition['pattern']):
-                        response,session_vars = parse_template(template=condition['template'],brain=brain,session_vars=session_vars,user_input=user_input,nodes=nodes,noprint=noprint)
-                        condition_matched = True
-                        break
-        else:
-            for condition in template['conditions']:
-                check = variables.replace_vars(session_vars,condition['pattern'])
-                if re.search(r"\{\{.*\}\}",check):
-                    break
-                if eval(check):
-                    response,session_vars = parse_template(template=condition['template'],brain=brain,session_vars=session_vars,user_input=user_input,nodes=nodes,noprint=noprint)
-                    condition_matched = True
-                    break
-        if not condition_matched:
-            response,session_vars = parse_template(template=template['fallback'],brain=brain,session_vars=session_vars,user_input=user_input,nodes=nodes,noprint=noprint)
-        return response,session_vars
-    elif template['type'] == 'C':
-        # Send to conversations
-        if 'vars' in template:
-            session_vars = variables.set_vars(session_vars,template)
-        if 'preset' in template:
-            session_vars = variables.reset_vars(session_vars,template,key='preset')
-        next_node = variables.replace_vars(session_vars,template['node'])
-        logging.info("Directing to conversation node: {}".format(next_node))
-        responses,session_vars = conversations.process_node(node_tag=next_node,nodes=nodes,session_vars=session_vars,responses=[],user_input=user_input)
-        # Right now, process_node returns a list of responses. May use this globally later, but for now, I'm just joining the responses to make one.
-        response = " ".join(responses)
-        if 'reset' in template:
-            session_vars = variables.reset_vars(session_vars,template,key='reset')
-        return response,session_vars
+            convo_match = score_patterns(user_input=user_input,search_patterns=search_patterns,r_weight=r_weight,pr_weight=pr_weight)
+            search_patterns = []
+            for key in patterns:
+                # Filter patterns to nodes that match '<intent>.default.*'
+                if ".".join(key.split('.')[:2]).lower() == "{}.{}".format(intent,'default').lower():
+                    for pattern in patterns[key]:
+                        if re.search(r"\{[A-Za-z0-9_\-\.]+\}",pattern[0]):
+                            new_pattern = variables.replace_vars(session_vars=session_vars,response=pattern[0])
+                            search_patterns.append((new_pattern,pattern[1]))
+                        else:
+                            search_patterns.append(pattern)
+            convo_default_match = score_patterns(user_input=user_input,search_patterns=search_patterns,r_weight=r_weight,pr_weight=pr_weight)
     else:
-        return "ERROR: malformed response template",session_vars
+        convo_match = None
+        convo_default_match = None
+    search_patterns = []
+    if intent is not None:
+        for key in patterns:
+            # Filter patterns to nodes that match '*.default.*' excluding '<intent>.default.*'
+            if key.split('.')[0].lower() != intent.lower() and key.split('.')[1].lower() == 'default':
+                for pattern in patterns[key]:
+                    if re.search(r"\{[A-Za-z0-9_\-\.]+\}",pattern[0]):
+                        new_pattern = variables.replace_vars(session_vars=session_vars,response=pattern[0])
+                        search_patterns.append((new_pattern,pattern[1]))
+                    else:
+                        search_patterns.append(pattern)
+    else:
+        for key in patterns:
+            # Filter patterns to nodes that match '*.default.*'
+            if key.split('.')[1] == 'default':
+                for pattern in patterns[key]:
+                    if re.search(r"\{[A-Za-z0-9_\-\.]+\}",pattern[0]):
+                        new_pattern = variables.replace_vars(session_vars=session_vars,response=pattern[0])
+                        search_patterns.append((new_pattern,pattern[1]))
+                    else:
+                        search_patterns.append(pattern)
+    # Score the results
+    default_match = score_patterns(user_input=user_input,search_patterns=search_patterns,r_weight=r_weight,pr_weight=pr_weight)
+    best_match = score_matches(default=default_match,convo_default=convo_default_match,convo=convo_match)
+    return best_match
+
+
+def score_patterns(user_input,search_patterns,r_weight,pr_weight):
+    threshold = 90
+    total_possible = r_weight*100 + pr_weight*100
+    matches = []
+    for pattern in search_patterns:
+        check_pattern = utils.remove_punctuation(input_string=pattern[0],keep_stars=True).lower()
+        if fnmatch(user_input,check_pattern) or fuzz.ratio(user_input,check_pattern) > threshold:
+            score = r_weight*fuzz.ratio(user_input,check_pattern) + pr_weight*fuzz.partial_ratio(user_input,check_pattern)
+            matches.append((score,pattern[0],pattern[1]))
+    if len(matches) > 0:
+        logging.debug("Choosing best match from: {}".format([x[1] for x in matches]))
+        best_match = sorted(matches,key=lambda pattern: pattern[0],reverse=True)[0]
+        logging.debug("Chose '{}' with {}% confidence.".format(best_match[1],(float(best_match[0])/float(total_possible))*100))
+    else:
+        logging.debug("No matches found above threshold: {}".format(threshold))
+        best_match = None
+    return best_match
+
+
+def score_matches(default,convo_default,convo):
+    logging.debug("Choosing best match from: ['{}','{}','{}']".format(default,convo_default,convo))
+    if convo is not None:
+        best_match = convo
+    elif convo_default is not None:
+        if convo_default == '*' and default != '*':
+            best_match = default
+        else:
+            best_match = convo_default
+    else:
+        best_match = default
+    return best_match

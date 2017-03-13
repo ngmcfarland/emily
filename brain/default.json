@@ -1,29 +1,19 @@
 {
-    "intent": "DEFAULT",
-    "topics": [
-        {
-            "topic": "NONE",
-            "categories": [
-                {
-                    "pattern": "QUIT",
-                    "template": {
-                        "type": "V",
-                        "response": "Bye!"
-                    },
-                    "utterances": [
-                        "Q",
-                        "EXIT",
-                        "BYE"
-                    ]
-                },
-                {
-                    "pattern": "*",
-                    "template": {
-                        "type": "V",
-                        "response": "I'm sorry, I don't know what you are asking."
-                    }
-                }
-            ]
-        }
-    ]
+  "intent": "default",
+  "conversations": {
+    "default": {
+      "quit": {
+        "node_type": "response",
+        "pattern": "quit",
+        "utterances": [
+          "q",
+          "exit",
+          "bye"
+        ],
+        "responses": [
+          "Bye!"
+        ]
+      }
+    }
+  }
 }

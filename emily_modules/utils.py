@@ -13,8 +13,8 @@ def load_data(brain_files=[]):
     brain_files = [file for file in brain_files if file.lower().endswith('.json') or file.lower().endswith('.yaml')]
     logging.info("Loading brain files: {}".format(brain_files))
     brain_count = len(brain_files)
-    brain = []
-    conversations = {}
+    nodes = {}
+    patterns = {}
     for filename in brain_files:
         try:
             if filename.lower().endswith('.json'):
@@ -23,23 +23,46 @@ def load_data(brain_files=[]):
             elif filename.lower().endswith('.yaml'):
                 with open(filename,'r') as f:
                     data = yaml.load(f.read())
-            for topic in data['topics']:
-                for category in topic['categories']:
-                    if 'node' in category['template'] and '.' not in category['template']['node']:
-                        category_template = dict(category['template'])
-                        category_template['node'] = "{}.{}".format(data['intent'].lower(),category['template']['node'])
+            for convo_key in data['conversations']:
+                conversation = data['conversations'][convo_key]
+                pattern_key = "{}.{}".format(data['intent'],convo_key)
+                patterns[pattern_key] = []
+                for node_key in conversation:
+                    new_key = "{}.{}.{}".format(data['intent'],convo_key,node_key)
+                    if new_key not in nodes:
+                        nodes[new_key] = {}
+                        node = conversation[node_key]
+                        for attr in node:
+                            if attr == 'pattern':
+                                patterns[pattern_key].append((node[attr].lower(),new_key))
+                            elif attr == 'utterances':
+                                patterns[pattern_key] += [(utterance.lower(),new_key) for utterance in node['utterances']]
+                            elif attr == 'conversation':
+                                if node[attr].count('.') == 0:
+                                    nodes[new_key][attr] = "{}.{}".format(data['intent'],node[attr])
+                                else:
+                                    nodes[new_key][attr] = node[attr]
+                            elif attr == 'node_options':
+                                new_options = []
+                                for option in node[attr]:
+                                    if option.count('.') == 0:
+                                        new_options.append("{}.{}.{}".format(data['intent'],convo_key,option))
+                                    elif option.count('.') == 1:
+                                        new_options.append("{}.{}".format(data['intent'],option))
+                                    else:
+                                        new_options.append(option)
+                                nodes[new_key][attr] = new_options
+                            elif attr not in ['node_type','responses','vars','reset','preset','chain','command']:
+                                if node[attr] is not None and node[attr].count('.') == 0:
+                                    nodes[new_key][attr] = "{}.{}.{}".format(data['intent'],convo_key,node[attr])
+                                elif node[attr] is not None and node[attr].count('.') == 1:
+                                    nodes[new_key][attr] = "{}.{}".format(data['intent'],node[attr])
+                                else:
+                                    nodes[new_key][attr] = node[attr]
+                            else:
+                                nodes[new_key][attr] = node[attr]
                     else:
-                        category_template = dict(category['template'])
-                    if category_template['type'] == 'E':
-                        for i,template in enumerate(category_template['responses']):
-                            if 'node' in template and '.' not in template['node']:
-                                category_template['responses'][i]['node'] = "{}.{}".format(data['intent'].lower(),template['node'])
-                    brain.append({'intent':data['intent'],'topic':topic['topic'],'pattern':category['pattern'],'template':category_template})
-                    if 'utterances' in category:
-                        for utterance in category['utterances']:
-                            brain.append({'intent':data['intent'],'topic':topic['topic'],'pattern':utterance,'template':category_template})
-            if 'conversations' in data:
-                conversations = get_conversations(data=data,conversations=conversations)
+                        logging.error("Duplicate node key entry - node not added to brain: {}".format(new_key))
         except:
             print("Failed to load {}".format(filename))
             logging.error("Failed to load {}".format(filename))
@@ -47,33 +70,8 @@ def load_data(brain_files=[]):
             logging.error("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
             brain_count -= 1
     logging.info("Loaded {} brain files".format(brain_count))
-    return brain,conversations
-
-
-def expand_utterances(brain):
-    rows = []
-    brain.loc[brain['utterances'].isnull(),['utterances']] = brain.loc[brain['utterances'].isnull(),'utterances'].apply(lambda x: [])
-    _ = brain.apply(lambda row: [rows.append([row['intent'],utterance,{'type':'U','redirect':row['pattern']},row['topic'],[]]) for utterance in row.utterances], axis=1)
-    brain = brain.append(pd.DataFrame(rows, columns=['intent','pattern','template','topic','utterances']))
-    brain.drop('utterances',axis=1,inplace=True)
+    brain = {'nodes':nodes,'patterns':patterns}
     return brain
-
-
-def get_conversations(data,conversations):
-    for key in data['conversations']:
-        new_key = "{}.{}".format(data['intent'].lower(),key)
-        if new_key not in conversations:
-            conversations[new_key] = {}
-            for attr in data['conversations'][key]:
-                if attr.lower() not in ['command','node_type','responses']:
-                    conversations[new_key][attr] = "{}.{}".format(data['intent'].lower(),data['conversations'][key][attr])
-                else:
-                    conversations[new_key][attr] = data['conversations'][key][attr]
-        else:
-            logging.error("ERROR: Duplicate conversation entries found!")
-            print("ERROR: Duplicate conversation entries found!")
-            sys.exit(1)
-    return conversations
 
 
 def init_logging(log_file,logging_level,already_started=False):
@@ -88,14 +86,19 @@ def init_logging(log_file,logging_level,already_started=False):
     return logging
 
 
-def remove_punctuation(input_string):
+def remove_punctuation(input_string,keep_stars=False):
     # string.punctuation evaluates to:
     #   !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
+    # If keep_stars flag is True, the function does not remove '*' from input_string
+    if keep_stars:
+        punctuation = string.punctuation.replace('*','')
+    else:
+        punctuation = string.punctuation
     # Compatibility with Python 2.x and 3.x
     if sys.version_info >= (3,0):
-        result = str(input_string).translate(str.maketrans("","",string.punctuation))
+        result = str(input_string).translate(str.maketrans("","",punctuation))
     else:
-        result = str(input_string).translate(string.maketrans("",""),string.punctuation)
+        result = str(input_string).translate(string.maketrans("",""),punctuation)
     return result
 
 
