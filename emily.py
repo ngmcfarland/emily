@@ -193,6 +193,40 @@ def chat():
             break
 
 
+def serverless(message,session_id=None,**alt_config):
+    __init_config__(**alt_config)
+    # logging = utils.init_logging(log_file=config['log_file'],logging_level=config['logging_level'],already_started=True)
+    brain_dir = os.path.join(curdir, config['brain_dir'])
+    brain_files = ["{}/{}".format(brain_dir,file) for file in os.listdir(brain_dir)]
+    brain = utils.load_data(brain_files=brain_files)
+    if session_id is None:
+        session_vars = config['default_session_vars']
+        session_vars['default_session_vars'] = dict(config['default_session_vars'])
+        session_vars['next_node'] = config['starting_node']
+        session_id = sessions.create_new_session(default_session_vars=session_vars,source=config['source'],session_vars_path=config['session_vars_path'],region=config['region'])
+    else:
+        session_vars = sessions.get_session_vars(session_id=session_id,source=config['source'],session_vars_path=config['session_vars_path'],region=config['region'])
+    utils.printlog(response=message,speaker='USER')
+    emily_start_time = datetime.now()
+    # Apply optional filters before sending to brain
+    intent,new_input = utils.apply_input_filters(user_input=message)
+    response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),brain=brain,session_vars=session_vars,intent=intent)
+    utils.printlog(response=response,speaker='EMILY',noprint=True)
+    emily_response_time = datetime.now() - emily_start_time
+    logging.debug("Emily Response Time: {} seconds".format("%.3f" % emily_response_time.total_seconds()))
+    if config['logging_level'].upper() == 'DEBUG':
+        logging.debug("Session Variables:")
+        for var in session_vars:
+            logging.debug(" * {}: {}".format(var,session_vars[var]))
+    if new_input.upper() in ['QUIT','Q','EXIT','BYE']:
+        sessions.remove_session(session_id=session_id,source=config['source'],session_vars_path=config['session_vars_path'],region=config['region'])
+        logging.info("Removed session: {}".format(session_id))
+    else:
+        sessions.set_session_vars(session_id=session_id,session_vars=session_vars,source=config['source'],session_vars_path=config['session_vars_path'],region=config['region'])
+    return response,session_id
+
+
+
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1].lower() == 'chat':
         chat()
