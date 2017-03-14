@@ -1,3 +1,4 @@
+from botocore.exceptions import ClientError
 import decimal
 import random
 import json
@@ -44,8 +45,7 @@ def get_session_vars(session_id,source,session_vars_path,region='us-east-1'):
         finally:
             return session_vars
     elif source.upper() == 'DYNAMODB':
-        if 'boto3' not in sys.modules:
-            import boto3
+        import boto3
         dynamodb = boto3.resource("dynamodb", region_name=region.lower())
         table = dynamodb.Table(session_vars_path)
         try:
@@ -74,8 +74,7 @@ def set_session_vars(session_id,session_vars,source,session_vars_path,region='us
         with open(os.path.join(curdir,session_vars_path),'w') as f:
             f.write(json.dumps(all_session_vars))
     elif source.upper() == 'DYNAMODB':
-        if 'boto3' not in sys.modules:
-            import boto3
+        import boto3
         # Check if session_id already exists
         old_session_vars = get_session_vars(session_id=session_id,source=source,session_vars_path=session_vars_path,region=region)
         dynamodb = boto3.resource("dynamodb", region_name=region.lower())
@@ -118,8 +117,7 @@ def create_new_session(default_session_vars,source,session_vars_path,region='us-
         set_session_vars(session_id=session_id,session_vars=default_session_vars,source=source,session_vars_path=session_vars_path,region=region)
         return session_id
     elif source.upper() == 'DYNAMODB':
-        if 'boto3' not in sys.modules:
-            import boto3
+        import boto3
         dynamodb = boto3.resource("dynamodb", region_name=region.lower())
         table = dynamodb.Table(session_vars_path)
         try:
@@ -158,8 +156,7 @@ def remove_session(session_id,source,session_vars_path,region='us-east-1'):
         with open(os.path.join(curdir,session_vars_path),'w') as f:
             f.write(json.dumps(all_session_vars))
     elif source.upper() == 'DYNAMODB':
-        if 'boto3' not in sys.modules:
-            import boto3
+        import boto3
         dynamodb = boto3.resource("dynamodb", region_name=region.lower())
         table = dynamodb.Table(session_vars_path)
         try:
