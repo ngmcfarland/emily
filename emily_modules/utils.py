@@ -9,69 +9,93 @@ import re
 import os
 
 
-def load_data(brain_files=[]):
-    brain_files = [file for file in brain_files if file.lower().endswith('.json') or file.lower().endswith('.yaml')]
-    logging.info("Loading brain files: {}".format(brain_files))
-    brain_count = len(brain_files)
+def load_data(brain_files=[],brain_table=None,source='LOCAL',region='us-east-1'):
     nodes = {}
     patterns = {}
-    for filename in brain_files:
+    if source.upper() == 'LOCAL':
+        brain_files = [file for file in brain_files if file.lower().endswith('.json') or file.lower().endswith('.yaml')]
+        logging.info("Loading brain files: {}".format(brain_files))
+        brain_count = len(brain_files)
+        for filename in brain_files:
+            try:
+                if filename.lower().endswith('.json'):
+                    with open(filename,'r') as f:
+                        data = json.loads(f.read())
+                elif filename.lower().endswith('.yaml'):
+                    with open(filename,'r') as f:
+                        data = yaml.load(f.read())
+                nodes,patterns = load_brain(nodes=nodes,patterns=patterns,data=data)
+            except:
+                print("Failed to load {}".format(filename))
+                logging.error("Failed to load {}".format(filename))
+                print("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
+                logging.error("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
+                brain_count -= 1
+        logging.info("Loaded {} brain files".format(brain_count))
+    elif source.upper() == 'DYNAMODB':
         try:
-            if filename.lower().endswith('.json'):
-                with open(filename,'r') as f:
-                    data = json.loads(f.read())
-            elif filename.lower().endswith('.yaml'):
-                with open(filename,'r') as f:
-                    data = yaml.load(f.read())
-            for convo_key in data['conversations']:
-                conversation = data['conversations'][convo_key]
-                pattern_key = "{}.{}".format(data['intent'],convo_key)
-                patterns[pattern_key] = []
-                for node_key in conversation:
-                    new_key = "{}.{}.{}".format(data['intent'],convo_key,node_key)
-                    if new_key not in nodes:
-                        nodes[new_key] = {}
-                        node = conversation[node_key]
-                        for attr in node:
-                            if attr == 'pattern':
-                                patterns[pattern_key].append((node[attr].lower(),new_key))
-                            elif attr == 'utterances':
-                                patterns[pattern_key] += [(utterance.lower(),new_key) for utterance in node['utterances']]
-                            elif attr == 'conversation':
-                                if node[attr].count('.') == 0:
-                                    nodes[new_key][attr] = "{}.{}".format(data['intent'],node[attr])
-                                else:
-                                    nodes[new_key][attr] = node[attr]
-                            elif attr == 'node_options':
-                                new_options = []
-                                for option in node[attr]:
-                                    if option.count('.') == 0:
-                                        new_options.append("{}.{}.{}".format(data['intent'],convo_key,option))
-                                    elif option.count('.') == 1:
-                                        new_options.append("{}.{}".format(data['intent'],option))
-                                    else:
-                                        new_options.append(option)
-                                nodes[new_key][attr] = new_options
-                            elif attr not in ['node_type','responses','vars','reset','preset','chain','command']:
-                                if node[attr] is not None and node[attr].count('.') == 0:
-                                    nodes[new_key][attr] = "{}.{}.{}".format(data['intent'],convo_key,node[attr])
-                                elif node[attr] is not None and node[attr].count('.') == 1:
-                                    nodes[new_key][attr] = "{}.{}".format(data['intent'],node[attr])
-                                else:
-                                    nodes[new_key][attr] = node[attr]
-                            else:
-                                nodes[new_key][attr] = node[attr]
-                    else:
-                        logging.error("Duplicate node key entry - node not added to brain: {}".format(new_key))
+            import boto3
+            client = boto3.client('dynamodb')
+            response = client.scan(TableName=brain_table)
+            if response['ResponseMetadata']['HTTPStatusCode'] == 200:
+                brain_count = response['Count']
+                for brain in response['Items']:
+                    data = json.loads(brain['brain'])
+                    nodes,pattern = load_brain(nodes=nodes,patterns=patterns,data=data)
+            else:
+                logging.error("Failed to scan DynamoDB table: {}".format(brain_table))
         except:
-            print("Failed to load {}".format(filename))
-            logging.error("Failed to load {}".format(filename))
-            print("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
-            logging.error("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
-            brain_count -= 1
-    logging.info("Loaded {} brain files".format(brain_count))
+                print("Failed to load {}".format(filename))
+                logging.error("Failed to load {}".format(filename))
+                print("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
+                logging.error("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
+                brain_count -= 1
     brain = {'nodes':nodes,'patterns':patterns}
     return brain
+
+
+def load_brain(nodes,patterns,data):
+    for convo_key in data['conversations']:
+        conversation = data['conversations'][convo_key]
+        pattern_key = "{}.{}".format(data['intent'],convo_key)
+        patterns[pattern_key] = []
+        for node_key in conversation:
+            new_key = "{}.{}.{}".format(data['intent'],convo_key,node_key)
+            if new_key not in nodes:
+                nodes[new_key] = {}
+                node = conversation[node_key]
+                for attr in node:
+                    if attr == 'pattern':
+                        patterns[pattern_key].append((node[attr].lower(),new_key))
+                    elif attr == 'utterances':
+                        patterns[pattern_key] += [(utterance.lower(),new_key) for utterance in node['utterances']]
+                    elif attr == 'conversation':
+                        if node[attr].count('.') == 0:
+                            nodes[new_key][attr] = "{}.{}".format(data['intent'],node[attr])
+                        else:
+                            nodes[new_key][attr] = node[attr]
+                    elif attr == 'node_options':
+                        new_options = []
+                        for option in node[attr]:
+                            if option.count('.') == 0:
+                                new_options.append("{}.{}.{}".format(data['intent'],convo_key,option))
+                            elif option.count('.') == 1:
+                                new_options.append("{}.{}".format(data['intent'],option))
+                            else:
+                                new_options.append(option)
+                        nodes[new_key][attr] = new_options
+                    elif attr not in ['node_type','responses','vars','reset','preset','chain','command']:
+                        if node[attr] is not None and node[attr].count('.') == 0:
+                            nodes[new_key][attr] = "{}.{}.{}".format(data['intent'],convo_key,node[attr])
+                        elif node[attr] is not None and node[attr].count('.') == 1:
+                            nodes[new_key][attr] = "{}.{}".format(data['intent'],node[attr])
+                        else:
+                            nodes[new_key][attr] = node[attr]
+                    else:
+                        nodes[new_key][attr] = node[attr]
+            else:
+                logging.error("Duplicate node key entry - node not added to brain: {}".format(new_key))
+    return nodes,patterns
 
 
 def init_logging(log_file,logging_level,already_started=False):

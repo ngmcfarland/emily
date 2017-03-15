@@ -1,15 +1,22 @@
 # Standard config variables
 log_file: log/emily.log
-brain_dir: brain
 logging_level: DEBUG
 emily_port: 8000
 default_session_vars: {'conversation':'default'}
 
+# Brain
+
+# Use LOCAL for local brain storage, DYNAMODB for AWS storage
+brain_source: LOCAL
+
+# Path to brain directory when source is LOCAL
+# DynamoDB table name when source is DYNAMODB
+brain_path: brain
+
 # Session variables
 
-# Use LOCAL for local session variable storage
-# Use DYNAMODB for AWS storage
-source: LOCAL
+# Use LOCAL for local session variable storage, DYNAMODB for AWS storage
+session_vars_source: LOCAL
 
 # Path to session vars file when source is LOCAL
 # DynamoDB table name when source is DYNAMODB
