@@ -15,44 +15,46 @@ Example JSON brain file structure:
 
   {
     "intent": "example",
-    "topics": [
-      {
-        "topic": "NONE",
-        "categories": [
-          {
-            "pattern": "MATCH THIS TEXT",
-            "template": {
-              "type": "V",
-              "vars": [
-                {
-                  "name": "my_temp_var",
-                  "value": "I set this"
-                }
-              ],
-              "response": "I matched it! I also set my_temp_var to: {{my_temp_var}}"
-            },
-            "utterances": [
-              "OR MATCH THIS TEXT",
-              "OR MATCH * TEXT"
-            ]
-          }
-        ] 
-      }
-    ],
     "conversations": {
-      "example_node": {
-        "node_type": "response",
-        "responses": [
-          "Say this",
-          "Or this"
-        ],
-        "next_node": "example_node_2"
+      "default": {
+        "first_example_node": {
+          "node_type": "response",
+          "pattern": "match this text",
+          "utterances": [
+            "or match this text",
+            "or match * text"
+          ],
+          "vars": [
+            {
+              "name": "my_temp_var",
+              "value": "I set this"
+            }
+          ],
+          "responses": [
+            "I matched it! I also set my_temp_var to: {my_temp_var}"
+          ]
+        },
+        "second_example_node": {
+          "node_type": "router",
+          "pattern": "go to other conversation",
+          "next_node": "other_conversation.third_example_node"
+        }
       },
-      "example_node_2": {
-        "node_type": "response",
-        "responses": [
-          "Also say this"
-        ]
+      "other_conversation": {
+        "third_example_node": {
+          "node_type": "response",
+          "responses": [
+            "Say this",
+            "or this"
+          ],
+          "next_node": "fourth_example_node"
+        },
+        "fourth_example_node": {
+          "node_type": "response",
+          "responses": [
+            "Also say this"
+          ]
+        }
       }
     }
   }
@@ -62,192 +64,123 @@ Example YAML brain file structure:
 .. code-block:: yaml
 
   intent: example
-  topics:
-    -
-      topic: NONE
-      categories:
-        -
-          pattern: MATCH THIS TEXT
-          template:
-            type: V
-            vars:
-              -
-                name: my_temp_var
-                value: I set this
-            response: I matched it! I also set my_temp_var to: {{my_temp_var}}
-          utterances:
-            - OR MATCH THIS TEXT
-            - "OR MATCH * TEXT"
   conversations:
-    example_node:
-      node_type: response
-      responses:
-        - Say this
-        - Or this
-      next_node: example_node_2
-    example_node_2: {
-      node_type: response
-      responses:
-        - Also say this
+    default:
+      first_example_node:
+        node_type: response
+        pattern: match this text
+        utterances:
+          - or match this text
+          - "or match * text"
+        vars:
+          -
+            name: my_temp_var
+            value: I set this
+        responses:
+          - I matched it! I also set my_temp_var to: {my_temp_var}
+      second_example_node:
+        node_type: router
+        pattern: go to other conversation
+        next_node: other_conversation.third_example_node
+    other_conversation:
+      third_example_node:
+        node_type: response
+        responses:
+          - Say this
+          - or this
+        next_node: fourth_example_node
+      fourth_example_node:
+        node_type: response
+        responses:
+          - Also say this
 
 Intents
 -------
 
-By convention, intents are the uppercase equivalent of the brain file name. If "intent_command" is specified in Emily's settings, Emily will attempt to match the result string from the intent command to the intent of one of her brain files.
+By convention, intents are the lowercase, separated by underscores, and equivalent to the brain file name.
+If "intent_command" is specified in Emily's settings, Emily will attempt to match the result string from the intent command to the intent of one of her brain files.
 
-Topics
-------
+Internally, all the conversation nodes are referenced using the following format: <intent>.<conversation>.<node_tag>
 
-Topics allow Emily to understand things in context, and provide structure for *extremely simple* back-and-forth conversations (for more complicated converations, use conversation nodes shown below). At all times, there is a session variable with the name "topic". Most of the time, topic is set to "NONE", so any responses from brain files containing "NONE" topics will be matched.
-
-A category in a brain file can temporarily set the "topic" variable to a different topic to have Emily search for matching patterns in that topic first. If a pattern is not matched in the specific topic set by a category, Emily will always check for matches in the "NONE" topic before answering with a default response.
-
-See the personality brain file for examples of topic usage.
-
-Categories
-~~~~~~~~~~
-
-Categories always contain a "pattern" and a "template", and can optionally contain "utterances" (other patterns that should have the same result). Emily will try to match the user's input to a pattern or utterance, and then use the template to determine how to respond.
-
-Patterns and Utterances
-~~~~~~~~~~~~~~~~~~~~~~~
-
-*Patterns should always be upper case, and contain no punctuation.*
-
-Emily does support the use of stars ("\*") in patterns. Meaning, a pattern of "HELLO \*" will match a user's input of "Hello, World!". Note that all punctuation (including apostrophes) are stripped from the user's input when matching patterns.
-
-Utterances follow the same conventions as patterns. The list of utterances is simply a convenience so that a single template can be accessed by multiple patterns.
-
-Note: YAML syntax requires that patterns or utterances that contain a "*" be enclosed in double quotes. See YAML example above.
-
-Templates
-~~~~~~~~~
-
-Templates direct Emily on how to respond when a pattern or utterance is matched. Emily understands the following types:
-
-======= ========================================= ==================================== ============================================================================
- Type    Description                               Supporting Attributes                Examples
-======= ========================================= ==================================== ============================================================================
- V       Direct response                           "response"                           basic_chat.json - "HELLO"
- U       Redirect to different pattern             "redirect"                           Primarily used for re-formatting user input
- W       Run command                               "presponse", "command", "response"   time_and_date.json - "CURRENT TIME"
- E       Choose random template from array         "responses"                          jokes.yaml - "TELL ME A JOKE"
- WU      Run command, then redirect to pattern     "presponse", "command", "redirect"   While supported, this functionality better achieved through conversations.
- Y       Choose response based on variable value   "var", "conditions", "fallback"      basic_chat.json - "WHAT IS MY NAME"
- C       Start a conversation                      "node"                               sports.json - "ASK ME ABOUT SPORTS"
-======= ========================================= ==================================== ============================================================================
-
-============ ============= ==========================================================================================================================
- Attribute    Object Type   Description
-============ ============= ==========================================================================================================================
- response     string        Verbatim string for how Emily should respond. Can include references to session variables and command outputs.
- redirect     string        Pattern that Emily should redirect to for a response.
- presponse    string        Short for "Pre-Response". For commands that may take time, a pre-response can be added to acknowledge user input.
- command      string        Python command. Use module syntax: "datetime.datetime.now()"
- responses    array         An array of response templates. The templates can be of any of the types listed in the table above.
- var          string        The name of the variable that will be checked during the condition template.
- conditions   array         An array of categories that Emily will use to match against the value of the "var".
- fallback     template      A response template used as the default during a condition in the event that none of the other conditions are satisfied.
- node         string        Unique key for a conversation node. See Conversations for more details.
-============ ============= ==========================================================================================================================
-
-In addition to these attributes, there are special attributes used for setting and resetting variables as defined below.
-
-Variables
-~~~~~~~~~
-
-All response template types can use variables in redirects, responses, presponses, conditions, etc. Session variables persist while Emily is running.
-Inside of any response template type, you can include an optional parameter for setting variables like this:
-
-.. code-block:: json
-
-  "vars": [
-    {
-      "name": "my_var",
-      "value": "This is the value"
-    },
-    {
-      "name": "my_other_var",
-      "value": "This is the other value"
-    }
-  ]
-
-By convention, variable names should be lowercase with underscore-separated words.
-
-Variables can be removed or reset to their defaults (like in the case of the "topic" variable) by including this parameter in any response template:
-
-.. code-block:: json
-
-  "reset": ["my_var","topic"]
-
-**Note:** The variables specified in the "reset" attribute will be reset *after* the template has been processed.
-Meaning the variables are still available for commands, responses, redirects, etc.
-At times, this is not the desired behavior, so there is a second option that resets the variable values *before* any further processing of the template:
-
-.. code-block:: json
-
-  "preset": ["my_var","topic"]
-
-Variables can be referenced by name using the following syntax:
-
-.. code-block:: json
-
-  "response": "My variable value is: {{my_var}}"
-
-When stars ("\*") are used in the "pattern" value of the category, their matched values can be referenced using the following syntax:
-
-.. code-block:: json
-
-  "pattern": "ROSES ARE * VIOLETS ARE *",
-  "template": {
-    "type": "V",
-    "response": "You said {{1}} is the color of roses, and {{2}} is the color of violets."
-  }
-
-When running commands inside of response templates (like in the "W" and "WU" types), you can reference the results of the command with the following syntax:
-
-.. code-block:: json
-
-  "type": "W",
-  "command": "my_module.run_something('{{1}}','OTHER')",
-  "response": "Here are the results: {{}}"
-
-The above syntax ("{{}}") will return the entire result in the response, regardless of whether the response is a string or other type of Python object.
-A more helpful method is to have your custom function defined in the "command" attribute return a Python dictionary.
-When a dictionary is returned, Emily automatically adds all of the dictionary's key-value pairs to the current session variables which makes them usable in responses, redirects, etc.
-
-
-.. code-block:: python
-
-    # Example function inside my_module.py
-    def split_by_dash(input_string):
-        string1,string2 = input_string.split("-")
-        return {'first':string1,'second':string2}
-
-.. code-block:: json
-
-  "type": "W",
-  "command": "my_module.split_by_dash(input_string='try-this')",
-  "response": "First string: {{first}}, Second string: {{second}}"
-
-**Note that Emily will overwrite any previous session variables with the values returned in the command's response**
+In the examples above, the first example node is actually referenced using "example.default.first_example_node", and the third example node is "example.other_conversation.third_example_node".
+If <intent> and/or <conversation> are not explicitly stated, local references will be assumed (see "next_node" attribute of "third_example_node").
 
 Conversations
 -------------
 
-Topics, patterns, and templates are useful for intelligently responding to a wide variety of user inputs, but they become very complex in interactions that involve more than a call and response.
-Conversations create a simple way of defining a flow of questions and responses which can mimic natural speech. They allow Emily to easily go deeper on one subject without losing context or getting confused.
+Conversations are logical groupings of conversation nodes so that Emily can have a coherent conversation without getting confused.
+All brain files should include a 'default' conversation, but have the option of including many more conversations.
+By setting the "conversation" session variable (see variables section below), you can control which patterns/utterances Emily will match user input against.
+By default, the "conversation" session variable is set to 'default' which causes Emily to search for patterns/utterances in 'default' conversations across all her brain files.
 
-  *When writing a brain file, use topics to go wide, and conversations to go deep.*
+In the sample below, you can see that routing the conversation to either "blue_flower" or "red_flower" will change Emily's answer when the user asks "What color is the flower?".
 
-For an example of conversations, look at the "sports.json" brain file and the "sports.py" module in emily/emily_modules.
+After processing a node inside a non-default conversation, the "conversation" session variable will automatically be reset to 'default'.
+
+If a pattern/utterance from a non-default conversation is not matched to the user input, Emily will also search the default conversations as a fall back.
+
+.. code-block:: json
+
+  {
+    "intent": "conversation_example",
+    "conversations": {
+      "default": {
+        "pick_blue_flower": {
+          "node_type": "response",
+          "pattern": "pick a blue flower",
+          "utterances": [
+            "choose a blue flower"
+          ],
+          "responses": [
+            "Okay, I have picked the flower."
+          ],
+          "conversation": "blue_flower"
+        },
+        "pick_red_flower": {
+          "node_type": "response",
+          "pattern": "pick a red flower",
+          "utterances": [
+            "choose a red flower"
+          ],
+          "responses": [
+            "Okay, I have picked the flower."
+          ],
+          "conversation": "red_flower"
+        }
+      },
+      "blue_flower": {
+        "what_color": {
+          "node_type": "response",
+          "pattern": "what color is it",
+          "utterances": [
+            "what color is the flower"
+          ],
+          "responses": [
+            "The flower is blue."
+          ]
+        }
+      },
+      "red_flower": {
+        "what_color": {
+          "node_type": "response",
+          "pattern": "what color is it",
+          "utterances": [
+            "what color is the flower"
+          ],
+          "responses": [
+            "The flower is red."
+          ]
+        }
+      }
+    }
+  }
 
 Nodes
 ~~~~~
 
-The "conversations" attribute in the brain file is a JSON or YAML object containing conversation nodes. Each node has a unique key by which it is referenced.
+Each conversation is a JSON or YAML object containing conversation nodes. Each node has a unique key by which it is referenced.
 
-The values chosen for node keys are irrelevant save for the fact that they must be unique *within that brain file*. Randomly generated keys can be used, but it is recommended that logical key values be used for human readability.
+The values chosen for node keys are irrelevant save for the fact that they must be unique *within that conversation*. Randomly generated keys can be used, but it is recommended that logical key values be used for human readability.
 
 Node Types
 ~~~~~~~~~~
@@ -258,15 +191,25 @@ There are five node types that can be used in creating a conversation.
  Type            Required Attributes
 =============== ==========================================================================
  response        "responses"
- string_logic    "command", "unknown_node"
- yes_no_logic    "yes_node", "yes_prime_node", "no_node", "no_prime_node", "unknown_node"
+ router          "next_node" or "node_options"
  simple_logic    "command"
- error           "responses"
+ yes_no_logic    "yes_node", "yes_prime_node", "no_node", "no_prime_node", "unknown_node"
+ string_logic    "command", "unknown_node"
 =============== ==========================================================================
 
 Optional Attributes for All Types:
 
-"error_node", "next_node"
+============= ===========================================================================================
+ Attribute     Description
+============= ===========================================================================================
+ pattern       A string of text for Emily to match the user's input against
+ utterances    Additional strings that Emily will reference when trying to match user input
+ error_node    Used with logic nodes, this attribute defines a node to route to in the event of an error
+ next_node     The next node to route to after processing the current node
+ vars          A list of variables to assign to the user's session variables
+ reset         A list of variables to reset after the node has been processed
+ preset        A list of variables to reset before the node has been processed
+============= ===========================================================================================
 
 **Response:**
 
@@ -277,6 +220,11 @@ Once a response node is reached that does not have another response node in the 
 
   "example_greeting_1": {
     "node_type": "response",
+    "pattern": "hello",
+    "utterances": [
+      "hi",
+      "hey"
+    ],
     "responses": [
       "Hello!",
       "Hey!",
@@ -290,16 +238,75 @@ Once a response node is reached that does not have another response node in the 
       "How are you today?",
       "How's your day going?"
     ],
-    "next_node": "some_other_node"
+    "next_node": "some_logic_node"
   }
 
 Responses are chosen by Emily at random, but output from above could be:
 
 .. code-block:: bash
 
+    User  >   hi
+
     Emily >   Hey! How are you today?
 
     User  >   
+
+**Router:**
+
+A router node is used to match the user's input using patterns and utterances, and route Emily to the appropriate response or logic node.
+This is often used to route to a conversation outside of 'default'.
+A router node can direct to the next node by using either a 'next_node' attribute (single node) or a 'node_options' attribute (one or more nodes chosen at random).
+
+.. code-block:: json
+
+  {
+    "intent": "router_examples",
+    "conversations": {
+      "default": {
+        "catch_input_1": {
+          "node_type": "router",
+          "pattern": "tell me about cats",
+          "utterances": [
+            "i want to know about cats",
+            "talk about cats"
+          ],
+          "next_node": "cats.cat_fact"
+        },
+        "catch_input_2": {
+          "node_type": "router",
+          "pattern": "tell me about pets",
+          "utterances": [
+            "i want to know about pets",
+            "talk about pets"
+          ],
+          "node_options": [
+            "cats.cat_fact",
+            "dogs.dog_fact"
+          ]
+        }
+      },
+      "cats": {
+        "cat_fact": {
+          "node_type": "response",
+          "responses": [
+            "A group of cats is called a 'clowder'",
+            "Cats sleep 70% of their lives",
+            "Cats have over 20 muscles that control their ears"
+          ]
+        }
+      },
+      "dogs": {
+        "dog_fact": {
+          "node_type": "response",
+          "responses": [
+            "Corgi is Welsh for 'dwarf dog'",
+            "A dog's sense of smell is 10,000 times stronger than a human's",
+            "Dogs have at least 18 muscles in each ear"
+          ]
+        }
+      }
+    }
+  }
 
 **Simple Logic:**
 
@@ -335,6 +342,7 @@ Possible Answers:
 
   "ask_about_dogs": {
     "node_type": "response",
+    "pattern": "ask me about dogs",
     "responses": [
       "Do you like dogs?"
     ],
@@ -380,16 +388,116 @@ The 'string' value will be compared to the attributes in the string_logic node a
 
 In the example above, if the user answered "What is your favorite type of dog?" with "A labrador" and the check_dog_type function returns {'string': 'lab'}, Emily will go to "lab_response".
 
-**Error:**
+Patterns and Utterances
+~~~~~~~~~~~~~~~~~~~~~~~
 
-The error node type is similar to a response node, and allows Emily to gracefully exit a conversation when she gets lost or confused by a user's input.
+By convention, patterns/utterances are lowercase and do not include any punctuation.
+
+Emily does support the use of stars ("\*") in patterns. Meaning, a pattern of "HELLO \*" will match a user's input of "Hello, World!". Note that all punctuation (including apostrophes) are stripped from the user's input when matching patterns.
+
+Utterances follow the same conventions as patterns. The list of utterances is simply a convenience so that a single template can be accessed by multiple patterns.
+
+Note: YAML syntax requires that patterns or utterances that contain a "*" be enclosed in double quotes. See YAML example above.
+
+Variables
+~~~~~~~~~
+
+All node types can use variables in patterns, utterances, responses, and commands. Session variables persist while Emily is running.
+Inside of any node, you can include an optional parameter for setting variables like this:
 
 .. code-block:: json
 
-  "catch_all_error": {
-    "node_type": "error",
+  "vars": [
+    {
+      "name": "my_var",
+      "value": "This is the value"
+    },
+    {
+      "name": "my_other_var",
+      "value": "This is the other value"
+    }
+  ]
+
+By convention, variable names should be lowercase with underscore-separated words.
+
+Variables can be removed or reset to their defaults (like in the case of the "conversation" variable) by including this parameter in any response template:
+
+.. code-block:: json
+
+  "reset": ["my_var","conversation"]
+
+**Note:** The variables specified in the "reset" attribute will be reset *after* the template has been processed.
+Meaning the variables are still available for commands, responses, redirects, etc.
+At times, this is not the desired behavior, so there is a second option that resets the variable values *before* any further processing of the template:
+
+.. code-block:: json
+
+  "preset": ["my_var","conversation"]
+
+Variables can be referenced by name using the following syntax:
+
+.. code-block:: json
+
+  "response": "My variable value is: {my_var}"
+
+When stars ("\*") are used in the "pattern" value of the category, their matched values can be referenced using the following syntax:
+
+.. code-block:: json
+
+  "node_type": "response",
+  "pattern": "roses are * violets are *",
+  "responses": [
+    "You said {1} is the color of roses, and {2} is the color of violets."
+  ]
+
+When running commands inside of logic nodes (like the "simple_logic", "yes_no_logic", and "string_logic" types), you can reference the results of the command with the following syntax:
+
+.. code-block:: json
+
+  "logic_example": {
+    "node_type": "simple_logic",
+    "pattern": "process *",
+    "command": "my_module.run_something('{1}','OTHER')",
+    "next_node": "response_example"
+  },
+  "response_example": {
+    "node_type": "response",
     "responses": [
-      "I'm sorry, I don't know what you're asking",
-      "I got a little confused there..."
+      "Okay, I processed {command_result}"
     ]
   }
+
+The above syntax ("{command_result}") will return the entire result in the response, regardless of whether the response is a string or other type of Python object.
+A more helpful method is to have your custom function defined in the "command" attribute return a Python dictionary.
+When a dictionary is returned, Emily automatically adds all of the dictionary's key-value pairs to the current session variables which makes them usable in responses, redirects, etc.
+
+
+.. code-block:: python
+
+    # Example function inside my_module.py
+    def split_by_dash(input_string):
+        string1,string2 = input_string.split("-")
+        return {'first':string1,'second':string2}
+
+.. code-block:: json
+
+  "logic_example": {
+    "node_type": "simple_logic",
+    "pattern": "split *",
+    "command": "my_module.split_by_dash(input_string='{1}')",
+    "next_node": "response_example"
+  },
+  "response_example": {
+    "node_type": "response",
+    "vars": [
+      {
+        "name": "saved_for_later",
+        "value": "{first}, {second}"
+      }
+    ],
+    "responses": [
+      "First string: {first}, Second string: {second}"
+    ]
+  }
+
+**Note that Emily will overwrite any previous session variables with the values returned in the command's response**

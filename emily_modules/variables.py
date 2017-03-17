@@ -46,9 +46,9 @@ def reset_vars(session_vars,template,key='reset'):
         else:
             for var in template[key]:
                 try:
-                    if var.lower() == 'topic':
-                        session_vars[var.lower()] = 'NONE'
-                        logging.info("Reset 'topic' to 'NONE'")
+                    if var.lower() == 'conversation':
+                        session_vars[var.lower()] = 'default'
+                        logging.info("Reset 'conversation' to 'default'")
                     else:
                         popped_value = session_vars.pop(var.lower())
                         logging.info("Removed session variable '{}' with value '{}'".format(var.lower(),popped_value))

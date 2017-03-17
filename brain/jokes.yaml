@@ -36,7 +36,7 @@ conversations:
         - Velcro... What a rip-off.
         - I'm reading a book on the history of glue - can't put it down.
     tell_joke:
-      node_type: random
+      node_type: router
       pattern: tell me a joke
       utterances:
         - i want to hear a joke

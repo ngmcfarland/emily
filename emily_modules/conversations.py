@@ -26,10 +26,6 @@ def process_node(node_tag,nodes,session_vars,responses,user_input=None):
         next_node,success = router_node(node=node)
         if success and next_node is not None:
             responses,session_vars,conversation = process_node(node_tag=next_node,nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
-    elif node['node_type'] == 'random':
-        next_node,success = random_node(node=node)
-        if success and next_node is not None:
-            responses,session_vars,conversation = process_node(node_tag=next_node,nodes=nodes,session_vars=session_vars,responses=responses,user_input=user_input)
     elif node['node_type'] == 'simple_logic':
         session_vars,success = simple_logic_node(node=node,session_vars=session_vars,user_input=user_input)
         if success:
@@ -67,12 +63,7 @@ def response_node(node,session_vars,responses):
         success = False
         logging.debug("Getting random response from: {}".format(node['responses']))
         response = node['responses'][random.randint(0,len(node['responses'])-1)]
-        replace_vars = re.findall(r"\{([^\{\}]*)\}",response,re.IGNORECASE)
-        for var in replace_vars:
-            try:
-                response = re.sub(r"\{"+var+r"\}",str(session_vars[var]),response,re.IGNORECASE)
-            except KeyError:
-                pass
+        response = variables.replace_vars(session_vars=session_vars,response=response)
         responses.append(response)
         success = True
     except KeyError as e:
@@ -84,20 +75,12 @@ def response_node(node,session_vars,responses):
 def router_node(node):
     try:
         success = False
-        next_node = True
-        next_node = node['next_node']
-        success = True
-    except KeyError as e:
-        logging.error("Router node missing attribute: {}".format(e))
-    return next_node,success
-
-
-def random_node(node):
-    try:
-        success = False
         next_node = None
-        logging.debug("Getting random node from: {}".format(node['node_options']))
-        next_node = node['node_options'][random.randint(0,len(node['node_options'])-1)]
+        if 'node_options' in node:
+            logging.debug("Getting random node from: {}".format(node['node_options']))
+            next_node = node['node_options'][random.randint(0,len(node['node_options'])-1)]
+        else:
+            next_node = node['next_node']
         success = True
     except KeyError as e:
         logging.error("Random node missing attribute: {}".format(e))
@@ -112,12 +95,7 @@ def simple_logic_node(node,session_vars,user_input):
             command = node['command'].replace('{user_input}',user_input)
         else:
             command = node['command']
-        replace_vars = re.findall(r"\{([^\{\}]*)\}",command,re.IGNORECASE)
-        for var in replace_vars:
-            try:
-                command = re.sub(r"\{"+var+r"\}",str(session_vars[var]),command,re.IGNORECASE)
-            except KeyError:
-                pass
+        command = variables.replace_vars(session_vars=session_vars,response=command)
         result = run_command.run(command)
         command_response = result['response']
         if result['success']:
@@ -167,12 +145,7 @@ def string_logic_node(node,session_vars,user_input):
             command = node['command'].replace('{user_input}',user_input)
         else:
             command = node['command']
-        replace_vars = re.findall(r"\{([^\{\}]*)\}",command,re.IGNORECASE)
-        for var in replace_vars:
-            try:
-                command = re.sub(r"\{"+var+r"\}",session_vars[var],command,re.IGNORECASE)
-            except KeyError:
-                pass
+        command = variables.replace_vars(session_vars=session_vars,response=command)
         result = run_command.run(command)
         command_response = result['response']
         if result['success'] and 'string' in command_response:

@@ -22,7 +22,11 @@ def match_input(user_input,brain,session_vars,intent=None):
                 patterns = brain['patterns']
             conversation = session_vars['conversation'] if 'conversation' in session_vars else 'default'
             best_match = match_patterns(user_input=user_input.lower(),patterns=patterns,conversation=conversation,session_vars=session_vars)
-            next_node = best_match[2] if best_match is not None else None
+            if best_match is not None:
+                next_node = best_match[2]
+                session_vars = variables.check_stars(pattern=best_match[1],user_input=user_input,session_vars=session_vars)
+            else:
+                next_node = None
         else:
             next_node = session_vars['next_node']
         if next_node is not None:
@@ -30,6 +34,7 @@ def match_input(user_input,brain,session_vars,intent=None):
             responses,session_vars,conversation = conversations.process_node(node_tag=next_node,nodes=brain['nodes'],session_vars=session_vars,responses=[],user_input=user_input)
             session_vars['conversation'] = conversation
             response = " ".join(responses)
+            session_vars = variables.clear_stars(session_vars=session_vars)
         else:
             response = "I'm sorry, I don't know what you are asking."
     except:
