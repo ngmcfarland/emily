@@ -130,7 +130,7 @@ The sample brain files included with Emily provide a good introduction to Emily'
 .. code-block:: json
 
   {
-    "intent": "MY_BRAIN",
+    "intent": "my_brain",
     "conversations": {
       "default": {
         "when_i_say_this": {
