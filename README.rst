@@ -131,40 +131,41 @@ The sample brain files included with Emily provide a good introduction to Emily'
 
   {
     "intent": "MY_BRAIN",
-    "topics": [
-      {
-        "topic": "NONE",
-        "categories": [
-          {
-            "pattern": "WHEN I SAY THIS",
-            "template": {
-              "type": "V",
-              "response": "You say this"
-            }
-          },
-          {
-            "pattern": "BUT WHEN I SAY THIS",
-            "template": {
-              "type": "W",
-              "command": "my_submodule.my_function()",
-              "response": "Run function and print result here: {{}}"
-            }
-          },
-          {
-            "pattern": "QUIT",
-            "template": {
-              "type": "V",
-              "response": "Bye!"
-            },
-            "utterances": [
-              "EXIT",
-              "Q",
-              "BYE"
-            ]
-          }
-        ]
+    "conversations": {
+      "default": {
+        "when_i_say_this": {
+          "node_type": "response",
+          "pattern": "when i say this",
+          "responses": [
+            "You say this"
+          ]
+        },
+        "but_when_i_say_this": {
+          "node_type": "simple_logic",
+          "pattern": "but when i say this",
+          "command": "my_submodule.my_function()",
+          "next_node": "print_result"
+        },
+        "print_result": {
+          "node_type": "response",
+          "responses": [
+            "Run function and print result here: {command_result}"
+          ]
+        },
+        "quit": {
+          "node_type": "response",
+          "pattern": "quit",
+          "utterances": [
+            "exit",
+            "q",
+            "bye"
+          ],
+          "responses": [
+            "Bye!"
+          ]
+        }
       }
-    ]
+    }
   }
 
 **Inside my_submodule.py**
@@ -253,7 +254,7 @@ In addition to the paramters above, any paramter contained in the emily/emily_co
 
     # Example with Emily() Class
     session = emily.Emily(more_brains=['other/brain.json'],disable_emily_defaults=True,logging_level='INFO',emily_port=8001,log_file='my_log_dir/emily.log')
-    session_id = session.get_session(default_session_vars={'topic':'NONE','foo':'bar'})
+    session_id = session.get_session(default_session_vars={'conversation':'default','foo':'bar'})
     session.start()
 
     # Example with start_emily() function (Flask app)
