@@ -475,8 +475,8 @@ When a dictionary is returned, Emily automatically adds all of the dictionary's 
 .. code-block:: python
 
     # Example function inside my_module.py
-    def split_by_dash(input_string):
-        string1,string2 = input_string.split("-")
+    def split_by_spaces(input_string):
+        string1,string2 = input_string.split(" ")
         return {'first':string1,'second':string2}
 
 .. code-block:: json
@@ -484,7 +484,7 @@ When a dictionary is returned, Emily automatically adds all of the dictionary's 
   "logic_example": {
     "node_type": "simple_logic",
     "pattern": "split *",
-    "command": "my_module.split_by_dash(input_string='{1}')",
+    "command": "my_module.split_by_spaces(input_string='{1}')",
     "next_node": "response_example"
   },
   "response_example": {

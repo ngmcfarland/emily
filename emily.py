@@ -206,7 +206,7 @@ def chat():
             break
 
 
-def serverless(message,session_id=None,**alt_config):
+def stateless(message,session_id=None,**alt_config):
     __init_config__(**alt_config)
     # logging = utils.init_logging(log_file=config['log_file'],logging_level=config['logging_level'],already_started=True)
     if config['brain_source'].upper() == 'LOCAL':

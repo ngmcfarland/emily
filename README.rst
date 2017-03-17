@@ -49,6 +49,39 @@ Command Line Example:
     
     Emily     >  Bye!
 
+Stateless Emily:
+-----------------
+
+Emily saves sessions to disk or to DynamoDB depending on your `Configuration Parameters`_.
+Because of this, Emily can run as a stateless application, meaning she does not need to stay running and retain everything in memory.
+
+**Note:** Running Emily as a stateless application does have an negative impact on response times.
+
+.. code-block:: bash
+
+    $ python
+
+    >>> import emily
+    >>> response,session_id = emily.stateless(message="Hello")
+    >>> print(response,session_id)
+    (u'Hey there!',42279)
+    >>> response,session_id = emily.stateless(session_id=session_id,message="Tell me a joke")
+    >>> print(response,session_id)
+    (u'Knock knock',42279)
+    >>> response,session_id = emily.stateless(session_id=session_id,message="Who's there?")
+    >>> print(response,session_id)
+    (u'A pencil',42279)
+    >>> response,session_id = emily.stateless(session_id=session_id,message="A pencil who?")
+    >>> print(response,session_id)
+    (u"Never mind, it's pointless",42279)
+    >>> response,session_id = emily.stateless(session_id=session_id,message="quit")
+    >>> print(response,session_id)
+    (u'Bye!',42279)
+
+In between function calls in the example above, Emily is not running as a background process. At each execution, she loads the brain files (including jokes.yaml) and also references her saved session information which allows her to keep track of where the user is in any given conversation.
+
+Notice that the first call to the emily.stateless() function only contains a message and no session_id. Emily will automatically assign the user a session ID and return it with her response. That session ID remains valid until the user sends a message of "quit", "q", "exit", or "bye".
+
 Emily as a Web Server:
 ----------------------
 
