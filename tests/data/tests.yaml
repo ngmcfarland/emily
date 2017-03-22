@@ -1,0 +1,8 @@
+intent: tests
+conversations:
+  default:
+    test_node:
+      node_type: response
+      pattern: hello
+      responses:
+        - world
