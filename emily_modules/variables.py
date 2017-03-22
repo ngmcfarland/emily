@@ -24,12 +24,9 @@ def clear_stars(session_vars):
     return session_vars
 
 
-def set_vars(session_vars,template,command_result=None):
+def set_vars(session_vars,template):
     for var in template['vars']:
-        if command_result:
-            value = replace_vars(session_vars,var['value'],command_result)
-        else:
-            value = replace_vars(session_vars,var['value'])
+        value = replace_vars(session_vars,var['value'])
         session_vars[var['name'].lower()] = value
         logging.info("Set '{}' to '{}'".format(var['name'].lower(),value))
     return session_vars
@@ -40,7 +37,9 @@ def reset_vars(session_vars,template,key='reset'):
         if len(template[key]) == 1 and template[key][0].upper() == 'ALL':
             try:
                 logging.info("Resetting session variables to defaults")
-                session_vars = session_vars['default_session_vars']
+                temp_session_vars = session_vars['default_session_vars']
+                session_vars = dict(temp_session_vars)
+                session_vars['default_session_vars'] = dict(temp_session_vars)
             except KeyError:
                 pass
         else:

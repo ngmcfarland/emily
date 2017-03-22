@@ -12,6 +12,8 @@ import json
 import sys
 import os
 
+__version__ = '1.0.0'
+
 curdir = os.path.dirname(__file__)
 config_file = 'emily_conf/emily_config.yaml'
 with open(os.path.join(curdir,config_file),'r') as f:
@@ -140,16 +142,16 @@ def get_session():
 @app.route('/chat', methods=['POST'])
 def chat():
     response = 'None'
+    session_id = None
     if request.json is not None:
         content = request.json
+        logging.debug("Client request: {}".format(json.dumps(content)))
         if 'session_id' not in content:
-            session_id = None
             response = 'Please include session ID in request. Session ID can be obtained by performing a GET against /get_session'
         else:
             session_id = int(content['session_id']) if isinstance(content['session_id'],string_types) else content['session_id']
             message = content['message']
-            response,session_id = send_message.send(message=message,session_id=session_id)
-        response = json.dumps({'response':response,'session_id':session_id})
+            response,session_id = send_message.send(message=message,session_id=session_id,port=config['emily_port'])
     else:
         if 'session_id' not in request.form:
             response = 'Please include session ID in request. Session ID can be obtained by performing a GET against /get_session'
@@ -158,7 +160,8 @@ def chat():
             if isinstance(session_id,string_types):
                 session_id = int(session_id)
             message = request.form['message']
-            response,session_id = send_message.send(message=message,session_id=session_id)
+            response,session_id = send_message.send(message=message,session_id=session_id,port=config['emily_port'])
+    response = json.dumps({'response':response,'session_id':session_id})
     return response
 
 
@@ -206,12 +209,16 @@ def chat():
             break
 
 
-def stateless(message,session_id=None,**alt_config):
+def stateless(message,session_id=None,more_brains=[],more_vars={},disable_emily_defaults=False,**alt_config):
     __init_config__(**alt_config)
     # logging = utils.init_logging(log_file=config['log_file'],logging_level=config['logging_level'],already_started=True)
     if config['brain_source'].upper() == 'LOCAL':
-        brain_dir = os.path.join(curdir, config['brain_path'])
-        brain_files = ["{}/{}".format(brain_dir,file) for file in os.listdir(brain_dir)]
+        if not disable_emily_defaults:
+            brain_dir = os.path.join(curdir, config['brain_path'])
+            brain_files = ["{}/{}".format(brain_dir,file) for file in os.listdir(brain_dir)]
+            brain_files += more_brains
+        else:
+            brain_files = more_brains
         brain = utils.load_data(brain_files=brain_files,source=config['brain_source'])
     elif config['brain_source'].upper() == 'DYNAMODB':
         brain = utils.load_data(brain_table=config['brain_path'],source=config['brain_source'],region=config['region'])
@@ -222,6 +229,8 @@ def stateless(message,session_id=None,**alt_config):
         session_vars = config['default_session_vars']
         session_vars['default_session_vars'] = dict(config['default_session_vars'])
         session_vars['next_node'] = config['starting_node']
+        for var in more_vars:
+            session_vars[var] = more_vars[var]
         session_id = sessions.create_new_session(default_session_vars=session_vars,source=config['session_vars_source'],session_vars_path=config['session_vars_path'],region=config['region'])
     else:
         session_vars = sessions.get_session_vars(session_id=session_id,source=config['session_vars_source'],session_vars_path=config['session_vars_path'],region=config['region'])

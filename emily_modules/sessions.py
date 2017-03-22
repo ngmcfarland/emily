@@ -1,9 +1,6 @@
-from botocore.exceptions import ClientError
 import decimal
 import random
 import json
-import yaml
-import sys
 import os
 
 curdir = os.path.dirname(__file__)
@@ -46,6 +43,7 @@ def get_session_vars(session_id,source,session_vars_path,region='us-east-1'):
             return session_vars
     elif source.upper() == 'DYNAMODB':
         import boto3
+        from botocore.exceptions import ClientError
         dynamodb = boto3.resource("dynamodb", region_name=region.lower())
         table = dynamodb.Table(session_vars_path)
         try:
@@ -75,6 +73,7 @@ def set_session_vars(session_id,session_vars,source,session_vars_path,region='us
             f.write(json.dumps(all_session_vars))
     elif source.upper() == 'DYNAMODB':
         import boto3
+        from botocore.exceptions import ClientError
         # Check if session_id already exists
         old_session_vars = get_session_vars(session_id=session_id,source=source,session_vars_path=session_vars_path,region=region)
         dynamodb = boto3.resource("dynamodb", region_name=region.lower())
@@ -118,6 +117,7 @@ def create_new_session(default_session_vars,source,session_vars_path,region='us-
         return session_id
     elif source.upper() == 'DYNAMODB':
         import boto3
+        from botocore.exceptions import ClientError
         dynamodb = boto3.resource("dynamodb", region_name=region.lower())
         table = dynamodb.Table(session_vars_path)
         try:
@@ -157,6 +157,7 @@ def remove_session(session_id,source,session_vars_path,region='us-east-1'):
             f.write(json.dumps(all_session_vars))
     elif source.upper() == 'DYNAMODB':
         import boto3
+        from botocore.exceptions import ClientError
         dynamodb = boto3.resource("dynamodb", region_name=region.lower())
         table = dynamodb.Table(session_vars_path)
         try:

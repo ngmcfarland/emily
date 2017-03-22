@@ -36,10 +36,12 @@ def match_input(user_input,brain,session_vars,intent=None):
             response = " ".join(responses)
             session_vars = variables.clear_stars(session_vars=session_vars)
         else:
+            session_vars['next_node'] = None
             response = "I'm sorry, I don't know what you are asking."
     except:
         logging.error("{}".format(sys.exc_info()[0]))
         logging.error("{}".format(sys.exc_info()[1]))
+        session_vars['next_node'] = None
         response = "I'm sorry, I don't know what you are asking."
     finally:
         return response,session_vars
@@ -132,7 +134,7 @@ def score_matches(default,convo_default,convo):
     if convo is not None:
         best_match = convo
     elif convo_default is not None:
-        if convo_default == '*' and default != '*':
+        if convo_default[1] == '*' and default[1] != '*':
             best_match = default
         else:
             best_match = convo_default

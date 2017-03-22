@@ -99,15 +99,17 @@ def load_brain(nodes,patterns,data):
 
 
 def init_logging(log_file,logging_level,already_started=False):
-    numeric_level = getattr(logging, logging_level.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError('Invalid log level: {}'.format(logging_level))
-    
-    if not already_started:
-        logging.basicConfig(filename=log_file, filemode='w', format='%(asctime)s | %(levelname)-8s | %(name)-32s | %(funcName)-25s | %(message)s', datefmt='%H:%M:%S', level=numeric_level)
-    else:
-        logging.basicConfig(filename=log_file, format='%(asctime)s | %(levelname)-8s | %(name)-32s | %(funcName)-25s | %(message)s', datefmt='%H:%M:%S', level=numeric_level)
-    return logging
+    try:
+        numeric_level = getattr(logging, logging_level.upper(), None)
+        if not isinstance(numeric_level, int):
+            raise ValueError('Invalid log level: {}'.format(logging_level))
+        
+        if not already_started:
+            logging.basicConfig(filename=log_file, filemode='w', format='%(asctime)s | %(levelname)-8s | %(name)-32s | %(funcName)-25s | %(message)s', datefmt='%H:%M:%S', level=numeric_level)
+        else:
+            logging.basicConfig(filename=log_file, format='%(asctime)s | %(levelname)-8s | %(name)-32s | %(funcName)-25s | %(message)s', datefmt='%H:%M:%S', level=numeric_level)
+    finally:
+        return logging
 
 
 def remove_punctuation(input_string,keep_stars=False):
