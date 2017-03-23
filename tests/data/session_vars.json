@@ -1,1 +1,1 @@
-{"10000": {"conversation": "default", "default_session_vars": {"conversation": "default"}, "foo": "bar"}}
+{"10000": {"foo": "bar", "conversation": "default", "default_session_vars": {"conversation": "default"}}}

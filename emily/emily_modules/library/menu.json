@@ -1,0 +1,1840 @@
+{
+  "categories": [
+    {
+      "tag": "BUNDLES",
+      "name": "Bundles",
+      "items": [
+        {
+          "tag": "BIRTHDAY_CELEBRATION",
+          "name": "Birthday Celebration",
+          "description": "",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "BIRTHDAY_CELEBRATION_8",
+              "name": "8 Person Birthday Celebration",
+              "description": "",
+              "meal": false,
+              "itemPrice": 0.00,
+              "items": [
+                {
+                  "tag": "NUGGET_CFA_TRAY_HOT_SMALL",
+                  "name": "Small Hot Nuggets Tray",
+                  "description": "Bite-sized pieces of tender chicken breast, seasoned to perfection and cooked in 100% refined peanut oil. Available with your choice of six delicious sauces.",
+                  "retailModifiedItemId": 1000150,
+                  "subsGroupId": 1,
+                  "meal": false,
+                  "itemPrice": 25.50,
+                  "items": [
+                    {
+                      "tag": "8OZ_SAUCES",
+                      "name": "8oz Sauces Free",
+                      "description": "",
+                      "Maximum": "1",
+                      "meal": false,
+                      "itemPrice": 0.00
+                    },
+                    {
+                      "tag": "8OZ_SAUCES_PAID",
+                      "name": "8 oz Sauces Paid",
+                      "description": "",
+                      "meal": false,
+                      "itemPrice": 0.00
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "BIRTHDAY_CELEBRATION_15",
+              "name": "15 Person Birthday Celebration",
+              "description": "",
+              "meal": false,
+              "itemPrice": 0.00,
+              "items": [
+                {
+                  "tag": "NUGGET_CFA_TRAY_HOT_MEDIUM",
+                  "name": "Medium Hot Nuggets Tray",
+                  "description": "Bite-sized pieces of tender chicken breast, seasoned to perfection and cooked in 100% refined peanut oil. Available with your choice of six delicious sauces.",
+                  "retailModifiedItemId": 1000151,
+                  "subsGroupId": 1,
+                  "meal": false,
+                  "itemPrice": 46.50,
+                  "items": [
+                    {
+                      "tag": "8OZ_SAUCES",
+                      "name": "8oz Sauces Free",
+                      "description": "",
+                      "Maximum": "1",
+                      "meal": false,
+                      "itemPrice": 0.00
+                    },
+                    {
+                      "tag": "8OZ_SAUCES_PAID",
+                      "name": "8 oz Sauces Paid",
+                      "description": "",
+                      "meal": false,
+                      "itemPrice": 0.00
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "BIRTHDAY_CELEBRATION_24",
+              "name": "24 Person Birthday Celebration",
+              "description": "",
+              "meal": false,
+              "itemPrice": 0.00,
+              "items": [
+                {
+                  "tag": "NUGGET_CFA_TRAY_HOT_LARGE",
+                  "name": "Large Hot Nuggets Tray",
+                  "description": "Bite-sized pieces of tender chicken breast, seasoned to perfection and cooked in 100% refined peanut oil. Available with your choice of six delicious sauces.",
+                  "retailModifiedItemId": 1000152,
+                  "subsGroupId": 1,
+                  "meal": false,
+                  "itemPrice": 75.50,
+                  "items": [
+                    {
+                      "tag": "8OZ_SAUCES",
+                      "name": "8oz Sauces Free",
+                      "description": "",
+                      "Maximum": "2",
+                      "meal": false,
+                      "itemPrice": 0.00
+                    },
+                    {
+                      "tag": "8OZ_SAUCES_PAID",
+                      "name": "8 oz Sauces Paid",
+                      "description": "",
+                      "meal": false,
+                      "itemPrice": 0.00
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "OLO_BREAKFAST",
+      "name": "Breakfast",
+      "items": [
+        {
+          "tag": "CHICK_N_MINIS_TRAY",
+          "name": "Chick-n-Minis<sup>™</sup> Tray",
+          "description": "Bite-sized Chick-fil-A Nuggets nestled in warm, mouth watering mini yeast rolls that are lightly coated with honey butter spread.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "CHICK_N_MINIS_TRAY_SMALL",
+              "name": "Small Chick-n-Mini Tray",
+              "description": "Bite-sized Chick-fil-A Nuggets nestled in warm, mouth watering mini yeast rolls that are lightly coated with honey butter spread.",
+              "retailModifiedItemId": 1000521,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 15.50,
+              "items": [
+                {
+                  "tag": "8OZ_SAUCES",
+                  "name": "8oz Sauces Free",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "CHICK_N_MINIS_TRAY_LARGE",
+              "name": "Large Chick-n-Mini Tray",
+              "description": "Bite-sized Chick-fil-A Nuggets nestled in warm, mouth watering mini yeast rolls that are lightly coated with honey butter spread.",
+              "retailModifiedItemId": 1000523,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 29.50,
+              "items": [
+                {
+                  "tag": "8OZ_SAUCES",
+                  "name": "8oz Sauces Free",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "BISCUIT_CHICKEN",
+          "name": "Chick-fil-A<sup>®</sup> Chicken Biscuit",
+          "description": "A breakfast portion of our famous boneless breast of chicken, seasoned to perfection, hand-breaded, pressure cooked in 100% refined peanut oil and served on a buttermilk biscuit baked fresh at each Restaurant.",
+          "retailModifiedItemId": 1000085,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 2.25
+        },
+        {
+          "tag": "BISCUIT_SPICY_CHICKEN",
+          "name": "Chick-fil-A® Spicy Chicken Biscuit",
+          "description": "A breakfast portion of our boneless breast of chicken, seasoned with a spicy blend of peppers, hand-breaded, biscuit pressure-cooked in 100% refined peanut oil and served on a buttermilk biscuit baked fresh at each Restaurant.",
+          "retailModifiedItemId": 1002843,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 2.39
+        },
+        {
+          "tag": "BISCUIT_BACON",
+          "name": "Bacon Biscuit",
+          "description": "Delicious bacon, served on a freshly baked buttermilk biscuit.",
+          "retailModifiedItemId": 1000081,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 1.89
+        },
+        {
+          "tag": "BISCUIT_SAUSAGE",
+          "name": "Sausage Biscuit",
+          "description": "A tasty pork sausage patty, served on a freshly baked buttermilk biscuit.",
+          "retailModifiedItemId": 1000088,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 1.89
+        },
+        {
+          "tag": "BISCUIT_BUTTERED",
+          "name": "Buttered Biscuit",
+          "description": "A delicious buttermilk biscuit baked fresh at each Restaurant. Served lightly buttered or plain.",
+          "retailModifiedItemId": 1000083,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 0.89
+        },
+        {
+          "tag": "YOGURT_GREEK_PARFAIT",
+          "name": "Greek Yogurt Parfait",
+          "description": "Creamy honey vanilla Greek yogurt with fresh strawberries and your choice of toppings.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "YOGURT_GREEK_PARFAIT_COOKIE",
+              "name": "Greek Yogurt Parfait W/ Cookie Crumbs",
+              "description": "Creamy honey vanilla Greek yogurt with fresh strawberries and your choice of toppings",
+              "retailModifiedItemId": 1005315,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 3.05
+            },
+            {
+              "tag": "YOGURT_GREEK_PARFAIT_GRANOLA",
+              "name": "Greek Yogurt Parfait W/ Granola",
+              "description": "Creamy honey vanilla Greek yogurt with fresh strawberries and your choice of toppings",
+              "retailModifiedItemId": 1005316,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 3.05
+            }
+          ]
+        },
+        {
+          "tag": "FRUIT_CUP",
+          "name": "Fruit Cup",
+          "description": "A great-tasting, nutritious fruit mix made with mandarin orange segments, fresh strawberries, red and green apple pieces and Blueberries, served chilled, in a choice of sizes.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "FRUIT_CUP_SMALL",
+              "name": "Small Fruit Cup",
+              "description": "A great-tasting, nutritious fruit mix made with mandarin orange segments, fresh strawberries, red and green apple pieces and Blueberries, served chilled, in a choice of sizes.",
+              "retailModifiedItemId": 1004575,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 2.15
+            },
+            {
+              "tag": "FRUIT_CUP_MEDIUM",
+              "name": "Medium Fruit Cup",
+              "description": "A great-tasting, nutritious fruit mix made with mandarin orange segments, fresh strawberries, red and green apple pieces and Blueberries, served chilled, in a choice of sizes.",
+              "retailModifiedItemId": 1004576,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 2.79
+            },
+            {
+              "tag": "FRUIT_CUP_LARGE",
+              "name": "Large Fruit Cup",
+              "description": "A great-tasting, nutritious fruit mix made with mandarin orange segments, fresh strawberries, red and green apple pieces and Blueberries, served chilled, in a choice of sizes.",
+              "retailModifiedItemId": 1004577,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 4.35
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "OLO_TRAYS",
+      "name": "Trays",
+      "items": [
+        {
+          "tag": "NUGGET_TRAYS",
+          "name": "Chick-fil-A<sup>®</sup> Nuggets Trays",
+          "description": "",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "NUGGET_CFA_TRAY_HOT_SMALL",
+              "name": "Small Hot Nuggets Tray",
+              "description": "Bite-sized pieces of tender chicken breast, seasoned to perfection and cooked in 100% refined peanut oil. Available with your choice of six delicious sauces.",
+              "retailModifiedItemId": 1000150,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 25.50,
+              "items": [
+                {
+                  "tag": "8OZ_SAUCES",
+                  "name": "8oz Sauces Free",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                },
+                {
+                  "tag": "8OZ_SAUCES_PAID",
+                  "name": "8 oz Sauces Paid",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "NUGGET_CFA_TRAY_HOT_MEDIUM",
+              "name": "Medium Hot Nuggets Tray",
+              "description": "Bite-sized pieces of tender chicken breast, seasoned to perfection and cooked in 100% refined peanut oil. Available with your choice of six delicious sauces.",
+              "retailModifiedItemId": 1000151,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 46.50,
+              "items": [
+                {
+                  "tag": "8OZ_SAUCES_PAID",
+                  "name": "8 oz Sauces Paid",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00
+                },
+                {
+                  "tag": "8OZ_SAUCES",
+                  "name": "8oz Sauces Free",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "NUGGET_CFA_TRAY_HOT_LARGE",
+              "name": "Large Hot Nuggets Tray",
+              "description": "Bite-sized pieces of tender chicken breast, seasoned to perfection and cooked in 100% refined peanut oil. Available with your choice of six delicious sauces.",
+              "retailModifiedItemId": 1000152,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 75.50,
+              "items": [
+                {
+                  "tag": "8OZ_SAUCES",
+                  "name": "8oz Sauces Free",
+                  "description": "",
+                  "Maximum": "2",
+                  "meal": false,
+                  "itemPrice": 0.00
+                },
+                {
+                  "tag": "8OZ_SAUCES_PAID",
+                  "name": "8 oz Sauces Paid",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "NUGGET_CFA_TRAY_CHILLED_SMALL",
+              "name": "Small Chilled Chick-fil-A® Nuggets",
+              "description": "Requires 5 hours advanced notice",
+              "retailModifiedItemId": 1004345,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 25.50,
+              "items": [
+                {
+                  "tag": "8OZ_SAUCES",
+                  "name": "8oz Sauces Free",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                },
+                {
+                  "tag": "8OZ_SAUCES_PAID",
+                  "name": "8 oz Sauces Paid",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "NUGGET_CFA_TRAY_CHILLED_MEDIUM",
+              "name": "Medium Chilled Chick-fil-A® Nuggets",
+              "description": "Requires 5 hours advanced notice",
+              "retailModifiedItemId": 1004346,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 46.50,
+              "items": [
+                {
+                  "tag": "8OZ_SAUCES",
+                  "name": "8oz Sauces Free",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                },
+                {
+                  "tag": "8OZ_SAUCES_PAID",
+                  "name": "8 oz Sauces Paid",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "NUGGET_CFA_TRAY_CHILLED_LARGE",
+              "name": "Large Chilled Chick-fil-A® Nuggets",
+              "description": "Requires 5 hours advanced notice",
+              "retailModifiedItemId": 1004347,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 75.50,
+              "items": [
+                {
+                  "tag": "8OZ_SAUCES_PAID",
+                  "name": "8 oz Sauces Paid",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00
+                },
+                {
+                  "tag": "8OZ_SAUCES",
+                  "name": "8oz Sauces Free",
+                  "description": "",
+                  "Maximum": "2",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "STRIP_TRAYS",
+          "name": "Chick-fil-A <span>Chick-n-Strips</span><sup>®</sup> Trays",
+          "description": "",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "CHICK_N_STRIPS_TRAY_HOT_SMALL",
+              "name": "Small Hot Strips Tray",
+              "description": "Made from the most tender part of the chicken breast, Chick-fil-A Chick-n-Strips™ are marinated with special seasonings, hand-breaded and pressure cooked to perfection in 100% refined peanut oil. Available with your choice of six delicious sauces. Hot Small",
+              "retailModifiedItemId": 1001342,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 25.50,
+              "items": [
+                {
+                  "tag": "8OZ_SAUCES",
+                  "name": "8oz Sauces Free",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                },
+                {
+                  "tag": "8OZ_SAUCES_PAID",
+                  "name": "8 oz Sauces Paid",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "CHICK_N_STRIPS_TRAY_HOT_MEDIUM",
+              "name": "Medium Hot Strips Tray",
+              "description": "Made from the most tender part of the chicken breast, Chick-fil-A Chick-n-Strips™ are marinated with special seasonings, hand-breaded and pressure cooked to perfection in 100% refined peanut oil. Available with your choice of six delicious sauces.",
+              "retailModifiedItemId": 1001343,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 46.50,
+              "items": [
+                {
+                  "tag": "8OZ_SAUCES",
+                  "name": "8oz Sauces Free",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                },
+                {
+                  "tag": "8OZ_SAUCES_PAID",
+                  "name": "8 oz Sauces Paid",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "CHICK_N_STRIPS_TRAY_HOT_LARGE",
+              "name": "Large Hot Strips Tray",
+              "description": "Made from the most tender part of the chicken breast, Chick-fil-A Chick-n-Strips™ are marinated with special seasonings, hand-breaded and pressure cooked to perfection in 100% refined peanut oil. Available with your choice of six delicious sauces.",
+              "retailModifiedItemId": 1001344,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 75.50,
+              "items": [
+                {
+                  "tag": "8OZ_SAUCES",
+                  "name": "8oz Sauces Free",
+                  "description": "",
+                  "Maximum": "2",
+                  "meal": false,
+                  "itemPrice": 0.00
+                },
+                {
+                  "tag": "8OZ_SAUCES_PAID",
+                  "name": "8 oz Sauces Paid",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "CHICK_N_STRIPS_TRAY_CHILLED_SMALL",
+              "name": "Small Chilled Chick-fil-A <span>Chick-n-Strips</span>®(Cooked & Chilled for Later)",
+              "description": "Requires 5 hours advanced notice",
+              "retailModifiedItemId": 1004339,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 25.50,
+              "items": [
+                {
+                  "tag": "8OZ_SAUCES",
+                  "name": "8oz Sauces Free",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                },
+                {
+                  "tag": "8OZ_SAUCES_PAID",
+                  "name": "8 oz Sauces Paid",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "CHICK_N_STRIPS_TRAY_CHILLED_MEDIUM",
+              "name": "Medium Chilled Chick-fil-A <span>Chick-n-Strips</span>®(Cooked & Chilled for Later)",
+              "description": "Requires 5 hours advanced notice",
+              "retailModifiedItemId": 1004340,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 46.50,
+              "items": [
+                {
+                  "tag": "8OZ_SAUCES",
+                  "name": "8oz Sauces Free",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                },
+                {
+                  "tag": "8OZ_SAUCES_PAID",
+                  "name": "8 oz Sauces Paid",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "CHICK_N_STRIPS_TRAY_CHILLED_LARGE",
+              "name": "Large Chilled Chick-fil-A <span>Chick-n-Strips</span>®(Cooked & Chilled for Later)",
+              "description": "Requires 5 hours advanced notice",
+              "retailModifiedItemId": 1004341,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 75.50,
+              "items": [
+                {
+                  "tag": "8OZ_SAUCES_PAID",
+                  "name": "8 oz Sauces Paid",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00
+                },
+                {
+                  "tag": "8OZ_SAUCES",
+                  "name": "8oz Sauces Free",
+                  "description": "",
+                  "Maximum": "2",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "COOL_WRAP_GRILLED_TRAY",
+          "name": "Grilled Chicken Cool Wrap<sup>®</sup> Trays",
+          "description": "Sliced grilled chicken, lettuce, red cabbage, carrots and cheese rolled in a flaxseed flat bread.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "COOL_WRAP_GRILLED_TRAY_SMALL",
+              "name": "Small Grilled Chicken Cool Wrap<sup>®</sup>",
+              "description": "Sliced grilled chicken, lettuce, red cabbage, carrots and cheese rolled in a flaxseed flat bread.",
+              "retailModifiedItemId": 1004648,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 24.00,
+              "items": [
+                {
+                  "tag": "DRESSING",
+                  "name": "Dressing",
+                  "description": "",
+                  "Maximum": "2",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "COOL_WRAP_GRILLED_TRAY_MEDIUM",
+              "name": "Medium Grilled Chicken Cool Wrap<sup>®</sup>",
+              "description": "Sliced grilled chicken, lettuce, red cabbage, carrots and cheese rolled in a flaxseed flat bread.",
+              "retailModifiedItemId": 1004649,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 38.50,
+              "items": [
+                {
+                  "tag": "DRESSING",
+                  "name": "Dressing",
+                  "description": "",
+                  "Maximum": "4",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "COOL_WRAP_GRILLED_TRAY_LARGE",
+              "name": "Large Grilled Chicken Cool Wrap<sup>®</sup>",
+              "description": "Sliced grilled chicken, lettuce, red cabbage, carrots and cheese rolled in a flaxseed flat bread.",
+              "retailModifiedItemId": 1004650,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 48.50,
+              "items": [
+                {
+                  "tag": "DRESSING",
+                  "name": "Dressing",
+                  "description": "",
+                  "Maximum": "7",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "FRUIT_TRAY",
+          "name": "Fruit Tray",
+          "description": "A great-tasting, nutritious fruit mix made with Mandarin orange segments, fresh strawberry slices, red and green apple pieces, Blueberries, served chilled with Caramel Dipping Sauce on the side.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "FRUIT_TRAY_SMALL",
+              "name": "Small Fruit Tray",
+              "description": "A great-tasting, nutritious fruit mix made with Mandarin orange segments, fresh strawberry slices, red and green apple pieces, Blueberries, served chilled with Caramel Dipping Sauce on the side.",
+              "retailModifiedItemId": 1004580,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 27.00,
+              "items": [
+                {
+                  "tag": "CARAMEL_SAUCE",
+                  "name": "Caramel Sauce",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "FRUIT_TRAY_LARGE",
+              "name": "Large Fruit Tray",
+              "description": "A great-tasting, nutritious fruit mix made with Mandarin orange segments, fresh strawberry slices, red and green apple pieces, Blueberries, served chilled with Caramel Dipping Sauce on the side.",
+              "retailModifiedItemId": 1004582,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 55.50,
+              "items": [
+                {
+                  "tag": "CARAMEL_SAUCE",
+                  "name": "Caramel Sauce",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "COOKIE_CHOCOLATE_CHUNK_TRAY",
+          "name": "Chocolate Chunk Cookie Tray",
+          "description": "Large chocolate chunk cookies that are baked fresh every day in each Restaurant and feature both semi-sweet dark and milk chocolate chunks, along with wholesome oats for an old-fashioned touch.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "COOKIE_CHOCOLATE_CHUNK_TRAY_SMALL",
+              "name": "Small Chocolate Chunk Cookie Tray",
+              "description": "Large chocolate chunk cookies that are baked fresh every day in each Restaurant and feature both semi-sweet dark and milk chocolate chunks, along with wholesome oats for an old-fashioned touch.",
+              "retailModifiedItemId": 1004037,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 15.50
+            },
+            {
+              "tag": "COOKIE_CHOCOLATE_CHUNK_TRAY_LARGE",
+              "name": "Large Chocolate Chunk Cookie Tray",
+              "description": "Large chocolate chunk cookies that are baked fresh every day in each Restaurant and feature both semi-sweet dark and milk chocolate chunks, along with wholesome oats for an old-fashioned touch.",
+              "retailModifiedItemId": 1004038,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 30.00
+            }
+          ]
+        },
+        {
+          "tag": "COOL_WRAP_GRILLED_CHICKEN_SALAD_SANDWICH_TRAY",
+          "name": "Grilled Chicken Cool Wrap<sup>®</sup> & Chicken Salad Sandwich Tray",
+          "description": "Tray of delicious Grilled Chicken Cool Wrap® halves and Chicken Salad Sandwich sections",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "COOL_WRAP_GRILLED_CHICKEN_SALAD_SANDWICH_TRAY_SMALL",
+              "name": "Small Grilled Chicken Cool Wrap<sup>®</sup> & Chicken Salad Sandwich",
+              "description": "Tray of delicious Grilled Chicken Cool Wrap® halves and Chicken Salad Sandwich sections",
+              "retailModifiedItemId": 1004620,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 24.00,
+              "items": [
+                {
+                  "tag": "DRESSING",
+                  "name": "Dressing",
+                  "description": "",
+                  "Maximum": "2",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "COOL_WRAP_GRILLED_CHICKEN_SALAD_SANDWICH_TRAY_MEDIUM",
+              "name": "Medium Grilled Chicken Cool Wrap<sup>®</sup> & Chicken Salad Sandwich",
+              "description": "Tray of delicious Grilled Chicken Cool Wrap® halves and Chicken Salad Sandwich sections",
+              "retailModifiedItemId": 1004621,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 43.50,
+              "items": [
+                {
+                  "tag": "DRESSING",
+                  "name": "Dressing",
+                  "description": "",
+                  "Maximum": "4",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "COOL_WRAP_GRILLED_CHICKEN_SALAD_SANDWICH_TRAY_LARGE",
+              "name": "Large Grilled Chicken Cool Wrap<sup>®</sup> & Chicken Salad Sandwich",
+              "description": "Tray of delicious Grilled Chicken Cool Wrap® halves and Chicken Salad Sandwich sections",
+              "retailModifiedItemId": 1004622,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 58.50,
+              "items": [
+                {
+                  "tag": "DRESSING",
+                  "name": "Dressing",
+                  "description": "",
+                  "Maximum": "4",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "SANDWICH_CHICKEN_SALAD_TRAY",
+          "name": "Chicken Salad Sandwich Tray",
+          "description": "Our delicious chicken salad is prepared with the freshest ingredients, including chunks of white chicken breast, chopped eggs, celery, sweet pickle relish and mayonnaise. Served chilled, with lettuce on Wheatberry bread.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "SANDWICH_CHICKEN_SALAD_TRAY_SMALL",
+              "name": "Small Chicken Salad Sandwich Tray",
+              "description": "Our delicious chicken salad is prepared with the freshest ingredients, including chunks of white chicken breast, chopped eggs, celery, sweet pickle relish and mayonnaise. Served chilled, with lettuce on Wheatberry bread.",
+              "retailModifiedItemId": 1000147,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 28.00
+            },
+            {
+              "tag": "SANDWICH_CHICKEN_SALAD_TRAY_MEDIUM",
+              "name": "Medium Chicken Salad Sandwich Tray",
+              "description": "Our delicious chicken salad is prepared with the freshest ingredients, including chunks of white chicken breast, chopped eggs, celery, sweet pickle relish and mayonnaise. Served chilled, with lettuce on Wheatberry bread..",
+              "retailModifiedItemId": 1000148,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 52.50
+            },
+            {
+              "tag": "SANDWICH_CHICKEN_SALAD_TRAY_LARGE",
+              "name": "Large Chicken Salad Sandwich Tray",
+              "description": "Our delicious chicken salad is prepared with the freshest ingredients, including chunks of white chicken breast, chopped eggs, celery, sweet pickle relish and mayonnaise. Served chilled, with lettuce on Wheatberry bread.",
+              "retailModifiedItemId": 1000149,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 68.00
+            }
+          ]
+        },
+        {
+          "tag": "CHICKEN_SALAD_TRAY",
+          "name": "Chicken Salad Tray",
+          "description": "Our Chicken Salad is made with the freshest ingredients, which include chunks of our Chick-fil-A chicken breast, chopped eggs, celery, sweet pickle relish and mayonnaise. Freshly prepared at each Restaurant.",
+          "retailModifiedItemId": 1000439,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 16.50
+        },
+        {
+          "tag": "SUPERFOOD_SIDE_TRAY",
+          "name": "Superfood Side Tray",
+          "description": "Broccolini & kale blend, maple vinaigrette dressing & dried sour cherries with roasted nut blend.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "SUPERFOOD_SIDE_TRAY_SMALL",
+              "name": "Small Superfood Side Tray",
+              "description": "Broccolini & kale blend, maple vinaigrette dressing & dried sour cherries with roasted nut blend.",
+              "retailModifiedItemId": 1005630,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 14.50
+            },
+            {
+              "tag": "SUPERFOOD_SIDE_TRAY_LARGE",
+              "name": "Large Superfood Side Tray",
+              "description": "Broccolini & kale blend, maple vinaigrette dressing & dried sour cherries with roasted nut blend.",
+              "retailModifiedItemId": 1005631,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 22.00
+            }
+          ]
+        },
+        {
+          "tag": "GARDEN_SALAD_TRAY",
+          "name": "Garden Salad Tray",
+          "description": "A fresh blend of Romaine and Iceberg lettuce, with shredded red cabbage and carrots, vine-ripened grape tomatoes, bite-sized broccoli florets and a subtle blend of Monterey Jack and Cheddar cheeses. Served with choice of dressing. Freshly prepared at each Restaurant.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "GARDEN_SALAD_TRAY_SMALL",
+              "name": "Small Garden Salad Tray",
+              "description": "A fresh blend of Romaine and Iceberg lettuce, with shredded red cabbage and carrots, vine-ripened grape tomatoes, bite-sized broccoli florets and a subtle blend of Monterey Jack and Cheddar cheeses. Served with choice of dressing. Freshly prepared at each Restaurant.",
+              "retailModifiedItemId": 1004237,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 14.00,
+              "items": [
+                {
+                  "tag": "DRESSING",
+                  "name": "Dressing",
+                  "description": "",
+                  "Maximum": "6",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "GARDEN_SALAD_TRAY_LARGE",
+              "name": "Large Garden Salad Tray",
+              "description": "A fresh blend of Romaine and Iceberg lettuce, with shredded red cabbage and carrots, vine-ripened grape tomatoes, bite-sized broccoli florets and a subtle blend of Monterey Jack and Cheddar cheeses. Served with choice of dressing. Freshly prepared at each Restaurant.",
+              "retailModifiedItemId": 1004238,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 30.50,
+              "items": [
+                {
+                  "tag": "DRESSING",
+                  "name": "Dressing",
+                  "description": "",
+                  "Maximum": "14",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "OLO_ENTREES",
+      "name": "Entree's",
+      "items": [
+        {
+          "tag": "SANDWICH_CFA_CHICKEN",
+          "name": "Chick-fil-A<sup>®</sup> Chicken Sandwich",
+          "description": "A boneless breast of chicken seasoned to perfection, hand-breaded, pressure cooked in 100% refined peanut oil and served on a toasted, buttered bun with dill pickle chips. Also available on a Golden Wheat bun..",
+          "retailModifiedItemId": 1000231,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 3.25,
+          "items": [
+            {
+              "tag": "SANDWICH_MODIFIERS",
+              "name": "Sandwich Modifiers",
+              "description": "",
+              "Maximum": "2",
+              "meal": false,
+              "itemPrice": 0.00
+            }
+          ]
+        },
+        {
+          "tag": "SPICY_CHICKEN_CFA_SANDWICH",
+          "name": "Chick-Fil-A® Spicy Chicken Sandwich",
+          "description": "",
+          "retailModifiedItemId": 1001285,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 3.49,
+          "items": [
+            {
+              "tag": "SANDWICH_MODIFIERS",
+              "name": "Sandwich Modifiers",
+              "description": "",
+              "Maximum": "2",
+              "meal": false,
+              "itemPrice": 0.00
+            }
+          ]
+        },
+        {
+          "tag": "NUGGETS_CFA",
+          "name": "Chick-fil-A<sup>®</sup> Nuggets",
+          "description": "Bite-sized pieces of tender all breast meat chicken, seasoned to perfection, hand-breaded and pressure cooked in 100% refined peanut oil. Available in 8-count or 12-count entrées with choice of dipping sauce.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "NUGGETS_CFA_8_COUNT",
+              "name": "8 ct Chick-fil-A<sup>®</sup> Nuggets",
+              "description": "Bite-sized pieces of tender all breast meat chicken, seasoned to perfection, hand-breaded and pressure cooked in 100% refined peanut oil. Available in 8-count or 12-count entrées with choice of dipping sauce.",
+              "retailModifiedItemId": 1000161,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 3.25,
+              "items": [
+                {
+                  "tag": "INDIVIDUAL_SAUCES",
+                  "name": "Individual Sauces",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "NUGGETS_CFA_12_COUNT",
+              "name": "12 Ct Chick-fil-A<sup>®</sup> Nuggets",
+              "description": "Bite-sized pieces of tender all breast meat chicken, seasoned to perfection, hand-breaded and pressure cooked in 100% refined peanut oil. Available in 8-count or 12-count entrées with choice of dipping sauce.",
+              "retailModifiedItemId": 1000162,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 4.65,
+              "items": [
+                {
+                  "tag": "INDIVIDUAL_SAUCES",
+                  "name": "Individual Sauces",
+                  "description": "",
+                  "Maximum": "2",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "CHICKEN_SUB_GRILLED",
+          "name": "Chilled Grilled Chicken Sub Sandwich",
+          "description": "Requires 5 hour notice to make",
+          "retailModifiedItemId": 1005350,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 4.95
+        },
+        {
+          "tag": "SANDWICH_CHICKEN_SALAD",
+          "name": "Chicken Salad Sandwich",
+          "description": "Freshly made at each Restaurant, this tasty sandwich is made with chunks of our Chick-fil-A chicken breast, chopped eggs, celery, sweet pickle relish and mayonnaise served chilled with Green Leaf lettuce on toasted Wheatberry bread.",
+          "retailModifiedItemId": 1000237,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 4.09
+        }
+      ]
+    },
+    {
+      "tag": "OLO_SALADS",
+      "name": "Salads & Wraps",
+      "items": [
+        {
+          "tag": "SALAD_SPICY_SOUTHWEST",
+          "name": "Spicy Southwest Salad",
+          "description": "Slices of grilled spicy chicken breast, chilled and served on a fresh bed of chopped Romaine lettuce and baby greens, topped with shredded red cabbage and carrots, grape tomatoes, a blend of Monterey Jack and Cheddar cheeses, and a zesty combination of roasted corn and black beans. Made fresh daily. Served with Seasoned Tortilla Strips, Chili Lime Pepitas and Creamy Salsa Dressing or Chili Lime Vinaigrette (or guest’s choice of dressing).",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "SALAD_SPICY_SOUTHWEST_FILET_GRILLED_SPICY",
+              "name": "Spicy Southwest Salad w/ Spicy Grilled Filet",
+              "description": "Slices of grilled spicy chicken breast, chilled and served on a fresh bed of chopped Romaine lettuce and baby greens, topped with shredded red cabbage and carrots, grape tomatoes, a blend of Monterey Jack and Cheddar cheeses, and a zesty combination of roasted corn and black beans. Made fresh daily. Served with Seasoned Tortilla Strips, Chili Lime Pepitas and Creamy Salsa Dressing or Chili Lime Vinaigrette (or guest’s choice of dressing).",
+              "retailModifiedItemId": 1005539,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 7.45,
+              "items": [
+                {
+                  "tag": "DRESSING",
+                  "name": "Dressing",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "SALAD_SPICY_SOUTHWEST_FILET_GRILLED",
+              "name": "Spicy Southwest Salad w/ Grilled Filet",
+              "description": "Slices of grilled spicy chicken breast, chilled and served on a fresh bed of chopped Romaine lettuce and baby greens, topped with shredded red cabbage and carrots, grape tomatoes, a blend of Monterey Jack and Cheddar cheeses, and a zesty combination of roasted corn and black beans. Made fresh daily. Served with Seasoned Tortilla Strips, Chili Lime Pepitas and Creamy Salsa Dressing or Chili Lime Vinaigrette (or guest’s choice of dressing).",
+              "retailModifiedItemId": 1005534,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 7.45,
+              "items": [
+                {
+                  "tag": "DRESSING",
+                  "name": "Dressing",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "SALAD_SPICY_SOUTHWEST_NO_MEAT",
+              "name": "Spicy Southwest Salad w/ No Meat",
+              "description": "Slices of grilled spicy chicken breast, chilled and served on a fresh bed of chopped Romaine lettuce and baby greens, topped with shredded red cabbage and carrots, grape tomatoes, a blend of Monterey Jack and Cheddar cheeses, and a zesty combination of roasted corn and black beans. Made fresh daily. Served with Seasoned Tortilla Strips, Chili Lime Pepitas and Creamy Salsa Dressing or Chili Lime Vinaigrette (or guest’s choice of dressing).",
+              "retailModifiedItemId": 1005532,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 5.55,
+              "items": [
+                {
+                  "tag": "DRESSING",
+                  "name": "Dressing",
+                  "description": "",
+                  "Maximum": "1",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "SALAD_GRILLED_MARKET",
+          "name": "Grilled Market Salad",
+          "description": "Sliced Grilled Chicken, Romaine & baby greens, red cabbage, carrots, blue cheese & fresh fruit",
+          "retailModifiedItemId": 1004654,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 7.45,
+          "items": [
+            {
+              "tag": "DRESSING",
+              "name": "Dressing",
+              "description": "",
+              "Maximum": "1",
+              "meal": false,
+              "itemPrice": 0.00
+            }
+          ]
+        },
+        {
+          "tag": "COOL_WRAP_GRILLED",
+          "name": "Grilled Chicken Cool Wrap",
+          "description": "Sliced grilled chicken, lettuce, red cabbage, carrots, cheese blend, in a flaxseed flour flat bread",
+          "retailModifiedItemId": 1004641,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 5.35,
+          "items": [
+            {
+              "tag": "DRESSING",
+              "name": "Dressing",
+              "description": "",
+              "Maximum": "1",
+              "meal": false,
+              "itemPrice": 0.00
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "OLO_SIDES_TREATS",
+      "name": "Sides & Treats",
+      "items": [
+        {
+          "tag": "SUPERFOOD_SIDE",
+          "name": "Superfood Side",
+          "description": "Broccolini & kale blend, maple vinaigrette dressing & dried sour cherries with roasted nut blend.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "SUPERFOOD_SIDE_SMALL",
+              "name": "Small Superfood Side",
+              "description": "Broccolini & kale blend, maple vinaigrette dressing & dried sour cherries with roasted nut blend.",
+              "retailModifiedItemId": 1005624,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 2.75
+            },
+            {
+              "tag": "SUPERFOOD_SIDE_LARGE",
+              "name": "Large Superfood Side",
+              "description": "Broccolini & kale blend, maple vinaigrette dressing & dried sour cherries with roasted nut blend.",
+              "retailModifiedItemId": 1005621,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 3.99
+            }
+          ]
+        },
+        {
+          "tag": "FRUIT_CUP",
+          "name": "Fruit Cup",
+          "description": "A great-tasting, nutritious fruit mix made with mandarin orange segments, fresh strawberries, red and green apple pieces and Blueberries, served chilled, in a choice of sizes.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "FRUIT_CUP_SMALL",
+              "name": "Small Fruit Cup",
+              "description": "A great-tasting, nutritious fruit mix made with mandarin orange segments, fresh strawberries, red and green apple pieces and Blueberries, served chilled, in a choice of sizes.",
+              "retailModifiedItemId": 1004575,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 2.15
+            },
+            {
+              "tag": "FRUIT_CUP_MEDIUM",
+              "name": "Medium Fruit Cup",
+              "description": "A great-tasting, nutritious fruit mix made with mandarin orange segments, fresh strawberries, red and green apple pieces and Blueberries, served chilled, in a choice of sizes.",
+              "retailModifiedItemId": 1004576,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 2.79
+            },
+            {
+              "tag": "FRUIT_CUP_LARGE",
+              "name": "Large Fruit Cup",
+              "description": "A great-tasting, nutritious fruit mix made with mandarin orange segments, fresh strawberries, red and green apple pieces and Blueberries, served chilled, in a choice of sizes.",
+              "retailModifiedItemId": 1004577,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 4.35
+            }
+          ]
+        },
+        {
+          "tag": "SALAD_SIDE",
+          "name": "Side Salad",
+          "description": "Romaine lettuce, red cabbage, carrots, cheese blend and grape tomatoes.",
+          "retailModifiedItemId": 1004265,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 2.95,
+          "items": [
+            {
+              "tag": "DRESSING",
+              "name": "Dressing",
+              "description": "",
+              "Maximum": "1",
+              "meal": false,
+              "itemPrice": 0.00
+            }
+          ]
+        },
+        {
+          "tag": "CHIPS_WAFFLE",
+          "name": "Waffle Potato Chip",
+          "description": "A premium kettle-cooked waffle cut chip.",
+          "retailModifiedItemId": 1000224,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 1.60
+        },
+        {
+          "tag": "YOGURT_GREEK_PARFAIT",
+          "name": "Greek Yogurt Parfait",
+          "description": "Creamy honey vanilla Greek yogurt with fresh strawberries and your choice of toppings.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "YOGURT_GREEK_PARFAIT_COOKIE",
+              "name": "Greek Yogurt Parfait W/ Cookie Crumbs",
+              "description": "Creamy honey vanilla Greek yogurt with fresh strawberries and your choice of toppings",
+              "retailModifiedItemId": 1005315,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 3.05
+            },
+            {
+              "tag": "YOGURT_GREEK_PARFAIT_GRANOLA",
+              "name": "Greek Yogurt Parfait W/ Granola",
+              "description": "Creamy honey vanilla Greek yogurt with fresh strawberries and your choice of toppings",
+              "retailModifiedItemId": 1005316,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 3.05
+            }
+          ]
+        },
+        {
+          "tag": "CHICKEN_SALAD_CUP",
+          "name": "Chicken Salad Cup",
+          "description": "Freshly made at each Restaurant and made with chunks of our Chick-fil-A chicken breast, chopped eggs, celery, sweet pickle relish and mayonnaise. Served with Saltine crackers.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "CHICKEN_SALAD_CUP_SMALL",
+              "name": "Small Chicken Salad Cup",
+              "description": "Freshly made at each Restaurant and made with chunks of our Chick-fil-A chicken breast, chopped eggs, celery, sweet pickle relish and mayonnaise. Served with Saltine crackers.",
+              "retailModifiedItemId": 1000422,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 3.25
+            },
+            {
+              "tag": "CHICKEN_SALAD_CUP_LARGE",
+              "name": "Large Chicken Salad Cup",
+              "description": "Freshly made at each Restaurant and made with chunks of our Chick-fil-A chicken breast, chopped eggs, celery, sweet pickle relish and mayonnaise. Served with Saltine crackers.",
+              "retailModifiedItemId": 1000423,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 5.19
+            }
+          ]
+        },
+        {
+          "tag": "COOKIE_CHOCOLATE_CHUNK",
+          "name": "Chocolate Chunk Cookie",
+          "description": "Cookies have both semi-sweet dark and milk chocolate chunks, along with wholesome oats.",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "COOKIE_CHOCOLATE_CHUNK_6_COUNT",
+              "name": "6 pack Chocolate Chunk Cookie",
+              "description": "Cookies have both semi-sweet dark and milk chocolate chunks, along with wholesome oats.",
+              "retailModifiedItemId": 1004057,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 6.95
+            },
+            {
+              "tag": "COOKIE_CHOCOLATE_CHUNK_INDIVIDUAL",
+              "name": "Chocolate Chunk Cookie",
+              "description": "Cookies have both semi-sweet dark and milk chocolate chunks, along with wholesome oats.",
+              "retailModifiedItemId": 1004056,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 1.25
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "OLO_DRINKS",
+      "name": "Drinks",
+      "items": [
+        {
+          "tag": "GALLON_TEA_SWEET",
+          "name": "Gallon Iced Tea - Sweetened",
+          "description": "Freshly-brewed each day from a premium blend of tea leaves. ",
+          "retailModifiedItemId": 1000354,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 5.25
+        },
+        {
+          "tag": "GALLON_TEA_UNSWEET",
+          "name": "Gallon Iced Tea - Unsweetened",
+          "description": "Freshly-brewed each day from a premium blend of tea leaves. ",
+          "retailModifiedItemId": 1000355,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 5.25
+        },
+        {
+          "tag": "GALLON_LEMONADE_REG",
+          "name": "Gallon fresh-squeezed Lemonade",
+          "description": "Made-from-scratch daily at each Chick-fil-A Restaurant using freshly squeezed lemon juice extracted from real lemons.",
+          "retailModifiedItemId": 1000135,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 10.00
+        },
+        {
+          "tag": "GALLON_LEMONADE_DIET",
+          "name": "Gallon fresh-squeezed Diet Lemonade",
+          "description": "Made-from-scratch daily at each Chick-fil-A Restaurant using freshly squeezed lemon juice extracted from real lemons.",
+          "retailModifiedItemId": 1000137,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 10.00
+        },
+        {
+          "tag": "BOTTLED_WATER",
+          "name": "DASANI<sup>®</sup> Bottled Water",
+          "description": "Purified water that is carefully designed and enhanced with minerals for a pure, fresh taste. A product of The Coca-Cola Company.",
+          "retailModifiedItemId": 1000190,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 1.65
+        },
+        {
+          "tag": "JUICE_SIMPLY_ORANGE",
+          "name": "Simply Orange<sup>®</sup> Juice",
+          "description": "100% pure-squeezed orange juice.",
+          "retailModifiedItemId": 1003375,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 2.25
+        },
+        {
+          "tag": "JUICE_MINUTE_MAID_APPLE",
+          "name": "Minute Maid<sup>®</sup> Apple Juice",
+          "description": "Minute Maid<sup>®</sup> Apple Juice (juice box with straw).",
+          "retailModifiedItemId": 1001289,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 1.19
+        },
+        {
+          "tag": "COFFEE",
+          "name": "Coffee",
+          "description": "Medium-roast coffee contain only hand-picked certified 100% Colombian beans",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "COFFEE_REGULAR_96_OZ",
+              "name": "Regular 96 oz",
+              "description": "Medium-roast coffee contain only hand-picked certified 100% Colombian beans",
+              "retailModifiedItemId": 1004733,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 13.50,
+              "items": [
+                {
+                  "tag": "COFFEE_CONDIMENTS",
+                  "name": "Coffee Condiments",
+                  "description": "",
+                  "Maximum": "3",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            },
+            {
+              "tag": "COFFEE_DECAF_96_OZ",
+              "name": "Decaf 96 oz",
+              "description": "Medium-roast coffee contain only hand-picked certified 100% Colombian beans",
+              "retailModifiedItemId": 1004734,
+              "subsGroupId": 1,
+              "meal": false,
+              "itemPrice": 13.50,
+              "items": [
+                {
+                  "tag": "COFFEE_CONDIMENTS",
+                  "name": "Coffee Condiments",
+                  "description": "",
+                  "Maximum": "3",
+                  "meal": false,
+                  "itemPrice": 0.00
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "MILK_WHITE_1_PERCENT",
+          "name": "1% White Milk",
+          "description": "Low fat milk.",
+          "retailModifiedItemId": 1001169,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 1.19
+        },
+        {
+          "tag": "MILK_CHOCOLATE_1_PERCENT",
+          "name": "1% Chocolate Milk",
+          "description": "Lowfat chocolate milk.",
+          "retailModifiedItemId": 1001174,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 1.19
+        },
+        {
+          "tag": "ICE_BAG_5_LB",
+          "name": "5 lb Bag of Ice",
+          "description": "5 lb Bag of Ice",
+          "retailModifiedItemId": 1001322,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 1.50
+        },
+        {
+          "tag": "ICE_SCOOP",
+          "name": "Ice Scoop",
+          "description": "Ice Scoop",
+          "retailModifiedItemId": 1003015,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 1.15
+        },
+        {
+          "tag": "ICE_BUCKET",
+          "name": "Ice Bucket ",
+          "description": "Ice Bucket ",
+          "retailModifiedItemId": 1002940,
+          "subsGroupId": 1,
+          "meal": false,
+          "itemPrice": 3.90
+        }
+      ]
+    },
+    {
+      "tag": "OLO_PACKAGED_MEALS",
+      "name": "Packaged Meals",
+      "items": [
+        {
+          "tag": "MEAL_PACK_SANDWICH_CFA_CHICKEN",
+          "name": "Chick-fil-A Chicken Sandwich Packaged Meal",
+          "description": "",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "MEAL_PACK_SANDWICH_CFA_CHICKEN_PREM",
+              "name": "Premium Chick-fil-A Chicken Sandwich Packaged Meal",
+              "description": "Prem (Chips, side, & a cookie)",
+              "retailModifiedItemId": 1003602,
+              "subsGroupId": 1,
+              "meal": true,
+              "itemPrice": 8.85,
+              "items": [
+                {
+                  "tag": "PREMIUM_SIDES",
+                  "name": "Premium Sides - Package Meals",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00,
+                  "items": [
+                    {
+                      "tag": "SUPERFOOD_SIDE_SMALL",
+                      "name": "Small Superfood Side",
+                      "description": "Broccolini & kale blend, maple vinaigrette dressing & dried sour cherries with roasted nut blend.",
+                      "retailModifiedItemId": 1005624,
+                      "subsGroupId": 31000999,
+                      "meal": false,
+                      "itemPrice": 2.75
+                    },
+                    {
+                      "tag": "FRUIT_CUP_MEDIUM",
+                      "name": "Medium Fruit Cup",
+                      "description": "A great-tasting, nutritious fruit mix made with mandarin orange segments, fresh strawberries, red and green apple pieces and Blueberries, served chilled, in a choice of sizes.",
+                      "retailModifiedItemId": 1004576,
+                      "subsGroupId": 31000999,
+                      "meal": false,
+                      "itemPrice": 2.79
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "MEAL_PACK_SANDWICH_SPICY_CHICKEN",
+          "name": "Spicy Chicken Sandwich Packaged Meal",
+          "description": "",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "MEAL_PACK_SANDWICH_SPICY_CHICKEN_REG",
+              "name": "Regular Spicy Chicken Sandwich Packaged Meal",
+              "description": "Reg (Chips & a cookie)",
+              "retailModifiedItemId": 1003481,
+              "subsGroupId": 1,
+              "meal": true,
+              "itemPrice": 6.34,
+              "items": [
+                {
+                  "tag": "SANDWICH_SPICY_CHICKEN",
+                  "name": "Spicy Chicken Sandwich",
+                  "description": "A boneless breast of chicken seasoned with a spicy blend of peppers, hand-breaded, pressure cooked in 100% refined peanut oil and served on a toasted, buttered bun with dill pickle chips. Also available on a Golden Wheat Bun.",
+                  "meal": false,
+                  "itemPrice": 0.00,
+                  "items": [
+                    {
+                      "tag": "SANDWICH_MODIFIERS",
+                      "name": "Sandwich Modifiers",
+                      "description": "",
+                      "Maximum": "2",
+                      "meal": false,
+                      "itemPrice": 0.00,
+                      "items": [
+                        {
+                          "tag": "CHEESE_COLBY_JACK",
+                          "name": "Colby Jack Cheese",
+                          "description": "",
+                          "meal": false,
+                          "itemPrice": 0.00
+                        },
+                        {
+                          "tag": "CHEESE_PEPPER_JACK",
+                          "name": "Pepper Jack Cheese",
+                          "description": "",
+                          "meal": false,
+                          "itemPrice": 0.00
+                        },
+                        {
+                          "tag": "CHEESE_AMERICAN",
+                          "name": "American Cheese",
+                          "description": "",
+                          "meal": false,
+                          "itemPrice": 0.00
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "MEAL_PACK_SANDWICH_SPICY_CHICKEN_PREM",
+              "name": "Premium Spicy Chicken Sandwich Packaged Meal",
+              "description": "Prem (Chips, side, & a cookie)",
+              "retailModifiedItemId": 1003603,
+              "subsGroupId": 1,
+              "meal": true,
+              "itemPrice": 9.09,
+              "items": [
+                {
+                  "tag": "SANDWICH_SPICY_CHICKEN",
+                  "name": "Spicy Chicken Sandwich",
+                  "description": "A boneless breast of chicken seasoned with a spicy blend of peppers, hand-breaded, pressure cooked in 100% refined peanut oil and served on a toasted, buttered bun with dill pickle chips. Also available on a Golden Wheat Bun.",
+                  "meal": false,
+                  "itemPrice": 0.00,
+                  "items": [
+                    {
+                      "tag": "SANDWICH_MODIFIERS",
+                      "name": "Sandwich Modifiers",
+                      "description": "",
+                      "Maximum": "2",
+                      "meal": false,
+                      "itemPrice": 0.00,
+                      "items": [
+                        {
+                          "tag": "CHEESE_COLBY_JACK",
+                          "name": "Colby Jack Cheese",
+                          "description": "",
+                          "meal": false,
+                          "itemPrice": 0.00
+                        },
+                        {
+                          "tag": "CHEESE_PEPPER_JACK",
+                          "name": "Pepper Jack Cheese",
+                          "description": "",
+                          "meal": false,
+                          "itemPrice": 0.00
+                        },
+                        {
+                          "tag": "CHEESE_AMERICAN",
+                          "name": "American Cheese",
+                          "description": "",
+                          "meal": false,
+                          "itemPrice": 0.00
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "MEAL_PACK_CHICKEN_SUB_GRILLED",
+          "name": "Chilled Grilled Chicken Sub Packaged Meal",
+          "description": "",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "MEAL_PACK_CHICKEN_SUB_GRILLED_PREM",
+              "name": "Premium Chilled Grilled Chicken Sub Sandwich Meal",
+              "description": "Prem (Chips, side, & a cookie)",
+              "retailModifiedItemId": 1005361,
+              "subsGroupId": 1,
+              "meal": true,
+              "itemPrice": 10.55,
+              "items": [
+                {
+                  "tag": "PREMIUM_SIDES",
+                  "name": "Premium Sides - Package Meals",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00,
+                  "items": [
+                    {
+                      "tag": "SUPERFOOD_SIDE_SMALL",
+                      "name": "Small Superfood Side",
+                      "description": "Broccolini & kale blend, maple vinaigrette dressing & dried sour cherries with roasted nut blend.",
+                      "meal": false,
+                      "itemPrice": 0.00
+                    },
+                    {
+                      "tag": "FRUIT_CUP_MEDIUM",
+                      "name": "Medium Fruit Cup",
+                      "description": "A great-tasting, nutritious fruit mix made with mandarin orange segments, fresh strawberries, red and green apple pieces and Blueberries, served chilled, in a choice of sizes.",
+                      "meal": false,
+                      "itemPrice": 0.00
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "MEAL_PACK_COOL_WRAP_GRILLED",
+          "name": "Grilled Chicken Cool Wrap Packaged Meal",
+          "description": "",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "MEAL_PACK_COOL_WRAP_GRILLED_REG",
+              "name": "Regular Grilled Chicken Cool Wrap Packaged Meal",
+              "description": "Reg (Chips & a cookie)",
+              "retailModifiedItemId": 1004644,
+              "subsGroupId": 1,
+              "meal": true,
+              "itemPrice": 8.20,
+              "items": [
+                {
+                  "tag": "COOL_WRAP_GRILLED",
+                  "name": "Grilled Chicken Cool Wrap",
+                  "description": "Sliced grilled chicken, lettuce, red cabbage, carrots, cheese blend, in a flaxseed flour flat bread",
+                  "meal": false,
+                  "itemPrice": 0.00,
+                  "items": [
+                    {
+                      "tag": "DRESSING",
+                      "name": "Dressing",
+                      "description": "",
+                      "meal": false,
+                      "itemPrice": 0.00
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "MEAL_PACK_COOL_WRAP_GRILLED_PREM",
+              "name": "Premium Grilled Chicken Cool Wrap Packaged Meal",
+              "description": "Prem (Chips, side, & a cookie)",
+              "retailModifiedItemId": 1004645,
+              "subsGroupId": 1,
+              "meal": true,
+              "itemPrice": 10.95,
+              "items": [
+                {
+                  "tag": "COOL_WRAP_GRILLED",
+                  "name": "Grilled Chicken Cool Wrap",
+                  "description": "Sliced grilled chicken, lettuce, red cabbage, carrots, cheese blend, in a flaxseed flour flat bread",
+                  "meal": false,
+                  "itemPrice": 0.00,
+                  "items": [
+                    {
+                      "tag": "DRESSING",
+                      "name": "Dressing",
+                      "description": "",
+                      "meal": false,
+                      "itemPrice": 0.00
+                    }
+                  ]
+                },
+                {
+                  "tag": "PREMIUM_SIDES",
+                  "name": "Premium Sides - Package Meals",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00,
+                  "items": [
+                    {
+                      "tag": "SUPERFOOD_SIDE_SMALL",
+                      "name": "Small Superfood Side",
+                      "description": "Broccolini & kale blend, maple vinaigrette dressing & dried sour cherries with roasted nut blend.",
+                      "meal": false,
+                      "itemPrice": 0.00
+                    },
+                    {
+                      "tag": "FRUIT_CUP_MEDIUM",
+                      "name": "Medium Fruit Cup",
+                      "description": "A great-tasting, nutritious fruit mix made with mandarin orange segments, fresh strawberries, red and green apple pieces and Blueberries, served chilled, in a choice of sizes.",
+                      "meal": false,
+                      "itemPrice": 0.00
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "MEAL_PACK_SANDWICH_CHICKEN_SALAD",
+          "name": "Chicken Salad Sandwich Packaged Meal",
+          "description": "",
+          "meal": false,
+          "itemPrice": 0.00,
+          "items": [
+            {
+              "tag": "MEAL_PACK_SANDWICH_CHICKEN_SALAD_PREM",
+              "name": "Premium Chicken Salad Sandwich Packaged Meal",
+              "description": "Prem (Chips, side, & a cookie)",
+              "retailModifiedItemId": 1004199,
+              "subsGroupId": 1,
+              "meal": true,
+              "itemPrice": 9.69,
+              "items": [
+                {
+                  "tag": "PREMIUM_SIDES",
+                  "name": "Premium Sides - Package Meals",
+                  "description": "",
+                  "meal": false,
+                  "itemPrice": 0.00,
+                  "items": [
+                    {
+                      "tag": "SUPERFOOD_SIDE_SMALL",
+                      "name": "Small Superfood Side",
+                      "description": "Broccolini & kale blend, maple vinaigrette dressing & dried sour cherries with roasted nut blend.",
+                      "meal": false,
+                      "itemPrice": 0.00
+                    },
+                    {
+                      "tag": "FRUIT_CUP_MEDIUM",
+                      "name": "Medium Fruit Cup",
+                      "description": "A great-tasting, nutritious fruit mix made with mandarin orange segments, fresh strawberries, red and green apple pieces and Blueberries, served chilled, in a choice of sizes.",
+                      "meal": false,
+                      "itemPrice": 0.00
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-from emily_modules import sessions,variables,process_input,utils,run_command,send_message
+from .emily_modules import sessions,variables,process_input,utils,run_command,send_message
 from flask_cors import CORS,cross_origin
 from flask import Flask,request
 from datetime import datetime
@@ -11,8 +11,6 @@ import yaml
 import json
 import sys
 import os
-
-__version__ = '1.0.0'
 
 curdir = os.path.dirname(__file__)
 config_file = 'emily_conf/emily_config.yaml'
@@ -170,6 +168,11 @@ def start_emily(more_brains=[],disable_emily_defaults=False,**alt_config):
     session.start()
     print("Web Server Started...")
     return app
+
+
+def emily_server():
+    app = start_emily()
+    app.run(debug=True)
 
 
 def chat():

@@ -36,12 +36,13 @@ setup(
     author_email='ngmcfarland@gmail.com',
     description='A highly customizable chatbot implemented in Python.',
     long_description='?', # ?
-    packages=['emily_modules'],
-    package_dir={'emily_modules':'emily_modules'},
-    py_modules=['emily'],
+    packages=['emily','emily.emily_modules'],
+    package_dir={'emily':'emily'},
     include_package_data=True,
     platforms='any',
-    # package_data={'emily_modules/data':['*']},
+    entry_points={
+        'console_scripts': ['emily=emily:chat','emily_server=emily:emily_server']
+    },
     classifiers=[
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',

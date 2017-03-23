@@ -7,15 +7,15 @@ import sys
 import os
 
 
-from emily_modules import sports
-from emily_modules import run_command
-from emily_modules import send_message
-from emily_modules import yes_no_parser
-from emily_modules import variables
-from emily_modules import utils
-from emily_modules import process_input
-from emily_modules import conversations
-from emily_modules import sessions
+from emily.emily_modules import sports
+from emily.emily_modules import run_command
+from emily.emily_modules import send_message
+from emily.emily_modules import yes_no_parser
+from emily.emily_modules import variables
+from emily.emily_modules import utils
+from emily.emily_modules import process_input
+from emily.emily_modules import conversations
+from emily.emily_modules import sessions
 
 
 curdir = os.path.dirname(__file__)
@@ -35,7 +35,11 @@ class CreateSocket(threading.Thread):
         while True:
             c,addr = self.s.accept()
             received = c.recv(4096)
-            received = received.replace('message','response')
+            if sys.version_info >= (3,0):
+                # In Python 3.x, the data transferred between sockets is in bytes
+                received = received.replace(b'message',b'response')
+            else:
+                received = received.replace('message','response')
             c.send(received)
             c.close()
             self.s.close()

@@ -29,9 +29,11 @@ Usage
 Command Line Example:
 ---------------------
 
+After installing Emily, a new bash command is available for chatting with Emily.
+
 .. code-block:: bash
 
-    $ python emily.py chat
+    $ emily
 
     User      >  Hello
 
@@ -91,10 +93,10 @@ First start Emily as a web server.
 
 .. code-block:: bash
 
-    $ python emily.py
+    $ emily_server
     Web Server Started...
 
-Then use HTTP requests to interact with Emily.
+Then, from another terminal window, use HTTP requests to interact with Emily.
 
 .. code-block:: bash
 

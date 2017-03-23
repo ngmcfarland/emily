@@ -1,3 +1,3 @@
-include emily_modules/data/*
-include emily_conf/*
+include emily/emily_modules/data/*
+include emily/emily_conf/*
 include tests/data/*

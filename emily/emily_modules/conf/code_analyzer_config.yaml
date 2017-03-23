@@ -1,0 +1,11 @@
+summary_template: |
+  Number of Python files: {file_count}
+  Code: {code_count} lines | Comments: {comment_count} lines
+  Functions: {function_count}
+  Classes: {class_count}
+  Dependencies: {dependency_count}
+  Variables: {variable_count}
+  if statements: {if_count}
+  with statements: {with_count}
+  while loops: {while_count}
+  for loops: {for_count}

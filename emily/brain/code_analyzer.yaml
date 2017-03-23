@@ -1,0 +1,24 @@
+intent: code_analyzer
+conversations:
+  default:
+    ask_analyze:
+      node_type: router
+      pattern: analyze code
+      utterances:
+        - i need you to analyze some code
+        - please analyze some code
+        - analyze python code
+      next_node: what_directory
+    what_directory:
+      node_type: response
+      responses:
+        - What directory would you like me to look in?
+      next_node: analyze_code
+    analyze_code:
+      node_type: simple_logic
+      command: code_analyzer.analyze_code("{user_input}")
+      next_node: summary
+    summary:
+      node_type: response
+      responses:
+        - "Here is what I found: {summary}"
