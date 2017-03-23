@@ -6,7 +6,6 @@ import emily
 
 
 class PyTest(TestCommand):
-    # user_options = [('pytest-args=', 'a', "Arguments to pass to pytest")]
 
     def initialize_options(self):
         TestCommand.initialize_options(self)
@@ -16,6 +15,10 @@ class PyTest(TestCommand):
         import pytest
         errno = pytest.main(self.pytest_args)
         sys.exit(errno)
+
+
+with open('README.rst') as f:
+    readme = f.read()
 
 
 setup(
@@ -35,7 +38,7 @@ setup(
     cmdclass={'test': PyTest},
     author_email='ngmcfarland@gmail.com',
     description='A highly customizable chatbot implemented in Python.',
-    long_description='?', # ?
+    long_description=readme,
     packages=['emily','emily.emily_modules'],
     package_dir={'emily':'emily'},
     include_package_data=True,
@@ -56,6 +59,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         ],
     extras_require={
-        'testing':['pytest'], # ?
+        'testing':['pytest'],
+        'aws':['boto3>=1.4.4'],
     }
 )
