@@ -6,7 +6,7 @@ Emily is a fully functional chatbot platform built in Python. Emily can be custo
 
 Emily does not have incredible abilities out of the box, but is instead meant to give developers of various skill levels an easy-to-configure chatbot that can interact with custom Python code effortlessly.
 
-.. _brain files: brain/README.rst
+.. _brain files: emily/brain/README.rst
 
 Requirements
 ============
@@ -250,7 +250,7 @@ Configuration parameters include:
 
 In addition to the paramters above, any paramter contained in the emily/emily_conf/emily_config.yaml can also be passed in to the Emily() class or the start_emily() function. Information on those parameters can be found here: `Configuration Parameters`_
 
-.. _Configuration Parameters: emily_conf/README.rst
+.. _Configuration Parameters: emily/emily_conf/README.rst
 
 **Example**
 
