@@ -21,6 +21,8 @@ Installation
 
 Using PIP
 
+**This is still being worked on. Pip installation will be available soon!**
+
 .. code-block:: bash
 
     $ pip install emily
