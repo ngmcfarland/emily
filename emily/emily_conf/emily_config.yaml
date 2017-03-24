@@ -1,6 +1,7 @@
 # Standard config variables
 log_file: log/emily.log
 logging_level: DEBUG
+write_log_to_file: True
 emily_port: 8000
 default_session_vars: {'conversation':'default'}
 

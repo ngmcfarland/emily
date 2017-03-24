@@ -37,7 +37,7 @@ class Emily(threading.Thread):
             self.s.bind(('',config['emily_port']))
             self.s.listen(5)
             self.already_started = False
-            logging = utils.init_logging(log_file=os.path.join(curdir,config['log_file']),logging_level=config['logging_level'])
+            logging = utils.init_logging(log_file=os.path.join(curdir,config['log_file']),logging_level=config['logging_level'],write_log_to_file=config['write_log_to_file'])
             logging.debug("Socket successfully created and listening on port {}".format(config['emily_port']))
             if disable_emily_defaults:
                 brain_files = more_brains
@@ -55,7 +55,7 @@ class Emily(threading.Thread):
                     sys.exit(1)
         except socket.error as err:
             if err.errno == 48:
-                logging = utils.init_logging(log_file=os.path.join(curdir,config['log_file']),logging_level=config['logging_level'],already_started=True)
+                logging = utils.init_logging(log_file=os.path.join(curdir,config['log_file']),logging_level=config['logging_level'],already_started=True,write_log_to_file=config['write_log_to_file'])
                 logging.debug("Emily already started")
                 self.already_started = True
             else:
@@ -163,8 +163,8 @@ def chat():
     return response
 
 
-def start_emily(more_brains=[],disable_emily_defaults=False,**alt_config):
-    session = Emily(more_brains=more_brains,disable_emily_defaults=disable_emily_defaults,**alt_config)
+def start_emily(more_brains=[],more_vars={},disable_emily_defaults=False,**alt_config):
+    session = Emily(more_brains=more_brains,more_vars=more_vars,disable_emily_defaults=disable_emily_defaults,**alt_config)
     session.start()
     print("Web Server Started...")
     return app
@@ -214,7 +214,7 @@ def chat():
 
 def stateless(message,session_id=None,more_brains=[],more_vars={},disable_emily_defaults=False,**alt_config):
     __init_config__(**alt_config)
-    # logging = utils.init_logging(log_file=config['log_file'],logging_level=config['logging_level'],already_started=True)
+    logging = utils.init_logging(log_file=config['log_file'],logging_level=config['logging_level'],already_started=True,write_log_to_file=config['write_log_to_file'])
     if config['brain_source'].upper() == 'LOCAL':
         if not disable_emily_defaults:
             brain_dir = os.path.join(curdir, config['brain_path'])

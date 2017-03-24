@@ -9,13 +9,6 @@ Relative path to desired logging file.
 
 **Default:** log/emily.log
 
-brain_dir
----------
-
-Relative path to directory containing brain files.
-
-**Default:** brain
-
 logging_level
 -------------
 
@@ -31,10 +24,17 @@ Desired logging level.
 - INFO
 - DEBUG
 
+write_log_to_file
+-----------------
+
+In some cases (like running Emily inside an AWS Lambda), you do not have access to write logs to the local filesystem. If write_log_to_file is False, Emily will still execute Python logging commands, but not write anything to the filesystem, and will ignore the "log_file" parameter.
+
+**Default:** True
+
 emily_port
 ----------
 
-Port that threaded Emily process listens on.
+Port that threaded Emily process listens on. Note that this is separate from the port that the Flask app will lisetn on.
 
 **Default:** 8000
 
@@ -43,29 +43,47 @@ default_session_vars
 
 Default session variables that every user gets when requesting a session.
 
-**Default:** {'topic':'NONE'}
+**Default:** {'conversation':'default'}
 
-source
-------
+brain_source
+------------
 
-Instructs Emily on where to store session variables and other data.
+Instructs Emily on where to retrieve brain files.
 
 **Default:** LOCAL
 
 **Options:**
 
 - LOCAL - local file system
-- DYNAMODB - DynamoDB tables in AWS
+- DYNAMODB - DynamoDB table in AWS
+
+brain_path
+----------
+
+Path to brain directory locally if brain_source: LOCAL.
+DynamoDB table name if brain_source: DYNAMODB.
+
+**Default:** brain
+
+session_vars_source
+-------------------
+
+Instructs Emily on where to store session variables.
+
+**Default:** LOCAL
+
+**Options:**
+
+- LOCAL - local file system
+- DYNAMODB - DynamoDB table in AWS
 
 session_vars_path
 -----------------
 
-Path to session variable file locally if source: LOCAL.
-DynamoDB table name if source: DYNAMODB.
+Path to session variable file locally if session_vars_source: LOCAL.
+DynamoDB table name if session_vars_source: DYNAMODB.
 
 **Default:** conf/session_vars.json
-
-**Note:** When using local file path, path is relative to the sessions.py module in emily_modules directory.
 
 region
 ------
