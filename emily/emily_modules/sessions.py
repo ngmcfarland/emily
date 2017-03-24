@@ -3,7 +3,7 @@ import random
 import json
 import os
 
-curdir = os.path.dirname(__file__)
+curdir = os.path.dirname(os.path.realpath(__file__))
 
 
 # Helper class to convert a DynamoDB item to JSON.

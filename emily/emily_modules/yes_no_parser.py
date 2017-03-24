@@ -6,7 +6,7 @@ import sys
 import re
 import os
 
-curdir = os.path.dirname(__file__)
+curdir = os.path.dirname(os.path.realpath(__file__))
 
 with open(os.path.join(curdir, 'data/yesno.json')) as json_yesno_data:
     yesno_data = json.load(json_yesno_data)

@@ -12,7 +12,7 @@ import json
 import sys
 import os
 
-curdir = os.path.dirname(__file__)
+curdir = os.path.dirname(os.path.realpath(__file__))
 config_file = 'emily_conf/emily_config.yaml'
 with open(os.path.join(curdir,config_file),'r') as f:
     config = yaml.load(f.read())
