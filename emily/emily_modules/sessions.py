@@ -102,6 +102,8 @@ def set_session_vars(session_id,session_vars,source,session_vars_path,region='us
 
 
 def create_new_session(default_session_vars,source,session_vars_path,region='us-east-1'):
+    if 'default_session_vars' not in default_session_vars:
+        default_session_vars['default_session_vars'] = dict(default_session_vars)
     # Identify used session ids
     if source.upper() == 'LOCAL':
         init_config(session_vars_path=session_vars_path)

@@ -66,7 +66,6 @@ class Emily(threading.Thread):
 
     def run(self):
         default_session_vars = config['default_session_vars']
-        default_session_vars['default_session_vars'] = dict(config['default_session_vars'])
         for key in self.more_vars.keys():
             default_session_vars[key] = self.more_vars[key]
         default_session_vars['next_node'] = config['starting_node']
@@ -116,18 +115,12 @@ class Emily(threading.Thread):
         new_s.close()
         return response['response'],response['session_id']
 
-    def get_session(self,default_session_vars=None):
-        if default_session_vars is None:
-            default_session_vars = config['default_session_vars']
-            default_session_vars['default_session_vars'] = dict(config['default_session_vars'])
-            for key in self.more_vars.keys():
-                default_session_vars[key] = self.more_vars[key]
-            if 'starting_node' in config:
-                default_session_vars['next_node'] = config['starting_node']
-        else:
-            default_session_vars['default_session_vars'] = dict(default_session_vars)
-            if 'starting_node' in config:
-                default_session_vars['next_node'] = config['starting_node']    
+    def get_session(self):
+        default_session_vars = config['default_session_vars']
+        for key in self.more_vars.keys():
+            default_session_vars[key] = self.more_vars[key]
+        if 'starting_node' in config:
+            default_session_vars['next_node'] = config['starting_node']
         session_id = sessions.create_new_session(default_session_vars=default_session_vars,source=config['session_vars_source'],session_vars_path=config['session_vars_path'],region=config['region'])
         return session_id
 

@@ -4,6 +4,8 @@ Emily
 
 Emily is a fully functional chatbot platform built in Python. Emily can be customized and controlled using `brain files`_ written in a simple JSON structure, and can also be configured to run your own custom Python code.
 
+Emily does not have incredible abilities out of the box, but is instead meant to give developers of various skill levels an easy-to-configure chatbot that can interact with custom Python code effortlessly.
+
 .. _brain files: brain/README.rst
 
 Requirements
@@ -193,15 +195,15 @@ The sample brain files included with Emily provide a good introduction to Emily'
         brains = ["brain/my_brain.json"]
 
         # Append my modules directory to the Python path so that Emily can import my custom code
-        sys.path.append(os.path.join(os.path.dirname(__file__),"modules"))
+        sys.path.append(os.path.dirname(os.path.realpath(__file__)),"modules"))
 
         if chat is None:
             # Get Emily as Flask Application
-            application = emily.start_emily(more_brains=brains,disable_emily_defaults=True)
-            application.run(debug=True)
+            application = emily.start_emily(more_brains=brains,more_vars={'foo':'bar'},disable_emily_defaults=True)
+            application.run(debug=True,port=5000)
         else:
             # Get Emily Session using Emily() Python Class
-            session = emily.Emily(more_brains=brains,disable_emily_defaults=True)
+            session = emily.Emily(more_brains=brains,more_vars={'foo':'bar'},,disable_emily_defaults=True)
             session_id = session.get_session()
             session.start()
 
@@ -255,8 +257,8 @@ In addition to the paramters above, any paramter contained in the emily/emily_co
 .. code-block:: python
 
     # Example with Emily() Class
-    session = emily.Emily(more_brains=['other/brain.json'],disable_emily_defaults=True,logging_level='INFO',emily_port=8001,log_file='my_log_dir/emily.log')
-    session_id = session.get_session(default_session_vars={'conversation':'default','foo':'bar'})
+    session = emily.Emily(more_brains=['other/brain.json'],disable_emily_defaults=True,logging_level='INFO',emily_port=8001,log_file='/full/path/to/my_log_dir/emily.log')
+    session_id = session.get_session()
     session.start()
 
     # Example with start_emily() function (Flask app)
