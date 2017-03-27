@@ -4,6 +4,7 @@
 *.pyc
 notes
 env
+dist
 *.egg
 *.eggs
 *.egg-info
