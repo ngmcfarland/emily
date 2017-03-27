@@ -2,8 +2,6 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 import sys
 
-import emily
-
 
 class PyTest(TestCommand):
 
@@ -23,7 +21,7 @@ with open('README.rst') as f:
 
 setup(
     name='emily',
-    version=emily.__version__,
+    version='1.0.0',
     url='https://github.com/ngmcfarland',
     license='Apache Software License',
     author='Nathan McFarland',
@@ -43,6 +41,7 @@ setup(
     package_dir={'emily':'emily'},
     include_package_data=True,
     platforms='any',
+    download_url='https://github.com/ngmcfarland/emily/archive/1.0.0.tar.gz',
     entry_points={
         'console_scripts': ['emily=emily:chat','emily_server=emily:emily_server']
     },
