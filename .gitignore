@@ -5,6 +5,7 @@
 notes
 env
 dist
+build
 *.egg
 *.eggs
 *.egg-info
