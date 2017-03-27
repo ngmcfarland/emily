@@ -21,7 +21,7 @@ session_vars_source: LOCAL
 
 # Path to session vars file when source is LOCAL
 # DynamoDB table name when source is DYNAMODB
-session_vars_path: conf/session_vars.json
+session_vars_path: data/session_vars.json
 
 # Used when source is DYNAMODB only
 region: us-east-1

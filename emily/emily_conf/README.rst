@@ -83,7 +83,7 @@ session_vars_path
 Path to session variable file locally if session_vars_source: LOCAL.
 DynamoDB table name if session_vars_source: DYNAMODB.
 
-**Default:** conf/session_vars.json
+**Default:** data/session_vars.json
 
 region
 ------
