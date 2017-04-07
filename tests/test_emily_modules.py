@@ -326,8 +326,8 @@ class TestConversations:
         """Does simple_logic_node execute a command successfully and save dictionary values to session_vars?"""
         command = 'json.loads(\'{"foo":"bar","input":"{user_input}"}\')'
         node = {'node_type':'simple_logic','command':command}
-        session_vars = {'hello':'world'}
         user_input = 'bananas'
+        session_vars = {'hello':'world','user_input':user_input}
         session_vars,success = conversations.simple_logic_node(node=node,session_vars=session_vars,user_input=user_input)
         assert success
         assert session_vars['foo'] == 'bar'
@@ -353,8 +353,8 @@ class TestConversations:
             'command':command,
             'bananas':'tests.default.bananas',
             'unknown_node':'tests.default.unknown'}
-        session_vars = {'foo':'bar'}
         user_input = "hello world"
+        session_vars = {'foo':'bar','user_input':user_input}
         next_node,success = conversations.string_logic_node(node=node,session_vars=session_vars,user_input=user_input)
         assert success
         assert next_node == 'tests.default.bananas'
