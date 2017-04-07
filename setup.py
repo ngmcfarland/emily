@@ -23,7 +23,7 @@ with open('RELEASES.rst') as f:
 
 setup(
     name='emily',
-    version='1.0.1',
+    version='1.0.2',
     url='https://github.com/ngmcfarland',
     license='Apache Software License',
     author='Nathan McFarland',
