@@ -1,6 +1,17 @@
 Releases
 --------
 
+1.0.3 (2017-04-07)
+++++++++++++++++++
+
+**Improvements**
+
+- Added function to setup.py for removing links in README.rst when creating the long description. PyPI does not display the description properly when there are links.
+
+**Bugfixes**
+
+- Forgot to make "user_input" change to Emily's stateless function in release 1.0.2
+
 1.0.2 (2017-04-07)
 ++++++++++++++++++
 
