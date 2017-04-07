@@ -99,7 +99,7 @@ Optional python command that can be used to determine which brain file to match 
 
 **Default:** null
 
-**Example:** go_find_intent.example("user_input")
+**Example:** go_find_intent.example("{user_input}")
 
 Emily will expect a string value in return that represents the matching intent, and use that to match against the "intent" of known brain files.
 
@@ -110,7 +110,7 @@ Depending on your project, you may prefer to have custom code pre-format the use
 
 **Default:** null
 
-**Example:** preformat_the_input.example("user_input")
+**Example:** preformat_the_input.example("{user_input}")
 
 Emily will expect a string value in return that will be used as the new value for "user_input".
 

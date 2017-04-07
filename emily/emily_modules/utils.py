@@ -144,7 +144,7 @@ def printlog(response,speaker,presponse=False,noprint=False):
 def apply_input_filters(user_input,intent_command=None,preformat_command=None):
     if intent_command:
         logging.debug("Applying this intent filter to user input: {}".format(intent_command))
-        intent_command = intent_command.replace('user_input',user_input)
+        intent_command = intent_command.replace('{user_input}',user_input)
         command_result = run_command.run(intent_command)
         if command_result['success']:
             logging.info("Determined intent: {}".format(command_result['response']))
@@ -156,7 +156,7 @@ def apply_input_filters(user_input,intent_command=None,preformat_command=None):
         intent = None
     if preformat_command:
         logging.debug("Applying this preformat filter to user input: {}".format(preformat_command))
-        preformat_command = preformat_command.replace('user_input',user_input)
+        preformat_command = preformat_command.replace('{user_input}',user_input)
         command_result = run_command.run(preformat_command)
         if command_result['success']:
             logging.info("Preformatted input to: {}".format(command_result['response']))

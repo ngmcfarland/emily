@@ -29,12 +29,12 @@ region: us-east-1
 
 # Optional Parameters for Alternate Functionality
 
-# By setting itent_command to a string like: go_find_intent.example("user_input")
+# By setting itent_command to a string like: go_find_intent.example("{user_input}")
 #   Emily will run the command and pass the user's input to your function. She will expect
 #   a string value in return, and use that value to filter the brain files by intent.
 intent_command: null
 
-# By setting preformat_command to a string like: preformat_the_input.example("user_input")
+# By setting preformat_command to a string like: preformat_the_input.example("{user_input}")
 #   Emily will run the command and pass the user's input to your function. She will expect
 #   a string value in return, and use that value as the new input to pass to the brain files.
 preformat_command: null
