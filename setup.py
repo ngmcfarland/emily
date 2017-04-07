@@ -1,6 +1,7 @@
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 import sys
+import re
 
 
 class PyTest(TestCommand):
@@ -13,6 +14,11 @@ class PyTest(TestCommand):
         import pytest
         errno = pytest.main(self.pytest_args)
         sys.exit(errno)
+
+
+def strip_rst_links(readme):
+    readme = re.sub(r"`([A-Za-z\s_0-9\-]+)\s?[A-Za-z0-9_/:\.<>\-]*`_",r"\1",readme)
+    return re.sub(r"\.\.\s_[a-zA-Z0-9\-_/:\.\s]+\n","",readme)
 
 
 with open('README.rst') as f:
@@ -38,7 +44,7 @@ setup(
     cmdclass={'test': PyTest},
     author_email='ngmcfarland@gmail.com',
     description='A highly customizable chatbot implemented in Python.',
-    long_description=readme + '\n\n' + releases,
+    long_description=strip_rst_links(readme) + '\n\n' + releases,
     packages=['emily','emily.emily_modules'],
     package_dir={'emily':'emily'},
     include_package_data=True,
