@@ -236,6 +236,7 @@ def stateless(message,session_id=None,more_brains=[],more_vars={},disable_emily_
     emily_start_time = datetime.now()
     # Apply optional filters before sending to brain
     intent,new_input = utils.apply_input_filters(user_input=message)
+    session_vars['user_input'] = new_input
     response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),brain=brain,session_vars=session_vars,intent=intent)
     utils.printlog(response=response,speaker='EMILY',noprint=True)
     emily_response_time = datetime.now() - emily_start_time
