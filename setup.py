@@ -29,7 +29,7 @@ with open('RELEASES.rst') as f:
 
 setup(
     name='emily',
-    version='1.0.2',
+    version='1.0.3',
     url='https://github.com/ngmcfarland',
     license='Apache Software License',
     author='Nathan McFarland',
@@ -49,7 +49,7 @@ setup(
     package_dir={'emily':'emily'},
     include_package_data=True,
     platforms='any',
-    download_url='https://github.com/ngmcfarland/emily/archive/1.0.1.tar.gz',
+    download_url='https://github.com/ngmcfarland/emily/archive/1.0.3.tar.gz',
     entry_points={
         'console_scripts': ['emily=emily:chat','emily_server=emily:emily_server']
     },
