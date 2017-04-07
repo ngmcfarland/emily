@@ -17,6 +17,8 @@ class PyTest(TestCommand):
 
 with open('README.rst') as f:
     readme = f.read()
+with open('RELEASES.rst') as f:
+    releases = f.read()
 
 
 setup(
@@ -36,7 +38,7 @@ setup(
     cmdclass={'test': PyTest},
     author_email='ngmcfarland@gmail.com',
     description='A highly customizable chatbot implemented in Python.',
-    long_description=readme,
+    long_description=readme + '\n\n' + releases,
     packages=['emily','emily.emily_modules'],
     package_dir={'emily':'emily'},
     include_package_data=True,
