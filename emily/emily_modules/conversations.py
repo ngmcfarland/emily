@@ -92,7 +92,7 @@ def simple_logic_node(node,session_vars,user_input):
     try:
         success = False
         if '{user_input}' in node['command'] and user_input is not None:
-            command = node['command'].replace('{user_input}',user_input)
+            command = node['command'].replace('{user_input}',session_vars['user_input'])
         else:
             command = node['command']
         command = variables.replace_vars(session_vars=session_vars,response=command)
@@ -142,7 +142,7 @@ def string_logic_node(node,session_vars,user_input):
         success = False
         next_node = None
         if '{user_input}' in node['command'] and user_input is not None:
-            command = node['command'].replace('{user_input}',user_input)
+            command = node['command'].replace('{user_input}',session_vars['user_input'])
         else:
             command = node['command']
         command = variables.replace_vars(session_vars=session_vars,response=command)

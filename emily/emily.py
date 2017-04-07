@@ -83,6 +83,7 @@ class Emily(threading.Thread):
                 session_vars = sessions.get_session_vars(session_id=session_id,source=config['session_vars_source'],session_vars_path=config['session_vars_path'],region=config['region'])
                 # Apply optional filters before sending to brain
                 intent,new_input = utils.apply_input_filters(user_input=str(user_input['message']),intent_command=config['intent_command'],preformat_command=config['preformat_command'])
+                session_vars['user_input'] = new_input
                 response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),brain=self.brain,session_vars=session_vars,intent=intent)
                 utils.printlog(response=response,speaker='EMILY',noprint=True)
                 c.send(json.dumps({'response':response,'session_id':session_id}).encode())
@@ -190,6 +191,7 @@ def chat():
         emily_start_time = datetime.now()
         # Apply optional filters before sending to brain
         intent,new_input = utils.apply_input_filters(user_input=user_input)
+        session_vars['user_input'] = new_input
         response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),brain=brain,session_vars=session_vars,intent=intent)
         utils.printlog(response=response,speaker='EMILY')
 
