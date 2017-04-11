@@ -1,6 +1,14 @@
 Releases
 --------
 
+1.0.4 (2017-04-11)
+++++++++++++++++++
+
+**Bugfixes**
+
+- Emily's default log file is 'emily/log/emily.log', but the empty log directory was not included in the wheel. Added log directory path to MANIFEST.in
+- Escaped single quote in README.rst that caused the syntax highlights in the command line example to look off.
+
 1.0.3 (2017-04-07)
 ++++++++++++++++++
 
