@@ -45,7 +45,7 @@ After installing Emily, a new bash command is available for chatting with Emily.
 
     Emily     >  Why did the scarecrow win an award?
     
-    User      >  I don't know
+    User      >  I don\'t know
     
     Emily     >  Because he was outstanding in his field...
     

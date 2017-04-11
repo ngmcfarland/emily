@@ -2,6 +2,7 @@ include emily/emily_modules/data/*
 include emily/emily_modules/conf
 include emily/emily_conf/*
 include emily/brain/*
+include emily/log/*
 include tests/data/*
 include *.rst
 include docs/*
