@@ -1,0 +1,6 @@
+EmilyIntent tell emily {Input}
+EmilyIntent tell emily to {Input}
+EmilyIntent ask emily {Input}
+EmilyIntent ask emily to {Input}
+EmilyIntent say to emily {Input}
+EmilyIntent {Input}
