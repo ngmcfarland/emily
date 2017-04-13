@@ -54,11 +54,15 @@ Instructions
 - Upload your zip file: emily_lambda_v1.zip
 - Handler: lambda_function.lambda_handler (this is the default)
 - Role: Create a Custom Role (opens new window)
-    - IAM Role: Create a new IAM role
-    - Role Name: emily_lambda_execution
-    - Allow
+
+  - IAM Role: Create a new IAM role
+  - Role Name: emily_lambda_execution
+  - Allow
+
 - Advanced Settings:
-    - Timeout: 15 Seconds
+
+  - Timeout: 15 Seconds
+  
 - Next
 - Create Function
 

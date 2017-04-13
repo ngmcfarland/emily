@@ -13,7 +13,8 @@ Requirements
 
 - Python 2.7 or later
 - `fuzzywuzzy <https://github.com/seatgeek/fuzzywuzzy>`_ - Fuzzy string matching
-    - Uses `python-Levenshtein <https://github.com/miohtama/python-Levenshtein>`_
+
+  - Uses `python-Levenshtein <https://github.com/miohtama/python-Levenshtein>`_
 - `Flask <https://github.com/pallets/flask>`_ - Web Server Microframework in Python
 
 Installation

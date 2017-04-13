@@ -55,11 +55,15 @@ Instructions
 - Upload your zip file: emily_alexa_lambda_v1.zip
 - Handler: lambda_function.lambda_handler (this is the default)
 - Role: Create a Custom Role (opens new window)
-    - IAM Role: Create a new IAM role
-    - Role Name: emily_lambda_execution
-    - Allow
+
+  - IAM Role: Create a new IAM role
+  - Role Name: emily_lambda_execution
+  - Allow
+
 - Advanced Settings:
-    - Timeout: 15 Seconds
+
+  - Timeout: 15 Seconds
+
 - Next
 - Create Function
 
@@ -84,10 +88,12 @@ Instructions
 
 - Intent Schema: See intent_schema.json
 - Custom Slot Types:
-    - Add Slot Type
-    - Enter Type: CATCH_ALL
-    - Enter Values: See custom_slot_type_values.txt
-    - Add
+
+  - Add Slot Type
+  - Enter Type: CATCH_ALL
+  - Enter Values: See custom_slot_type_values.txt
+  - Add
+
 - Sample Utterances: See sample_utterances.txt
 - Save
 - Next
