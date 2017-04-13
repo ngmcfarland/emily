@@ -40,13 +40,13 @@ def load_data(brain_files=[],brain_table=None,source='LOCAL',region='us-east-1')
             if response['ResponseMetadata']['HTTPStatusCode'] == 200:
                 brain_count = response['Count']
                 for brain in response['Items']:
-                    data = json.loads(brain['brain'])
+                    data = json.loads(brain['brain']['S'])
                     nodes,pattern = load_brain(nodes=nodes,patterns=patterns,data=data)
             else:
                 logging.error("Failed to scan DynamoDB table: {}".format(brain_table))
         except:
-                print("Failed to load {}".format(filename))
-                logging.error("Failed to load {}".format(filename))
+                print("Failed to load {}".format(brain_table))
+                logging.error("Failed to load {}".format(brain_table))
                 print("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
                 logging.error("Reason: {} - {}".format(sys.exc_info()[0],sys.exc_info()[1]))
                 brain_count -= 1
