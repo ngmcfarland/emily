@@ -1,3 +1,4 @@
+import datetime
 import decimal
 import random
 import json
@@ -83,9 +84,10 @@ def set_session_vars(session_id,session_vars,source,session_vars_path,region='us
             try:
                 response = table.update_item(
                     Key={'session_id': session_id},
-                    UpdateExpression="set session_vars = :vars",
+                    UpdateExpression="set session_vars = :vars, last_updated = :last_updated",
                     ExpressionAttributeValues={
-                        ':vars': json.dumps(session_vars)
+                        ':vars': json.dumps(session_vars),
+                        ':last_updated': datetime.datetime.utcnow().isoformat()+"Z"
                     },
                     ReturnValues="UPDATED_NEW"
                 )
