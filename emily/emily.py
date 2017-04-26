@@ -177,23 +177,16 @@ def chat():
     response = 'None'
     session_id = None
     if request.json is not None:
-        content = request.json
-        logging.debug("Client request: {}".format(json.dumps(content)))
-        if 'session_id' not in content:
+        logging.debug("Client request: {}".format(json.dumps(request.json)))
+        if 'session_id' not in request.json:
             response = 'Please include session ID in request. Session ID can be obtained by performing a GET against /get_session'
         else:
-            session_id = int(content['session_id']) if isinstance(content['session_id'],string_types) else content['session_id']
-            message = content['message']
-            response,session_id = send_message.send(message=message,session_id=session_id,port=config['emily_port'])
+            response,session_id = send_message.send(message=request.json['message'],session_id=request.json['session_id'],port=config['emily_port'])
     else:
         if 'session_id' not in request.form:
             response = 'Please include session ID in request. Session ID can be obtained by performing a GET against /get_session'
         else:
-            session_id = request.form['session_id']
-            if isinstance(session_id,string_types):
-                session_id = int(session_id)
-            message = request.form['message']
-            response,session_id = send_message.send(message=message,session_id=session_id,port=config['emily_port'])
+            response,session_id = send_message.send(message=request.form['message'],session_id=request.form['session_id'],port=config['emily_port'])
     response = json.dumps({'response':response,'session_id':session_id})
     return response
 
