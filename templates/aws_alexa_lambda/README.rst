@@ -18,7 +18,7 @@ Instructions
 1. In AWS create a new DynamoDB table to hold Emily's session variables.
 
 - Table Name: emily_session_vars (or whatever your preference is)
-- Primary Key: session_id (Number)
+- Primary Key: session_id (String)
 
 2. Create an application directory locally
 
