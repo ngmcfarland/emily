@@ -77,14 +77,19 @@ class Emily(threading.Thread):
                 utils.printlog(response=user_input['message'],speaker='USER')
                 emily_start_time = datetime.now()
                 session_id = user_input['session_id']
-                if not session_id:
-                    session_id = sessions.create_new_session(default_session_vars=default_session_vars,source=config['session_vars_source'],session_vars_path=config['session_vars_path'],region=config['region'])
-                    logging.info("New session ID: {}".format(session_id))
-                session_vars = sessions.get_session_vars(session_id=session_id,source=config['session_vars_source'],session_vars_path=config['session_vars_path'],region=config['region'])
+                session_vars = sessions.get_session_vars(session_id=session_id,
+                    source=config['session_vars_source'],
+                    session_vars_path=config['session_vars_path'],
+                    region=config['region'])
                 # Apply optional filters before sending to brain
-                intent,new_input = utils.apply_input_filters(user_input=str(user_input['message']),intent_command=config['intent_command'],preformat_command=config['preformat_command'])
+                intent,new_input = utils.apply_input_filters(user_input=str(user_input['message']),
+                    intent_command=config['intent_command'],
+                    preformat_command=config['preformat_command'])
                 session_vars['user_input'] = new_input
-                response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),brain=self.brain,session_vars=session_vars,intent=intent)
+                response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),
+                    brain=self.brain,
+                    session_vars=session_vars,
+                    intent=intent)
                 utils.printlog(response=response,speaker='EMILY',noprint=True)
                 c.send(json.dumps({'response':response,'session_id':session_id}).encode())
                 c.close()
@@ -98,15 +103,22 @@ class Emily(threading.Thread):
                         logging.debug(" * {}: {}".format(var,session_vars[var]))
 
                 if user_input['message'].upper() in ['Q','QUIT','EXIT','BYE']:
-                    sessions.remove_session(session_id=session_id,source=config['session_vars_source'],session_vars_path=config['session_vars_path'],region=config['region'])
+                    sessions.remove_session(session_id=session_id,
+                        source=config['session_vars_source'],
+                        session_vars_path=config['session_vars_path'],
+                        region=config['region'])
                     logging.info("Removed session: {}".format(session_id))
                     if config['session_vars_source'].upper() == 'LOCAL' and sessions.get_session_count(session_vars_path=config['session_vars_path']) == 0:
                         self.s.close()
                         break
                 else:
-                    sessions.set_session_vars(session_id=session_id,session_vars=session_vars,source=config['session_vars_source'],session_vars_path=config['session_vars_path'],region=config['region'])
+                    sessions.set_session_vars(session_id=session_id,
+                        session_vars=session_vars,
+                        source=config['session_vars_source'],
+                        session_vars_path=config['session_vars_path'],
+                        region=config['region'])
 
-    def send(self,message,session_id=None):
+    def send(self,message,session_id):
         new_s = socket.socket()
         port = config['emily_port']
         new_s.connect(('localhost',port))
@@ -116,19 +128,48 @@ class Emily(threading.Thread):
         new_s.close()
         return response['response'],response['session_id']
 
-    def get_session(self):
+    def get_session(self,preferred_id=None):
         default_session_vars = config['default_session_vars']
         for key in self.more_vars.keys():
             default_session_vars[key] = self.more_vars[key]
         if 'starting_node' in config:
             default_session_vars['next_node'] = config['starting_node']
-        session_id = sessions.create_new_session(default_session_vars=default_session_vars,source=config['session_vars_source'],session_vars_path=config['session_vars_path'],region=config['region'])
+        session_id = sessions.create_new_session(default_session_vars=default_session_vars,
+            source=config['session_vars_source'],
+            session_vars_path=config['session_vars_path'],
+            region=config['region'],
+            preferred_id=preferred_id)
         return session_id
 
 
 @app.route('/get_session')
 def get_session():
-    session_id = sessions.create_new_session(default_session_vars=config['default_session_vars'],source=config['session_vars_source'],session_vars_path=config['session_vars_path'],region=config['region'])
+    session_id = sessions.create_new_session(default_session_vars=config['default_session_vars'],
+        source=config['session_vars_source'],
+        session_vars_path=config['session_vars_path'],
+        region=config['region'])
+    return str(session_id)
+
+@app.route('/get_session', methods=['POST'])
+def get_preferred_session():
+    session_id = None
+    if request.json is not None and 'preferred_id' in request.json:
+        session_id = sessions.create_new_session(default_session_vars=config['default_session_vars'],
+            source=config['session_vars_source'],
+            session_vars_path=config['session_vars_path'],
+            region=config['region'],
+            preferred_id=request.json['preferred_id'])
+    elif request.form is not None and 'preferred_id' in request.form:
+        session_id = sessions.create_new_session(default_session_vars=config['default_session_vars'],
+            source=config['session_vars_source'],
+            session_vars_path=config['session_vars_path'],
+            region=config['region'],
+            preferred_id=request.form['preferred_id'])
+    else:
+        session_id = sessions.create_new_session(default_session_vars=config['default_session_vars'],
+            source=config['session_vars_source'],
+            session_vars_path=config['session_vars_path'],
+            region=config['region'])
     return str(session_id)
 
 @app.route('/chat', methods=['POST'])
@@ -174,9 +215,12 @@ def chat():
     if config['brain_source'].upper() == 'LOCAL':
         brain_dir = os.path.join(curdir, config['brain_path'])
         brain_files = ["{}/{}".format(brain_dir,file) for file in os.listdir(brain_dir)]
-        brain = utils.load_data(brain_files=brain_files,source=config['brain_source'])
+        brain = utils.load_data(brain_files=brain_files,
+            source=config['brain_source'])
     elif config['brain_source'].upper() == 'DYNAMODB':
-        brain = utils.load_data(brain_table=config['brain_path'],source=config['brain_source'],region=config['region'])
+        brain = utils.load_data(brain_table=config['brain_path'],
+            source=config['brain_source'],
+            region=config['region'])
     else:
         logging.error("Invalid source defined in config: {}".format(config['brain_source']))
         sys.exit(1)
@@ -192,7 +236,10 @@ def chat():
         # Apply optional filters before sending to brain
         intent,new_input = utils.apply_input_filters(user_input=user_input)
         session_vars['user_input'] = new_input
-        response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),brain=brain,session_vars=session_vars,intent=intent)
+        response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),
+            brain=brain,
+            session_vars=session_vars,
+            intent=intent)
         utils.printlog(response=response,speaker='EMILY')
 
         emily_response_time = datetime.now() - emily_start_time
@@ -207,9 +254,12 @@ def chat():
             break
 
 
-def stateless(message,session_id=None,more_brains=[],more_vars={},disable_emily_defaults=False,**alt_config):
+def stateless(message,session_id=None,preferred_id=None,more_brains=[],more_vars={},disable_emily_defaults=False,**alt_config):
     __init_config__(**alt_config)
-    logging = utils.init_logging(log_file=config['log_file'],logging_level=config['logging_level'],already_started=True,write_log_to_file=config['write_log_to_file'])
+    logging = utils.init_logging(log_file=config['log_file'],
+        logging_level=config['logging_level'],
+        already_started=True,
+        write_log_to_file=config['write_log_to_file'])
     if config['brain_source'].upper() == 'LOCAL':
         if not disable_emily_defaults:
             brain_dir = os.path.join(curdir, config['brain_path'])
@@ -229,15 +279,25 @@ def stateless(message,session_id=None,more_brains=[],more_vars={},disable_emily_
         session_vars['next_node'] = config['starting_node']
         for var in more_vars:
             session_vars[var] = more_vars[var]
-        session_id = sessions.create_new_session(default_session_vars=session_vars,source=config['session_vars_source'],session_vars_path=config['session_vars_path'],region=config['region'])
+        session_id = sessions.create_new_session(default_session_vars=session_vars,
+            source=config['session_vars_source'],
+            session_vars_path=config['session_vars_path'],
+            region=config['region'],
+            preferred_id=preferred_id)
     else:
-        session_vars = sessions.get_session_vars(session_id=session_id,source=config['session_vars_source'],session_vars_path=config['session_vars_path'],region=config['region'])
+        session_vars = sessions.get_session_vars(session_id=session_id,
+            source=config['session_vars_source'],
+            session_vars_path=config['session_vars_path'],
+            region=config['region'])
     utils.printlog(response=message,speaker='USER')
     emily_start_time = datetime.now()
     # Apply optional filters before sending to brain
     intent,new_input = utils.apply_input_filters(user_input=message)
     session_vars['user_input'] = new_input
-    response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),brain=brain,session_vars=session_vars,intent=intent)
+    response,session_vars = process_input.match_input(user_input=utils.remove_punctuation(new_input),
+        brain=brain,
+        session_vars=session_vars,
+        intent=intent)
     utils.printlog(response=response,speaker='EMILY',noprint=True)
     emily_response_time = datetime.now() - emily_start_time
     logging.debug("Emily Response Time: {} seconds".format("%.3f" % emily_response_time.total_seconds()))
@@ -246,10 +306,17 @@ def stateless(message,session_id=None,more_brains=[],more_vars={},disable_emily_
         for var in session_vars:
             logging.debug(" * {}: {}".format(var,session_vars[var]))
     if new_input.upper() in ['QUIT','Q','EXIT','BYE']:
-        sessions.remove_session(session_id=session_id,source=config['session_vars_source'],session_vars_path=config['session_vars_path'],region=config['region'])
+        sessions.remove_session(session_id=session_id,
+            source=config['session_vars_source'],
+            session_vars_path=config['session_vars_path'],
+            region=config['region'])
         logging.info("Removed session: {}".format(session_id))
     else:
-        sessions.set_session_vars(session_id=session_id,session_vars=session_vars,source=config['session_vars_source'],session_vars_path=config['session_vars_path'],region=config['region'])
+        sessions.set_session_vars(session_id=session_id,
+            session_vars=session_vars,
+            source=config['session_vars_source'],
+            session_vars_path=config['session_vars_path'],
+            region=config['region'])
     return response,session_id
 
 

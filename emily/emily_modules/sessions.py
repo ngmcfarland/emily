@@ -48,7 +48,7 @@ def get_session_vars(session_id,source,session_vars_path,region='us-east-1'):
         dynamodb = boto3.resource("dynamodb", region_name=region.lower())
         table = dynamodb.Table(session_vars_path)
         try:
-            response = table.get_item(Key={'session_id': session_id})
+            response = table.get_item(Key={'session_id': str(session_id)})
         except ClientError as e:
             print(e.response['Error']['Message'])
             session_vars = {}
@@ -76,14 +76,17 @@ def set_session_vars(session_id,session_vars,source,session_vars_path,region='us
         import boto3
         from botocore.exceptions import ClientError
         # Check if session_id already exists
-        old_session_vars = get_session_vars(session_id=session_id,source=source,session_vars_path=session_vars_path,region=region)
+        old_session_vars = get_session_vars(session_id=session_id,
+            source=source,
+            session_vars_path=session_vars_path,
+            region=region)
         dynamodb = boto3.resource("dynamodb", region_name=region.lower())
         table = dynamodb.Table(session_vars_path)
         if len(old_session_vars) > 0:
             # perform an update
             try:
                 response = table.update_item(
-                    Key={'session_id': session_id},
+                    Key={'session_id': str(session_id)},
                     UpdateExpression="set session_vars = :vars, last_updated = :last_updated",
                     ExpressionAttributeValues={
                         ':vars': json.dumps(session_vars),
@@ -96,14 +99,14 @@ def set_session_vars(session_id,session_vars,source,session_vars_path,region='us
         else:
             # perform an insert
             try:
-                response = table.put_item(Item={'session_id': session_id, 'session_vars': json.dumps(session_vars)})
+                response = table.put_item(Item={'session_id': str(session_id), 'session_vars': json.dumps(session_vars)})
             except ClientError as e:
                 print(e.response['Error']['Message'])
     else:
         print("ERROR: Unrecognized source: {}".format(source))
 
 
-def create_new_session(default_session_vars,source,session_vars_path,region='us-east-1'):
+def create_new_session(default_session_vars,source,session_vars_path,region='us-east-1',preferred_id=None):
     if 'default_session_vars' not in default_session_vars:
         default_session_vars['default_session_vars'] = dict(default_session_vars)
     # Identify used session ids
@@ -112,12 +115,27 @@ def create_new_session(default_session_vars,source,session_vars_path,region='us-
         with open(os.path.join(curdir,session_vars_path),'r') as f:
             all_session_vars = json.loads(f.read())
         used_session_ids = all_session_vars.keys()
-        session_id = get_random_session_id()
-        while session_id in used_session_ids:
-            # If generated session id already in use, get another
+        if preferred_id is not None:
+            if str(preferred_id) in used_session_ids:
+                logging.error("Preferred Session ID '{}' already in use!".format(preferred_id))
+                session_id = get_random_session_id()
+                while session_id in used_session_ids:
+                    # If generated session id already in use, get another
+                    session_id = get_random_session_id()
+            else:
+                session_id = preferred_id
+        else:
             session_id = get_random_session_id()
+            while session_id in used_session_ids:
+                # If generated session id already in use, get another
+                session_id = get_random_session_id()
         # Set default session vars using new id
-        set_session_vars(session_id=session_id,session_vars=default_session_vars,source=source,session_vars_path=session_vars_path,region=region)
+        set_session_vars(session_id=session_id,
+            session_vars=default_session_vars,
+            source=source,
+            session_vars_path=session_vars_path,
+            region=region)
+        logging.info("Created session for '{}'".format(session_id))
         return session_id
     elif source.upper() == 'DYNAMODB':
         import boto3
@@ -135,12 +153,27 @@ def create_new_session(default_session_vars,source,session_vars_path,region='us-
                 used_session_ids = [x['session_id'] for x in json.loads(json.dumps(response['Items'],cls=DecimalEncoder))]
             else:
                 used_session_ids = []
-            session_id = get_random_session_id()
-            while session_id in used_session_ids:
-                # If generated session id already in use, get another
+            if preferred_id is not None:
+                if str(preferred_id) in used_session_ids:
+                    logging.error("Preferred Session ID '{}' already in use!".format(preferred_id))
+                    session_id = get_random_session_id()
+                    while session_id in used_session_ids:
+                        # If generated session id already in use, get another
+                        session_id = get_random_session_id()
+                else:
+                    session_id = preferred_id
+            else:
                 session_id = get_random_session_id()
+                while session_id in used_session_ids:
+                    # If generated session id already in use, get another
+                    session_id = get_random_session_id()
             # Set default session vars using new id
-            set_session_vars(session_id=session_id,session_vars=default_session_vars,source=source,session_vars_path=session_vars_path,region=region)
+            set_session_vars(session_id=session_id,
+                session_vars=default_session_vars,
+                source=source,
+                session_vars_path=session_vars_path,
+                region=region)
+            logging.info("Created session for '{}'".format(session_id))
             return session_id
     else:
         print("ERROR: Unrecognized source: {}".format(source))
