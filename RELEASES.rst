@@ -1,6 +1,18 @@
 Releases
 --------
 
+1.0.5 (2017-04-26)
+++++++++++++++++++
+
+**Improvements**
+
+- Support for preferred session IDs when posting to /get_session or calling the get_session() function in the Emily() class. 
+- Introduced templates for hosting Emily in AWS Lambda and Beanstalk, and for having Emily interact with Amazon's Alexa.
+
+**Bugfixes**
+
+- get_session_vars had a bug when using DynamoDB as the source for session variables.
+
 1.0.4 (2017-04-11)
 ++++++++++++++++++
 

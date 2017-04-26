@@ -4,5 +4,6 @@ include emily/emily_conf/*
 include emily/brain/*
 include emily/log/*
 include tests/data/*
+include templates/*
 include *.rst
 include docs/*
