@@ -111,6 +111,7 @@ Then, from another terminal window, use HTTP requests to interact with Emily.
 **URLs:**
 
 - **GET /get_session** - Stores a new set of session variables based on the default session variables and returns a session ID
+- **POST /get_session** - By including a 'preferred_id' variable in post body, Emily will attempt to create a new session using the preferred session ID.
 - **POST /chat** - Send a message to Emily. Request should include a 'session_id' parameter and a 'message' paramter.
 
 Using Custom Code with Emily
