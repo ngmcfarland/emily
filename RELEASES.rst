@@ -1,6 +1,13 @@
 Releases
 --------
 
+1.0.6 (2017-04-26)
+++++++++++++++++++
+
+**Bugfixes**
+
+- Allowed for preferred session IDs in 1.0.5, which means session IDs may be strings or integers, but Emily was still trying to cast session IDs as integers.
+
 1.0.5 (2017-04-26)
 ++++++++++++++++++
 
