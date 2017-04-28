@@ -30,6 +30,7 @@ def __init_config__(**alt_config):
 class Emily(threading.Thread):
     def __init__(self,more_brains=[],more_vars={},disable_emily_defaults=False,**alt_config):
         super(Emily, self).__init__()
+        self.already_started = True
         try:
             __init_config__(**alt_config)
             self.s = socket.socket()
@@ -57,7 +58,6 @@ class Emily(threading.Thread):
             if err.errno == 48:
                 logging = utils.init_logging(log_file=os.path.join(curdir,config['log_file']),logging_level=config['logging_level'],already_started=True,write_log_to_file=config['write_log_to_file'])
                 logging.debug("Emily already started")
-                self.already_started = True
             else:
                 print(err)
         finally:
@@ -80,7 +80,8 @@ class Emily(threading.Thread):
                 session_vars = sessions.get_session_vars(session_id=session_id,
                     source=config['session_vars_source'],
                     session_vars_path=config['session_vars_path'],
-                    region=config['region'])
+                    region=config['region'],
+                    default_session_vars=default_session_vars)
                 # Apply optional filters before sending to brain
                 intent,new_input = utils.apply_input_filters(user_input=str(user_input['message']),
                     intent_command=config['intent_command'],
@@ -278,10 +279,15 @@ def stateless(message,session_id=None,preferred_id=None,more_brains=[],more_vars
             region=config['region'],
             preferred_id=preferred_id)
     else:
+        default_session_vars = config['default_session_vars']
+        for var in more_vars:
+            default_session_vars[var] = more_vars[var]
+        default_session_vars['next_node'] = config['starting_node']
         session_vars = sessions.get_session_vars(session_id=session_id,
             source=config['session_vars_source'],
             session_vars_path=config['session_vars_path'],
-            region=config['region'])
+            region=config['region'],
+            default_session_vars=default_session_vars)
     utils.printlog(response=message,speaker='USER')
     emily_start_time = datetime.now()
     # Apply optional filters before sending to brain

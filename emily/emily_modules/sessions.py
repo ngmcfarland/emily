@@ -32,7 +32,7 @@ def get_session_count(session_vars_path):
     return len(all_session_vars)
 
 
-def get_session_vars(session_id,source,session_vars_path,region='us-east-1'):
+def get_session_vars(session_id,source,session_vars_path,region='us-east-1',default_session_vars={}):
     if source.upper() == 'LOCAL':
         init_config(session_vars_path=session_vars_path)
         with open(os.path.join(curdir,session_vars_path),'r') as f:
@@ -40,7 +40,12 @@ def get_session_vars(session_id,source,session_vars_path,region='us-east-1'):
         try:
             session_vars = all_session_vars[str(session_id)]
         except KeyError as e:
-            session_vars = {}
+            session_vars = default_session_vars
+            session_id = create_new_session(default_session_vars=session_vars,
+                source=source,
+                session_vars_path=session_vars_path,
+                region=region,
+                preferred_id=session_id)
         finally:
             return session_vars
     elif source.upper() == 'DYNAMODB':
@@ -57,7 +62,12 @@ def get_session_vars(session_id,source,session_vars_path,region='us-east-1'):
             if 'Item' in response:
                 session_vars = json.loads(response['Item']['session_vars'])
             else:
-                session_vars = {}
+                session_vars = default_session_vars
+                session_id = create_new_session(default_session_vars=session_vars,
+                    source=source,
+                    session_vars_path=session_vars_path,
+                    region=region,
+                    preferred_id=session_id)
         finally:
             return session_vars
     else:

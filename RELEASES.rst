@@ -1,6 +1,14 @@
 Releases
 --------
 
+1.0.7 (2017-04-28)
+++++++++++++++++++
+
+**Bugfixes**
+
+- Main portion of Emily class tried to get session variables before user had session variables, which returns '{}'. When this happens, the default_session_vars and starting_node settings are ignored. Added default_session_vars parameter to sessions.get_session() so that when a session doesn't exist yet, Emily creates a new one with the default session variables.
+- self.already_started in the Emily() class was not initialized under some circumstances. Now self.already_started begins as True, and is set to False if Emily is not already started.
+
 1.0.6 (2017-04-26)
 ++++++++++++++++++
 
