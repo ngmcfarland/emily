@@ -29,8 +29,8 @@ with open('RELEASES.rst') as f:
 
 setup(
     name='emily',
-    version='1.0.7',
-    url='https://github.com/ngmcfarland',
+    version='1.0.8',
+    url='https://github.com/ngmcfarland/emily',
     license='Apache Software License',
     author='Nathan McFarland',
     tests_require=['pytest'],
@@ -49,7 +49,7 @@ setup(
     package_dir={'emily':'emily'},
     include_package_data=True,
     platforms='any',
-    download_url='https://github.com/ngmcfarland/emily/archive/1.0.7.tar.gz',
+    download_url='https://github.com/ngmcfarland/emily/archive/1.0.8.tar.gz',
     entry_points={
         'console_scripts': ['emily=emily:chat','emily_server=emily:emily_server']
     },

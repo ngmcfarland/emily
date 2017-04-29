@@ -1,6 +1,14 @@
 Releases
 --------
 
+1.0.8 (2017-04-29)
+++++++++++++++++++
+
+**Bugfixes**
+
+- Fixed infinite loop in sessions.py when source is DYNAMODB and session ID didn't exist.
+- Adjusted tests for pytest to reflect recent session management changes.
+
 1.0.7 (2017-04-28)
 ++++++++++++++++++
 
