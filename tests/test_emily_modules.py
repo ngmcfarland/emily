@@ -384,10 +384,8 @@ class TestSessions:
     def test_get_session_vars(self):
         """Does get_session_vars return correct session variables from 'EMILY_DIR/tests/data/session_vars.json' when session ID exists?"""
         session_vars_path = os.path.join(data_dir,'session_vars.json')
-        session_vars_1 = sessions.get_session_vars(session_id=10000,source='LOCAL',session_vars_path=session_vars_path)
-        session_vars_2 = sessions.get_session_vars(session_id=10001,source='LOCAL',session_vars_path=session_vars_path)
-        assert session_vars_1['foo'] == 'bar'
-        assert session_vars_2 == {}
+        session_vars = sessions.get_session_vars(session_id=10000,source='LOCAL',session_vars_path=session_vars_path)
+        assert session_vars['foo'] == 'bar'
 
     def test_create_new_session(self):
         """Does create_new_session create a new session in 'EMILY_DIR/tests/data/session_vars.json'?"""
@@ -425,6 +423,4 @@ class TestSessions:
                 session_id = int(s_id)
         sessions.remove_session(session_id=session_id,source='LOCAL',session_vars_path=session_vars_path)
         num_sessions = sessions.get_session_count(session_vars_path=session_vars_path)
-        session_vars = sessions.get_session_vars(session_id=session_id,source='LOCAL',session_vars_path=session_vars_path)
         assert num_sessions == 1
-        assert session_vars == {}
