@@ -86,33 +86,20 @@ def set_session_vars(session_id,session_vars,source,session_vars_path,region='us
     elif source.upper() == 'DYNAMODB':
         import boto3
         from botocore.exceptions import ClientError
-        # Check if session_id already exists
-        old_session_vars = get_session_vars(session_id=session_id,
-            source=source,
-            session_vars_path=session_vars_path,
-            region=region)
         dynamodb = boto3.resource("dynamodb", region_name=region.lower())
         table = dynamodb.Table(session_vars_path)
-        if len(old_session_vars) > 0:
-            # perform an update
-            try:
-                response = table.update_item(
-                    Key={'session_id': str(session_id)},
-                    UpdateExpression="set session_vars = :vars, last_updated = :last_updated",
-                    ExpressionAttributeValues={
-                        ':vars': json.dumps(session_vars),
-                        ':last_updated': datetime.datetime.utcnow().isoformat()+"Z"
-                    },
-                    ReturnValues="UPDATED_NEW"
-                )
-            except ClientError as e:
-                print(e.response['Error']['Message'])
-        else:
-            # perform an insert
-            try:
-                response = table.put_item(Item={'session_id': str(session_id), 'session_vars': json.dumps(session_vars)})
-            except ClientError as e:
-                print(e.response['Error']['Message'])
+        try:
+            response = table.update_item(
+                Key={'session_id': str(session_id)},
+                UpdateExpression="set session_vars = :vars, last_updated = :last_updated",
+                ExpressionAttributeValues={
+                    ':vars': json.dumps(session_vars),
+                    ':last_updated': datetime.datetime.utcnow().isoformat()+"Z"
+                },
+                ReturnValues="UPDATED_NEW"
+            )
+        except ClientError as e:
+            print(e.response['Error']['Message'])
     else:
         print("ERROR: Unrecognized source: {}".format(source))
 
