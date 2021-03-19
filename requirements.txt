@@ -4,7 +4,7 @@ Flask==0.12
 Flask-Cors==3.0.2
 fuzzywuzzy[speedup]==0.15.0
 itsdangerous==0.24
-Jinja2==2.9.5
+Jinja2==2.11.3
 MarkupSafe==0.23
 packaging==16.8
 pyaml==16.12.2
